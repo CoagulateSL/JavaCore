@@ -1,0 +1,28 @@
+package net.coagulate.Core;
+
+/**
+ *
+ * @author Iain Price
+ */
+public class ExceptionTools {
+    public static String dumpException(Throwable e) {
+        String p="";
+        if (e.getCause()!=null) { p=p+dumpException(e.getCause()); }
+        p=p+"<h3>"+e.getClass().getName()+" - "+e.getLocalizedMessage()+"</h3>";
+        for (StackTraceElement st:e.getStackTrace()) {
+            p+="<pre>";
+            p+=st.getClassName()+"."+st.getMethodName()+":"+st.getLineNumber();
+            p+="</pre>";
+        }
+        return p;
+    }
+    public static String toString(Throwable e) {
+        String p="";
+        if (e.getCause()!=null) { p=p+dumpException(e.getCause()); }
+        p=p+"***EXCEPTION***: "+e.getClass().getName()+" - "+e.getLocalizedMessage()+"\n";
+        for (StackTraceElement st:e.getStackTrace()) {
+            p+=st.getClassName()+"."+st.getMethodName()+":"+st.getLineNumber()+"\n";
+        }
+        return p;
+    }    
+}
