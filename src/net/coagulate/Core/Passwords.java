@@ -49,9 +49,12 @@ public abstract class Passwords {
     public static final int PBKDF2_INDEX = 4;
 
     public static String createHash(String password)
-        throws CannotPerformOperationException
     {
-        return createHash(password.toCharArray());
+        try {
+            return createHash(password.toCharArray());
+        } catch (CannotPerformOperationException ex) {
+            throw new AssertionError("Crypto error creating password hash",ex);
+        }
     }
 
     private static String createHash(char[] password)
@@ -78,9 +81,12 @@ public abstract class Passwords {
     }
 
     public static boolean verifyPassword(String password, String correctHash)
-        throws CannotPerformOperationException, InvalidHashException
     {
-        return verifyPassword(password.toCharArray(), correctHash);
+        try {
+            return verifyPassword(password.toCharArray(), correctHash);
+        } catch (CannotPerformOperationException|InvalidHashException ex) {
+            throw new AssertionError("Crypto error verifying password",ex);
+        }
     }
 
     private static boolean verifyPassword(char[] password, String correctHash)
