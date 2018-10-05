@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
  *
  * @author Iain Price
  */
-public class MailTools {
+public final class MailTools {
     public static void mail(String server,String fromname,String fromaddress,String toname,String toaddress,String subject, String body) throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host", server);

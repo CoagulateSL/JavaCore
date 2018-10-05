@@ -4,7 +4,7 @@ package net.coagulate.Core;
  *
  * @author Iain Price
  */
-public class ExceptionTools {
+public abstract class ExceptionTools {
     public static String dumpException(Throwable e) {
         String p="";
         if (e.getCause()!=null) { p=p+dumpException(e.getCause()); }
