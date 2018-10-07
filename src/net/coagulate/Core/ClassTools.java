@@ -3,6 +3,7 @@ package net.coagulate.Core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +23,8 @@ public abstract class ClassTools {
     private static boolean initialised=false;
     private static Set<Class> classmap=null;
     
-    public Set<Class> getAnnotatedClasses(Class annotation) {
+    @SuppressWarnings("unchecked")
+    public static Set<Class> getAnnotatedClasses(Class<? extends Annotation> annotation) {
         Set<Class> classes=new HashSet<>();
         for (Class c:classmap) {
             if (c.isAnnotationPresent(annotation)) { classes.add(c); }
@@ -30,7 +32,7 @@ public abstract class ClassTools {
         return classes;
     }
     
-    public Set<Method> getAnnotatedMethods(Class annotation) {
+    public static Set<Method> getAnnotatedMethods(Class<? extends Annotation> annotation) {
         Set<Method> methods=new HashSet<>();
         for (Class c:classmap) {
             for (Method m:c.getMethods()) {
