@@ -15,7 +15,7 @@ import javax.xml.bind.DatatypeConverter;
  *
  * @author Iain Price
  */
-public class CertUtils {
+public abstract class CertUtils {
 
     public static RSAPrivateKey generatePrivateKeyFromDER(byte[] keyBytes) throws InvalidKeySpecException, NoSuchAlgorithmException {
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);

@@ -9,7 +9,7 @@ import javax.xml.bind.DatatypeConverter;
  *
  * @author Iain Price
  */
-public class Crypto {
+public abstract class Crypto {
 
     public static String SHA1(String string) {
         MessageDigest md = null;

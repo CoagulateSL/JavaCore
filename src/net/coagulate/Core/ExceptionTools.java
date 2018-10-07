@@ -21,7 +21,7 @@ public abstract class ExceptionTools {
         if (e.getCause()!=null) { p=p+dumpException(e.getCause()); }
         p=p+"***EXCEPTION***: "+e.getClass().getName()+" - "+e.getLocalizedMessage()+"\n";
         for (StackTraceElement st:e.getStackTrace()) {
-            p+=st.getClassName()+"."+st.getMethodName()+":"+st.getLineNumber()+"\n";
+            p+="___exception___: "+st.getClassName()+"."+st.getMethodName()+":"+st.getLineNumber()+"\n";
         }
         return p;
     }    

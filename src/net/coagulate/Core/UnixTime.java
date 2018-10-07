@@ -9,7 +9,7 @@ import java.util.TimeZone;
  *
  * @author Iain Price
  */
-public class UnixTime {
+public abstract class UnixTime {
 
     /** Convert a specific date time into unixtime
      *

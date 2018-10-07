@@ -8,7 +8,7 @@ import javax.xml.bind.DatatypeConverter;
  *
  * @author Iain Price
  */
-public class ByteTools {
+public abstract class ByteTools {
 
     private static String toBase64(byte[] array) {
         return DatatypeConverter.printBase64Binary(array);

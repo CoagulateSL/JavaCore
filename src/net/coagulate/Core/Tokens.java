@@ -4,7 +4,7 @@ package net.coagulate.Core;
  *
  * @author Iain Price
  */
-public class Tokens {
+public abstract class Tokens {
 
     private static final String tokenfont = "0123456789abdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
