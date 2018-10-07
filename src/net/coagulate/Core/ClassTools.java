@@ -3,6 +3,7 @@ package net.coagulate.Core;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 import static java.util.logging.Level.CONFIG;
@@ -20,6 +21,29 @@ public abstract class ClassTools {
     private static final Object initlock=new Object();
     private static boolean initialised=false;
     private static Set<Class> classmap=null;
+    
+    public Set<Class> getAnnotatedClasses(Class annotation) {
+        Set<Class> classes=new HashSet<>();
+        for (Class c:classmap) {
+            if (c.isAnnotationPresent(annotation)) { classes.add(c); }
+        }
+        return classes;
+    }
+    
+    public Set<Method> getAnnotatedMethods(Class annotation) {
+        Set<Method> methods=new HashSet<>();
+        for (Class c:classmap) {
+            for (Method m:c.getMethods()) {
+                if (m.isAnnotationPresent(annotation)) { methods.add(m); }
+            }
+        }
+        return methods;
+    }
+    
+    
+    
+    
+    
     
     public static boolean initialised() { synchronized(initlock) { return initialised; } }
     public static void initialise() {
