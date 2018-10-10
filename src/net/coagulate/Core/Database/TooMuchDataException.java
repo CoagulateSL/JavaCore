@@ -1,4 +1,4 @@
-package net.coagulate.Database;
+package net.coagulate.Core.Database;
 
 /** Exception thrown when one row is expected but multiple are found.
  *

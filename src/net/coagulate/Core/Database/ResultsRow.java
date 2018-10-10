@@ -1,4 +1,4 @@
-package net.coagulate.Database;
+package net.coagulate.Core.Database;
 
 /**  Represents a row in a set of database results.
  *

@@ -1,4 +1,4 @@
-package net.coagulate.Database;
+package net.coagulate.Core.Database;
 
 /** Unpacks a resultset into a independant java datastructure.
  * Essentially a List of Rows, and a Row is a String,String Map of column names to values.

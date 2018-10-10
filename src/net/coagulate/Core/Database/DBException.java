@@ -1,4 +1,4 @@
-package net.coagulate.Database;
+package net.coagulate.Core.Database;
 
 import net.coagulate.Core.SystemException;
 

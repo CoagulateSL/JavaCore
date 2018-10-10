@@ -1,4 +1,4 @@
-package net.coagulate.Database;
+package net.coagulate.Core.Database;
 
 /** EXCLUSIVELY used to signal failure to acquire a lock.
  * 

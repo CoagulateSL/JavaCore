@@ -1,7 +1,9 @@
-package net.coagulate.Database;
+package net.coagulate.Core.Database;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import net.coagulate.Core.SystemException;
 
@@ -37,5 +39,22 @@ public abstract class DB {
             throw new SystemException("Attempt to retrieve non-existant data source "+datasourcename);
         }
         return datasources.get(datasourcename);
+    }
+
+    public static void shutdown() {
+        Set<String> names=new HashSet<>();
+        for (String source:datasources.keySet()) { names.add(source); }
+        for (String source:names) {
+            Logger.getLogger(DB.class.getName()).config("Closing database connection "+source);
+            datasources.get(source).shutdown();
+            datasources.remove(names);
+        }
+    }
+
+    public static boolean test() {
+        for (DBConnection connection:datasources.values()) {
+            if (!connection.test()) { return false; }
+        }
+        return true;
     }
 }

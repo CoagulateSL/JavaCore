@@ -1,4 +1,4 @@
-package net.coagulate.Database;
+package net.coagulate.Core.Database;
 
 /** Exception thrown when finding a row is mandatory, and none were found.
  *

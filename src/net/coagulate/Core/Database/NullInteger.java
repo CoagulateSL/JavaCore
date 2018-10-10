@@ -1,4 +1,4 @@
-package net.coagulate.Database;
+package net.coagulate.Core.Database;
 
 /** This feels like a bodge :).
  * If we wish to push a "null" into the database, then we pass a "null" reference to our methods.
