@@ -20,7 +20,7 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
     private static final Random random=new Random();
 
     public int lock() { return lock(30); }
-    /** Uses the write consistency property of MariaDB to synchronise a lock across the database.
+    /** Uses the write consistency property of MariaDB to synchronise a lock across the GPHUD.getDB().
      * The target table must use "id", a numeric primary key, as well as having lockedby (int), lockeduntil (int) and lockedserial (int).
      * The same serial should be used for the unlock.
      * Uses "Get old data" "Update lock where data+lock=olddata+oldlock" "Get data and confirm".  Since the updates must be ordered across the cluster

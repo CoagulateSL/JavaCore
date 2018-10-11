@@ -14,6 +14,10 @@ import org.mariadb.jdbc.MariaDbPoolDataSource;
 public class MariaDBConnection extends DBConnection {
 
     private MariaDbPoolDataSource pool;
+
+    public MariaDBConnection(String sourcename,String host,String username,String password,String dbname) {
+        this(sourcename,"jdbc:mariadb://"+host+"/"+dbname+"?user="+username+"&password="+password+"&maxPoolSize=10&connectTimeout=5000");
+    }
     
 
     public void shutdown() {
