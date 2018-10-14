@@ -2,7 +2,7 @@ package net.coagulate.Core.Database;
 
 import java.util.Map;
 import java.util.TreeMap;
-import net.coagulate.GPHUD.SystemException;
+import net.coagulate.Core.SystemException;
 
 /**
  *
