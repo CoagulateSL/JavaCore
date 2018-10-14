@@ -40,7 +40,7 @@ public class MariaDBConnection extends DBConnection {
             }
             for (String tablename:notempty.keySet()) {
                 int rows=notempty.get(tablename);
-                logger.config("Table "+tablename+" contains "+rows+" entries");
+                logger.fine("Table "+tablename+" contains "+rows+" entries");
             }
 
         } catch (SQLException|DBException ex) {
