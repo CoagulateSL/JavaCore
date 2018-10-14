@@ -2,7 +2,7 @@ package net.coagulate.Core.Database;
 
 import net.coagulate.Core.SystemException;
 
-/**  Represents errors with the database.
+/**  Represents errors with the GPHUD.getDB().
  * We've made this 'runtime' as theoretically /any/ sql statement can fail, so this can be thrown unchecked.
  * In most cases there's little remedy to this situation which means either:
  * 1) the database is down
