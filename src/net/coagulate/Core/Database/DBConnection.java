@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import static java.util.logging.Level.SEVERE;
 import java.util.logging.Logger;
-import net.coagulate.Core.UserException;
+import net.coagulate.Core.Tools.UserException;
 
 /**
  *

@@ -1,4 +1,4 @@
-package net.coagulate.Core;
+package net.coagulate.Core.Tools;
 
 /**  Internal errors in the code.
  * Unchecked, usually thrown to the top and logged.

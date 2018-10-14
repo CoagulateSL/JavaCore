@@ -1,8 +1,8 @@
 package net.coagulate.Core.Database;
 
 import java.util.Random;
-import net.coagulate.Core.SystemException;
-import net.coagulate.Core.UnixTime;
+import net.coagulate.Core.Tools.SystemException;
+import net.coagulate.Core.Tools.UnixTime;
 
 /**
  *

@@ -1,4 +1,4 @@
-package net.coagulate.Core;
+package net.coagulate.Core.Tools;
 
 import java.util.logging.Handler;
 import java.util.logging.Level;

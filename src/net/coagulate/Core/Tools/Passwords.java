@@ -1,4 +1,4 @@
-package net.coagulate.Core;
+package net.coagulate.Core.Tools;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

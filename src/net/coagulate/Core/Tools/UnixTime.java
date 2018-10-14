@@ -1,4 +1,4 @@
-package net.coagulate.Core;
+package net.coagulate.Core.Tools;
 
 import java.text.DateFormat;
 import java.util.Calendar;

@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
-import net.coagulate.Core.SystemException;
+import net.coagulate.Core.Tools.SystemException;
 
 /** Handles the database connection
  * Uses a database pool to create connections.

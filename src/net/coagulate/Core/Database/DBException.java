@@ -1,6 +1,6 @@
 package net.coagulate.Core.Database;
 
-import net.coagulate.Core.SystemException;
+import net.coagulate.Core.Tools.SystemException;
 
 /**  Represents errors with the GPHUD.getDB().
  * We've made this 'runtime' as theoretically /any/ sql statement can fail, so this can be thrown unchecked.

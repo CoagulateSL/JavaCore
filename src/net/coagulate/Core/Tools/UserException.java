@@ -1,4 +1,4 @@
-package net.coagulate.Core;
+package net.coagulate.Core.Tools;
 
 /** Checked exception indicating an error with a users request.
  * These should be intercepted by the interface and shown appropriately.

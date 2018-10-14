@@ -1,4 +1,4 @@
-package net.coagulate.Core;
+package net.coagulate.Core.Tools;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
