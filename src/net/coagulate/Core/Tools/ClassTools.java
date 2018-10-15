@@ -145,7 +145,10 @@ public abstract class ClassTools {
             }
             if (entry.getName().equals("META-INF/MANIFEST.MF")) { System.out.println("WE HAVE A MANIFEST!!!!"); 
                 Manifest manifest=new Manifest(zip);
-                System.out.println(manifest.getMainAttributes().get("Class-Path"));
+                for (Object a:manifest.getMainAttributes().keySet()) {
+                    System.out.println("Main Attribute: "+a.toString());
+                }
+//                System.out.println(manifest.getMainAttributes().get("Class-Path"));
                 //byte[] array=new byte[(int)entry.getSize()];
                 //zip.read(array);
                 //System.out.println(new String(array));
