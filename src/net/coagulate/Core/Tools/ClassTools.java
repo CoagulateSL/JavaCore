@@ -144,9 +144,11 @@ public abstract class ClassTools {
                 recurseClass(classname,classes);
             }
             if (entry.getName().equals("META-INF/MANIFEST.MF")) { System.out.println("WE HAVE A MANIFEST!!!!"); 
-                byte[] array=new byte[(int)entry.getSize()];
-                zip.read(array);
-                System.out.println(new String(array));
+                Manifest manifest=new Manifest(zip);
+                System.out.println(manifest.getMainAttributes().get("Class-Path"));
+                //byte[] array=new byte[(int)entry.getSize()];
+                //zip.read(array);
+                //System.out.println(new String(array));
             }
         }
     }
