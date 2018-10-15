@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.Manifest;
 import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.WARNING;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -136,8 +137,12 @@ public abstract class ClassTools {
                 Manifest manifest=new Manifest(zip);
                 for (String element:manifest.getMainAttributes().getValue("Class-Path").split(" ")) {
                     System.out.println(f.getParentFile().getCanonicalPath()+"/"+element);  
-                    
-                    inspectFile(new File(f.getParentFile().getCanonicalPath()+"/"+element), f.getParentFile(), classes);
+                    try {
+                        inspectFile(new File(f.getParentFile().getCanonicalPath()+"/"+element), f.getParentFile(), classes);
+                    }
+                    catch (Exception e) { 
+                        Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING,"Failed to recurse MANIFEST.MF",e);
+                    }
                 }
             }
         }
