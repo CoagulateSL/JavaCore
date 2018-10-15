@@ -97,7 +97,8 @@ public abstract class ClassTools {
     private static void inspectFile(File f,File base,Set<Class> classes) throws IOException {
         if (f.isDirectory()) { recurse(f,base,classes); return;}
         if (f.getAbsolutePath().toLowerCase().endsWith(".jar")) { recurseJar(f,classes); return; }
-        if (f.getAbsolutePath().toLowerCase().endsWith(".class")) { recurseClass(f.getAbsolutePath().substring(base.getAbsolutePath().length()+1),classes); }
+        if (f.getAbsolutePath().toLowerCase().endsWith(".class")) { recurseClass(f.getAbsolutePath().substring(base.getAbsolutePath().length()+1),classes); return; }
+        if (DEBUG) { System.out.println("Unhandled file in inspectFile: "+f.getAbsolutePath()); }
     }
             
     // takes a given location (classpath element or discovered) and iterates (recursively for directories) over its contents, extracting the class name and examining that
