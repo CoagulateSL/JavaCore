@@ -21,7 +21,7 @@ import java.util.zip.ZipInputStream;
  * @author Iain Price
  */
 public abstract class ClassTools {
-    private static final boolean DEBUG=false;
+    private static final boolean DEBUG=true;
     private static final Object initlock=new Object();
     private static boolean initialised=false;
     private static Set<Class> classmap=null;
