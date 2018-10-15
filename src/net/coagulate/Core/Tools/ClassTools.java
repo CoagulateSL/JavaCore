@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.Manifest;
@@ -79,15 +77,6 @@ public abstract class ClassTools {
             File f=new File(element);
             inspectFile(f,f,classes);
         }
-        Enumeration<URL> resources = ClassTools.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
-        while (resources.hasMoreElements()) {
-            try {
-                Manifest manifest = new Manifest(resources.nextElement().openStream());
-                for (String m:manifest.getEntries().keySet()) { System.out.println("Manifest produced "+m); }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         if (DEBUG) { System.out.println("FINAL LIST OF ENUMERATED ACCEPTED CLASSES:"); 
             for (Class c:classes) { System.out.println(c.getCanonicalName()); }
         }
@@ -145,13 +134,9 @@ public abstract class ClassTools {
             }
             if (entry.getName().equals("META-INF/MANIFEST.MF")) { System.out.println("WE HAVE A MANIFEST!!!!"); 
                 Manifest manifest=new Manifest(zip);
-                for (Object a:manifest.getMainAttributes().keySet()) {
-                    System.out.println("Main Attribute: "+a.toString());
+                for (String element:manifest.getMainAttributes().getValue("Class-Path").split(" ")) {
+                    System.out.println(f.getParentFile().getCanonicalPath()+"/"+element);                    
                 }
-                System.out.println("AAA:"+manifest.getMainAttributes().getValue("Class-Path"));
-                //byte[] array=new byte[(int)entry.getSize()];
-                //zip.read(array);
-                //System.out.println(new String(array));
             }
         }
     }
