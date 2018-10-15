@@ -133,11 +133,11 @@ public abstract class ClassTools {
                 String classname = entry.getName();
                 recurseClass(classname,classes);
             }
-            if (entry.getName().equals("META-INF/MANIFEST.MF")) { System.out.println("WE HAVE A MANIFEST!!!!"); 
+            if (entry.getName().equals("META-INF/MANIFEST.MF")) { if (DEBUG) { System.out.println("WE HAVE A MANIFEST!!!!");  }
                 Manifest manifest=new Manifest(zip);
-                if (manifest.getMainAttributes().containsKey("Class-Path")) {
+                if (manifest.getMainAttributes().getValue("Class-Path")!=null) {
                     for (String element:manifest.getMainAttributes().getValue("Class-Path").split(" ")) {
-                        System.out.println(f.getParentFile().getCanonicalPath()+"/"+element);  
+                        if (DEBUG) { System.out.println(f.getParentFile().getCanonicalPath()+"/"+element);   }
                         try {
                             inspectFile(new File(f.getParentFile().getCanonicalPath()+"/"+element), f.getParentFile(), classes);
                         }
