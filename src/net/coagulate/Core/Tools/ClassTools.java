@@ -143,7 +143,7 @@ public abstract class ClassTools {
                             inspectFile(new File(f.getParentFile().getCanonicalPath()+"/"+element), f.getParentFile(), classes);
                         }
                         catch (Exception e) { 
-                            Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING,"Failed to recurse MANIFEST.MF",e);
+                            if (DEBUG) { Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING,"Failed to recurse MANIFEST.MF",e); }
                         }
                     }
                 }
