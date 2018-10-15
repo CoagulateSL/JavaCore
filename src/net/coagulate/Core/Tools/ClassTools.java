@@ -143,6 +143,7 @@ public abstract class ClassTools {
                 String classname = entry.getName();
                 recurseClass(classname,classes);
             }
+            if (entry.getName().equals("META-INF/MANIFEST.MF")) { System.out.println("WE HAVE A MANIFEST!!!!"); }
         }
     }
         
