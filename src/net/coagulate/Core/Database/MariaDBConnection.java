@@ -39,7 +39,7 @@ public class MariaDBConnection extends DBConnection {
                 if (rows>0) {
                     notempty.put(tablename,rows);
                 } else { 
-                    logger.config("Table "+tablename+" is empty");
+                    logger.fine("Table "+tablename+" is empty");
                 }
             }
             for (String tablename:notempty.keySet()) {
