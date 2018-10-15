@@ -148,7 +148,7 @@ public abstract class ClassTools {
                 for (Object a:manifest.getMainAttributes().keySet()) {
                     System.out.println("Main Attribute: "+a.toString());
                 }
-//                System.out.println(manifest.getMainAttributes().get("Class-Path"));
+                System.out.println("AAA:"+manifest.getMainAttributes().getValue("Class-Path"));
                 //byte[] array=new byte[(int)entry.getSize()];
                 //zip.read(array);
                 //System.out.println(new String(array));
