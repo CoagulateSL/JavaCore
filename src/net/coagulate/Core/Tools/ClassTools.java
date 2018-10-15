@@ -5,8 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.jar.Manifest;
 import static java.util.logging.Level.CONFIG;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -69,12 +72,21 @@ public abstract class ClassTools {
     }
         
     public static Set<Class> enumerateClasses() throws IOException {
-        Set<Class> classes=new HashSet<>();
+        Set<Class> classes=new HashSet<>(); 
         if (DEBUG) { System.out.println("CLASS PATH IS "+System.getProperty("java.class.path")); }
         for (String element : System.getProperty("java.class.path").split(Pattern.quote(System.getProperty("path.separator")))) {
             if (DEBUG) { System.out.println("Path element: "+element); }
             File f=new File(element);
             inspectFile(f,f,classes);
+        }
+        Enumeration<URL> resources = ClassTools.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
+        while (resources.hasMoreElements()) {
+            try {
+                Manifest manifest = new Manifest(resources.nextElement().openStream());
+                for (String m:manifest.getEntries().keySet()) { System.out.println("Manifest produced "+m); }
+            } catch (IOException e) {
+                // handle
+            }
         }
         if (DEBUG) { System.out.println("FINAL LIST OF ENUMERATED ACCEPTED CLASSES:"); 
             for (Class c:classes) { System.out.println(c.getCanonicalName()); }
