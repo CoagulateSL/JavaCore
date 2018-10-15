@@ -70,6 +70,7 @@ public abstract class ClassTools {
         
     public static Set<Class> enumerateClasses() throws IOException {
         Set<Class> classes=new HashSet<>();
+        if (DEBUG) { System.out.println("CLASS PATH IS "+System.getProperty("java.class.path")); }
         for (String element : System.getProperty("java.class.path").split(Pattern.quote(System.getProperty("path.separator")))) {
             if (DEBUG) { System.out.println("Path element: "+element); }
             File f=new File(element);
