@@ -135,13 +135,15 @@ public abstract class ClassTools {
             }
             if (entry.getName().equals("META-INF/MANIFEST.MF")) { System.out.println("WE HAVE A MANIFEST!!!!"); 
                 Manifest manifest=new Manifest(zip);
-                for (String element:manifest.getMainAttributes().getValue("Class-Path").split(" ")) {
-                    System.out.println(f.getParentFile().getCanonicalPath()+"/"+element);  
-                    try {
-                        inspectFile(new File(f.getParentFile().getCanonicalPath()+"/"+element), f.getParentFile(), classes);
-                    }
-                    catch (Exception e) { 
-                        Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING,"Failed to recurse MANIFEST.MF",e);
+                if (manifest.getMainAttributes().containsKey("Class-Path")) {
+                    for (String element:manifest.getMainAttributes().getValue("Class-Path").split(" ")) {
+                        System.out.println(f.getParentFile().getCanonicalPath()+"/"+element);  
+                        try {
+                            inspectFile(new File(f.getParentFile().getCanonicalPath()+"/"+element), f.getParentFile(), classes);
+                        }
+                        catch (Exception e) { 
+                            Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING,"Failed to recurse MANIFEST.MF",e);
+                        }
                     }
                 }
             }
