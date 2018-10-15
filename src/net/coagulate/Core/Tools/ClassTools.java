@@ -20,10 +20,11 @@ import java.util.zip.ZipInputStream;
  * @author Iain Price
  */
 public abstract class ClassTools {
-    private static final boolean DEBUG=true;
+    private static final boolean DEBUG=false;
     private static final Object initlock=new Object();
     private static boolean initialised=false;
     private static Set<Class> classmap=null;
+    private static int totalclasses=0;
     
     @SuppressWarnings("unchecked")
     public static Set<Class> getAnnotatedClasses(Class<? extends Annotation> annotation) {
@@ -56,7 +57,7 @@ public abstract class ClassTools {
                 if (initialised) { return; }
                 Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG,"Commencing classpath scanning");
                 classmap=enumerateClasses();
-                Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG,"Classpath scanner found "+classmap.size()+" classes");
+                Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG,"Classpath scanner found "+classmap.size()+" classes, "+totalclasses+" scanned.");
                 initialised=true;
             }
         }
@@ -113,7 +114,7 @@ public abstract class ClassTools {
             if (!classname.equals("")) { classname+="."; }
             classname+=element;
         }
-        
+        totalclasses++;
         if (!classname.startsWith("net.coagulate.")) { return; }
         // examine named class and instansiate if appropriate.
         try {
