@@ -85,7 +85,7 @@ public abstract class ClassTools {
                 Manifest manifest = new Manifest(resources.nextElement().openStream());
                 for (String m:manifest.getEntries().keySet()) { System.out.println("Manifest produced "+m); }
             } catch (IOException e) {
-                // handle
+                e.printStackTrace();
             }
         }
         if (DEBUG) { System.out.println("FINAL LIST OF ENUMERATED ACCEPTED CLASSES:"); 
