@@ -105,6 +105,7 @@ public abstract class DBConnection {
         if (Thread.currentThread().getStackTrace().length>0) {
             StackTraceElement element = Thread.currentThread().getStackTrace()[0];
             caller=element.getClassName()+"."+element.getMethodName();
+            if (element.getLineNumber()>=0) { caller=caller+":"+element.getLineNumber(); }
             caller=caller.replaceFirst("net.coagulate.","");
         }
         if (logsql) {
@@ -155,6 +156,7 @@ public abstract class DBConnection {
         if (Thread.currentThread().getStackTrace().length>0) {
             StackTraceElement element = Thread.currentThread().getStackTrace()[0];
             caller=element.getClassName()+"."+element.getMethodName();
+            if (element.getLineNumber()>=0) { caller=caller+":"+element.getLineNumber(); }
             caller=caller.replaceFirst("net.coagulate.","");
         }
         if (logsql) {
