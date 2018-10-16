@@ -102,8 +102,8 @@ public abstract class DBConnection {
     public Results dq(String parameterisedcommand,Object... params)
     {
         String caller="Unknown";
-        if (Thread.currentThread().getStackTrace().length>0) {
-            StackTraceElement element = Thread.currentThread().getStackTrace()[0];
+        if (Thread.currentThread().getStackTrace().length>2) {
+            StackTraceElement element = Thread.currentThread().getStackTrace()[2];
             caller=element.getClassName()+"."+element.getMethodName();
             if (element.getLineNumber()>=0) { caller=caller+":"+element.getLineNumber(); }
             caller=caller.replaceFirst("net.coagulate.","");
@@ -153,8 +153,8 @@ public abstract class DBConnection {
     public void d(String parameterisedcommand,Object... params)
     {
         String caller="Unknown";
-        if (Thread.currentThread().getStackTrace().length>0) {
-            StackTraceElement element = Thread.currentThread().getStackTrace()[0];
+        if (Thread.currentThread().getStackTrace().length>2) {
+            StackTraceElement element = Thread.currentThread().getStackTrace()[2];
             caller=element.getClassName()+"."+element.getMethodName();
             if (element.getLineNumber()>=0) { caller=caller+":"+element.getLineNumber(); }
             caller=caller.replaceFirst("net.coagulate.","");
