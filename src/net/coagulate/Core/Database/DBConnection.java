@@ -140,8 +140,8 @@ public abstract class DBConnection {
         return caller;
     }
     public String formatFrame(int framenumber,String def) {
-        if (Thread.currentThread().getStackTrace().length>2) {
-            StackTraceElement element = Thread.currentThread().getStackTrace()[2];
+        if (Thread.currentThread().getStackTrace().length>framenumber) {
+            StackTraceElement element = Thread.currentThread().getStackTrace()[framenumber];
             String caller = element.getClassName()+"."+element.getMethodName();
             if (element.getLineNumber()>=0) { caller=caller+":"+element.getLineNumber(); }
             caller=caller.replaceAll("net.coagulate.","");
