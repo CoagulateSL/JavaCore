@@ -101,6 +101,12 @@ public abstract class DBConnection {
      */
     public Results dq(String parameterisedcommand,Object... params)
     {
+        String caller="Unknown";
+        if (Thread.currentThread().getStackTrace().length>0) {
+            StackTraceElement element = Thread.currentThread().getStackTrace()[0];
+            caller=element.getClassName()+"."+element.getMethodName();
+            caller=caller.replaceFirst("net.coagulate.","");
+        }
         if (logsql) {
             if (sqllog.containsKey(parameterisedcommand)) {
                 sqllog.put(parameterisedcommand,sqllog.get(parameterisedcommand)+1);
@@ -115,7 +121,7 @@ public abstract class DBConnection {
             long start=new Date().getTime();
             rs=stm.executeQuery();
             long end=new Date().getTime();
-            if (DB.sqldebug_queries || (end-start)>=DB.SLOWQUERYTHRESHOLD_QUERY) { logger.config("SQL:"+(end-start)+"ms "+stm.toString()); }
+            if (DB.sqldebug_queries || (end-start)>=DB.SLOWQUERYTHRESHOLD_QUERY) { logger.config("SQL ["+caller+"]:"+(end-start)+"ms "+stm.toString()); }
             if (logsql) {
                 if (sqllogsum.containsKey(parameterisedcommand)) {
                     sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(end-start));
@@ -145,6 +151,12 @@ public abstract class DBConnection {
      */
     public void d(String parameterisedcommand,Object... params)
     {
+        String caller="Unknown";
+        if (Thread.currentThread().getStackTrace().length>0) {
+            StackTraceElement element = Thread.currentThread().getStackTrace()[0];
+            caller=element.getClassName()+"."+element.getMethodName();
+            caller=caller.replaceFirst("net.coagulate.","");
+        }
         if (logsql) {
             if (sqllog.containsKey(parameterisedcommand)) {
                 sqllog.put(parameterisedcommand,sqllog.get(parameterisedcommand)+1);
@@ -160,7 +172,7 @@ public abstract class DBConnection {
             stm.execute();
             conn.commit();
             long end=new Date().getTime();
-            if (DB.sqldebug_commands || (end-start)>=DB.SLOWQUERYTHRESHOLD_UPDATE) { logger.finer("SQL:"+(end-start)+"ms "+stm.toString()); }
+            if (DB.sqldebug_commands || (end-start)>=DB.SLOWQUERYTHRESHOLD_UPDATE) { logger.finer("SQL ["+caller+"]:"+(end-start)+"ms "+stm.toString()); }
             if (logsql) {
                 if (sqllogsum.containsKey(parameterisedcommand)) {
                     sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(end-start));
