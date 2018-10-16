@@ -101,13 +101,6 @@ public abstract class DBConnection {
      */
     public Results dq(String parameterisedcommand,Object... params)
     {
-        String caller="Unknown";
-        if (Thread.currentThread().getStackTrace().length>2) {
-            StackTraceElement element = Thread.currentThread().getStackTrace()[2];
-            caller=element.getClassName()+"."+element.getMethodName();
-            if (element.getLineNumber()>=0) { caller=caller+":"+element.getLineNumber(); }
-            caller=caller.replaceFirst("net.coagulate.","");
-        }
         if (logsql) {
             if (sqllog.containsKey(parameterisedcommand)) {
                 sqllog.put(parameterisedcommand,sqllog.get(parameterisedcommand)+1);
@@ -122,7 +115,7 @@ public abstract class DBConnection {
             long start=new Date().getTime();
             rs=stm.executeQuery();
             long end=new Date().getTime();
-            if (DB.sqldebug_queries || (end-start)>=DB.SLOWQUERYTHRESHOLD_QUERY) { logger.config("SQL ["+caller+"]:"+(end-start)+"ms "+stm.toString()); }
+            if (DB.sqldebug_queries || (end-start)>=DB.SLOWQUERYTHRESHOLD_QUERY) { logger.config("SQL ["+formatCaller()+"]:"+(end-start)+"ms "+stm.toString()); }
             if (logsql) {
                 if (sqllogsum.containsKey(parameterisedcommand)) {
                     sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(end-start));
@@ -141,7 +134,21 @@ public abstract class DBConnection {
             if (conn!=null) { try { conn.close(); } catch (SQLException e) {}}
         }
     }   
-
+    public String formatCaller() {
+        String caller=formatFrame(5,"Unknown");
+        String caller2=formatFrame(6,""); if (!caller2.isEmpty()) { caller+=", "+caller2; }
+        return caller;
+    }
+    public String formatFrame(int framenumber,String def) {
+        if (Thread.currentThread().getStackTrace().length>2) {
+            StackTraceElement element = Thread.currentThread().getStackTrace()[2];
+            String caller = element.getClassName()+"."+element.getMethodName();
+            if (element.getLineNumber()>=0) { caller=caller+":"+element.getLineNumber(); }
+            caller=caller.replaceAll("net.coagulate.","");
+            return caller;
+        }
+        return def;
+    }
 
     // database do, statement with no results
     /** Call database with no results.
@@ -152,13 +159,6 @@ public abstract class DBConnection {
      */
     public void d(String parameterisedcommand,Object... params)
     {
-        String caller="Unknown";
-        if (Thread.currentThread().getStackTrace().length>2) {
-            StackTraceElement element = Thread.currentThread().getStackTrace()[2];
-            caller=element.getClassName()+"."+element.getMethodName();
-            if (element.getLineNumber()>=0) { caller=caller+":"+element.getLineNumber(); }
-            caller=caller.replaceFirst("net.coagulate.","");
-        }
         if (logsql) {
             if (sqllog.containsKey(parameterisedcommand)) {
                 sqllog.put(parameterisedcommand,sqllog.get(parameterisedcommand)+1);
@@ -174,7 +174,7 @@ public abstract class DBConnection {
             stm.execute();
             conn.commit();
             long end=new Date().getTime();
-            if (DB.sqldebug_commands || (end-start)>=DB.SLOWQUERYTHRESHOLD_UPDATE) { logger.finer("SQL ["+caller+"]:"+(end-start)+"ms "+stm.toString()); }
+            if (DB.sqldebug_commands || (end-start)>=DB.SLOWQUERYTHRESHOLD_UPDATE) { logger.finer("SQL ["+formatCaller()+"]:"+(end-start)+"ms "+stm.toString()); }
             if (logsql) {
                 if (sqllogsum.containsKey(parameterisedcommand)) {
                     sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(end-start));
