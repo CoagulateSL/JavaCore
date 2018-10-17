@@ -18,7 +18,7 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.impl.bootstrap.ServerBootstrap;
-import org.apache.http.protocol.HttpRequestHandler;
+import org.apache.http.protocol.HttpRequestHandlerMapper;
 
 /** Listen for HTTP on a port.
  * @author Iain Price
@@ -27,25 +27,6 @@ public class HTTPSListener {
     
     private ServerBootstrap bootstrap=null;
     private Logger logger;
-    private void map(String url,HttpRequestHandler handler) { bootstrap.registerHandler(url,handler); }
-    /*private static void addHandlers(ServerBootstrap bootstrap) {
-        HTTPSListener.bootstrap=bootstrap;
-        map("/IPC",new IPC());
-        map("/shutdown",new UnauthenticatedShutdown());
-        map("/SetPassword",new SetPassword());
-        map("/Billing",new net.coagulate.SL.Billing.Index());
-        map("/Logout",new Logout());
-        map("/SSO/*",new SSOExchange());
-        map("/",new Index());
-        
-        map("/SecondLifeAPI/Ping",new SLPing());
-        
-        map("/RegionMonitor",new net.coagulate.SL.Services.RegionMonitor.Index());
-        map("/RegionMonitor/Index",new net.coagulate.SL.Services.RegionMonitor.Index());
-        map("/RegionMonitor/Subscribe",new net.coagulate.SL.Services.RegionMonitor.Subscribe());
-        map("/SecondLifeAPI/RegionMonitor/GetRegions",new GetRegions());
-        HTTPSListener.bootstrap=null;        
-    }*/
     
     private Logger logger() { 
         if (logger!=null) { return logger; }
@@ -56,7 +37,7 @@ public class HTTPSListener {
     private HttpServer server=null;
     private String name="HTTPS";
     private int port=-1;
-    public HTTPSListener(int port,String pemfile) {
+    public HTTPSListener(int port,String pemfile,HttpRequestHandlerMapper mapper) {
         this.port=port;
         Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
         try {
@@ -95,7 +76,8 @@ public class HTTPSListener {
                     .setSslContext(sslcontext)
                     .setSocketConfig(reuse)
                     .setServerInfo("CoagulateHTTPS/1.1")
-                    .setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE);
+                    .setConnectionReuseStrategy(NoConnectionReuseStrategy.INSTANCE)
+                    .setHandlerMapper(mapper);
             // NOTE HOW THE HANDLERS ARE A SINGLE INSTANCE.
             // no instance level data storage.  USE HTTPCONTEXT (superceeded by "State")
             name="HTTPS:"+port;
