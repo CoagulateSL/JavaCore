@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,6 +47,21 @@ public abstract class ClassTools {
     }
     
     
+    public static Set<Constructor> getAnnotatedConstructors(Class<? extends Annotation> annotation) {
+        Set<Constructor> constructors=new HashSet<>();
+        for (Class c:classmap) {
+            try {
+                Constructor cons=c.getConstructor(new Class[0]);
+                if (cons.isAnnotationPresent(annotation)) { constructors.add(cons); }
+            } catch (NoSuchMethodException|SecurityException ex) {
+                // no such method - this is fine, many classes wont have a zero param constructor =)
+                // securityexception - this is also fine, we'll find protected classes or other things we're not supposed to instansiate, so we wont.
+            }
+        }
+        return constructors;
+    }
+    
+        
     
     
     
