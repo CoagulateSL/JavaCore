@@ -20,7 +20,7 @@ import net.coagulate.Core.Tools.SystemException;
  */
 public abstract class DB {
     static final long SLOWQUERYTHRESHOLD_QUERY=100;
-    static final long SLOWQUERYTHRESHOLD_UPDATE=100;
+    static final long SLOWQUERYTHRESHOLD_UPDATE=250;
     static final boolean sqldebug_queries=false;
     static final boolean sqldebug_commands=false;
     
