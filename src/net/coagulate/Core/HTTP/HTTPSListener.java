@@ -46,14 +46,16 @@ public class HTTPSListener {
             byte[] certAndKey = Files.readAllBytes(new File(pemfile).toPath());
             byte[] certBytes = CertUtils.parseDERFromPEM(certAndKey, "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
             byte[] keyBytes = CertUtils.parseDERFromPEM(certAndKey, "-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----");
-
+            byte[] chainBytes= CertUtils.parseDERFromPEM(Files.readAllBytes(new File("/etc/keys/chain.pem").toPath()), "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
+            
             X509Certificate cert = CertUtils.generateCertificateFromDER(certBytes);              
+            X509Certificate chain = CertUtils.generateCertificateFromDER(chainBytes);              
             RSAPrivateKey key  = CertUtils.generatePrivateKeyFromDER(keyBytes);    
 
             KeyStore keystore = KeyStore.getInstance("JKS");
             keystore.load(null);
             keystore.setCertificateEntry("TLS Presentation", cert);
-            keystore.setKeyEntry("key-alias", key, "changeit".toCharArray(), new Certificate[] {cert});
+            keystore.setKeyEntry("key-alias", key, "changeit".toCharArray(), new Certificate[] {cert,chain});
 
             KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
             kmf.init(keystore, "changeit".toCharArray());
