@@ -4,7 +4,7 @@ package net.coagulate.Core.Tools;
  * These should be intercepted by the interface and shown appropriately.
  * @author Iain Price
  */
-public class UserException extends Exception {
+public class UserException extends RuntimeException {
     public UserException(String reason) { super(reason); }
     public UserException(String reason,Throwable cause) { super(reason,cause); }
 }
