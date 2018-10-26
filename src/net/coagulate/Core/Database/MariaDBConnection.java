@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.TreeMap;
+import static java.util.logging.Level.CONFIG;
 import static java.util.logging.Level.SEVERE;
 import org.mariadb.jdbc.MariaDbPoolDataSource;
 
@@ -22,7 +23,8 @@ public class MariaDBConnection extends DBConnection {
 
     public void shutdown() {
         logger.config("Closing database connection");
-        if (pool!=null) { pool.close(); pool=null; }
+        try { if (pool!=null) { pool.close(); pool=null; } }
+        catch (Exception e) { logger.log(CONFIG,"Error closing DB connection: "+e.getLocalizedMessage()); }
     }
     
     public MariaDBConnection(String name,String jdbc) {
