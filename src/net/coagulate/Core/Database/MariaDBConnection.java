@@ -13,7 +13,7 @@ import org.mariadb.jdbc.MariaDbPoolDataSource;
  * @author Iain Price
  */
 public class MariaDBConnection extends DBConnection {
-
+    private static final boolean TABLECOUNT=false;
     private MariaDbPoolDataSource pool;
 
     public MariaDBConnection(String sourcename,String host,String username,String password,String dbname) {
@@ -33,20 +33,22 @@ public class MariaDBConnection extends DBConnection {
             pool = new MariaDbPoolDataSource(jdbc);
             if (!test()) { throw new SQLException("Failed to count(*) on table ping which should have one row only"); }
             // pointless stuff that slows us down =)
-            Results tables=dq("show tables");
-            Map<String,Integer> notempty=new TreeMap<>();
-            for (ResultsRow r:tables) {
-                String tablename=r.getString();
-                int rows=dqi(true,"select count(*) from "+tablename);
-                if (rows>0) {
-                    notempty.put(tablename,rows);
-                } else { 
-                    logger.fine("Table "+tablename+" is empty");
+            if (TABLECOUNT) {
+                Results tables=dq("show tables");
+                Map<String,Integer> notempty=new TreeMap<>();
+                for (ResultsRow r:tables) {
+                    String tablename=r.getString();
+                    int rows=dqi(true,"select count(*) from "+tablename);
+                    if (rows>0) {
+                        notempty.put(tablename,rows);
+                    } else { 
+                        logger.fine("Table "+tablename+" is empty");
+                    }
                 }
-            }
-            for (String tablename:notempty.keySet()) {
-                int rows=notempty.get(tablename);
-                logger.fine("Table "+tablename+" contains "+rows+" entries");
+                for (String tablename:notempty.keySet()) {
+                    int rows=notempty.get(tablename);
+                    logger.fine("Table "+tablename+" contains "+rows+" entries");
+                }
             }
 
         } catch (SQLException|DBException ex) {
