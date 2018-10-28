@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLTransactionRollbackException;
 import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
@@ -182,6 +183,9 @@ public abstract class DBConnection {
                     sqllogsum.put(parameterisedcommand,end-start);
                 }
             }               
+        }
+        catch (SQLTransactionRollbackException e) {
+            throw new LockException("Transaction conflicted and was rolled back",e);
         }
         catch (SQLException e) { throw new DBException("SQL error during command "+parameterisedcommand,e); }
         finally {
