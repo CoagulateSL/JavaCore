@@ -45,7 +45,7 @@ public abstract class DB {
         Set<String> names=new HashSet<>();
         for (String source:datasources.keySet()) { names.add(source); }
         for (String source:names) {
-            Logger.getLogger(DB.class.getName()).config("Closing database connection "+source);
+            // Logger.getLogger(DB.class.getName()).config("Closing database connection "+source); // logged by shutdown method
             datasources.get(source).shutdown();
             datasources.remove(names);
         }
