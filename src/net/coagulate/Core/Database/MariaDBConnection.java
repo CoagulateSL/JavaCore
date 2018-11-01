@@ -24,6 +24,7 @@ public class MariaDBConnection extends DBConnection {
     public void shutdown() {
         logger.config("Closing database connection");
         try { if (pool!=null) { pool.close(); pool=null; } }
+        catch (NullPointerException e) {} // hmm
         catch (Exception e) { logger.log(CONFIG,"Error closing DB connection: "+e.getLocalizedMessage()); }
     }
     
