@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 
 /**
  *
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
  */
 public class LogHandler extends Handler {
 
+    public static String mailprefix="[UNKNOWN]";
     public static final void initialise() {
         LogManager.getLogManager().reset();
         Logger.getLogger("").setLevel(Level.ALL);
@@ -45,7 +47,21 @@ public class LogHandler extends Handler {
             }
         }
         System.out.println(formatLevel(level)+"#"+postpad(thread+"",4)+" "+system+" - "+message+" (@"+classname+"."+method+")");
-        if (record.getThrown()!=null) { System.out.println(ExceptionTools.toString(record.getThrown())); }
+        if (record.getThrown()!=null) {
+            Throwable thrown=record.getThrown();
+            //if (!thrown instanceof UserException) {
+                System.out.println(ExceptionTools.toString(thrown));
+            try {
+                MailTools.mail(mailprefix+" "+thrown.getLocalizedMessage(),ExceptionTools.toHTML(thrown));
+            } catch (MessagingException ex) {
+                System.out.println("EXCEPTION IN EXCEPTION MAILER");
+                System.out.println("EXCEPTION IN EXCEPTION MAILER");
+                System.out.println("EXCEPTION IN EXCEPTION MAILER");
+                System.out.println("EXCEPTION IN EXCEPTION MAILER");
+                System.out.println("EXCEPTION IN EXCEPTION MAILER");
+                System.out.println(ExceptionTools.toString(ex));
+            }
+        }
     }
 
     @Override

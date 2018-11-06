@@ -24,5 +24,6 @@ public abstract class ExceptionTools {
             p+="___exception___: "+st.getClassName()+"."+st.getMethodName()+":"+st.getLineNumber()+"\n";
         }
         return p;
-    }    
+    }   
+    public static String toHTML(Throwable e) { return dumpException(e); }
 }
