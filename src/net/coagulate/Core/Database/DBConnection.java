@@ -170,12 +170,13 @@ public abstract class DBConnection {
         Connection conn=null; PreparedStatement stm=null;
         try {
             conn=getConnection();
+            try { conn.commit(); } catch (SQLException e) {}
             stm=prepare(conn,parameterisedcommand,params);
             long start=new Date().getTime();
             stm.execute();
             conn.commit();
             long end=new Date().getTime();
-            if (DB.sqldebug_commands || (end-start)>=DB.SLOWQUERYTHRESHOLD_UPDATE) { logger.finer("SQL ["+formatCaller()+"]:"+(end-start)+"ms "+stm.toString()); }
+            if (DB.sqldebug_commands || (end-start)>=DB.SLOWQUERYTHRESHOLD_UPDATE) { logger.finer("SQL "+(end-start)+"ms ["+formatCaller()+"]:"+stm.toString()); }
             if (logsql) {
                 if (sqllogsum.containsKey(parameterisedcommand)) {
                     sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(end-start));
