@@ -169,10 +169,9 @@ public abstract class DBConnection {
         }
         Connection conn=null; PreparedStatement stm=null;
         try {
-            long start=new Date().getTime();
             conn=getConnection();
-            try { conn.commit(); } catch (SQLException e) {}
             stm=prepare(conn,parameterisedcommand,params);
+            long start=new Date().getTime();
             stm.execute();
             conn.commit();
             long end=new Date().getTime();
