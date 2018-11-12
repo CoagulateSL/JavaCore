@@ -40,7 +40,11 @@ public abstract class DB {
         }
         return datasources.get(datasourcename);
     }
-
+    public static Set<DBConnection> get() {
+        Set<DBConnection> connections=new HashSet<>();
+        connections.addAll(datasources.values());
+        return connections;
+    }
     public static void shutdown() {
         Set<String> names=new HashSet<>();
         for (String source:datasources.keySet()) { names.add(source); }

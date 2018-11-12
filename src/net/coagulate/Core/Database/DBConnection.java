@@ -19,6 +19,39 @@ import net.coagulate.Core.Tools.UserException;
  */
 public abstract class DBConnection {
     
+    private static final boolean accumulatestats=true;
+    private final Object querylock=new Object();
+    private int queries=0;
+    private long querytime=0;
+    private long querymax=0;
+    
+    private final Object updatelock=new Object();
+    private int updates=0;
+    private long updatetime=0;
+    private long updatemax=0;
+    
+    public class DBStats {
+        public int queries;
+        public float queryaverage;
+        public float querymax;
+        public int updates;
+        public float updateaverage;
+        public float updatemax;
+        public DBStats(int q,float qa,float qm,int u,float ua,float um) { queries=q; queryaverage=qa; querymax=qm; updates=u; ua=updateaverage; um=updatemax; }
+    }
+    
+    public DBStats getStats() {
+        if (!accumulatestats) { throw new IllegalStateException("Stats are disabled"); }
+        synchronized(querylock) {
+            synchronized(updatelock) {
+                DBStats stats=new DBStats(queries,querytime/((float)queries),querymax,updates,updatetime/((float)updates),updatemax);
+                queries=0; querytime=0; querymax=0;
+                updates=0; updatetime=0; updatemax=0;
+                return stats;
+            }
+        }
+    }
+    
     static final boolean logsql=true; public static boolean sqlLogging() { return logsql; }
     
     Map<String,Integer> sqllog=new HashMap<>();
@@ -116,14 +149,22 @@ public abstract class DBConnection {
             long start=new Date().getTime();
             rs=stm.executeQuery();
             long end=new Date().getTime();
-            if (DB.sqldebug_queries || (end-start)>=DB.SLOWQUERYTHRESHOLD_QUERY) { logger.config("SQL ["+formatCaller()+"]:"+(end-start)+"ms "+stm.toString()); }
+            long diff=end-start;
+            if (DB.sqldebug_queries || (diff)>=DB.SLOWQUERYTHRESHOLD_QUERY) { logger.config("SQL ["+formatCaller()+"]:"+(diff)+"ms "+stm.toString()); }
             if (logsql) {
                 if (sqllogsum.containsKey(parameterisedcommand)) {
-                    sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(end-start));
+                    sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(diff));
                 } else {
-                    sqllogsum.put(parameterisedcommand,end-start);
+                    sqllogsum.put(parameterisedcommand,diff);
                 }
-            }   
+            }
+            if (accumulatestats) {
+                synchronized(querylock) {
+                    queries++;
+                    querytime+=(diff);
+                    if (querymax<diff) { querymax=diff; }
+                }
+            }
             Results results=new Results(rs);
             results.setStatement(stm.toString());
             return results;
@@ -175,14 +216,22 @@ public abstract class DBConnection {
             stm.execute();
             conn.commit();
             long end=new Date().getTime();
-            if (DB.sqldebug_commands || (end-start)>=DB.SLOWQUERYTHRESHOLD_UPDATE) { logger.finer("SQL "+(end-start)+"ms ["+formatCaller()+"]:"+stm.toString()); }
+            long diff=end-start;
+            if (DB.sqldebug_commands || (diff)>=DB.SLOWQUERYTHRESHOLD_UPDATE) { logger.finer("SQL "+(diff)+"ms ["+formatCaller()+"]:"+stm.toString()); }
             if (logsql) {
                 if (sqllogsum.containsKey(parameterisedcommand)) {
-                    sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(end-start));
+                    sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(diff));
                 } else {
-                    sqllogsum.put(parameterisedcommand,end-start);
+                    sqllogsum.put(parameterisedcommand,diff);
                 }
-            }               
+            }
+            if (accumulatestats) {
+                synchronized(updatelock) {
+                    updates++;
+                    updatetime+=(diff);
+                    if (updatemax<diff) { updatemax=diff; }
+                }
+            }
         }
         catch (SQLTransactionRollbackException e) {
             throw new LockException("Transaction conflicted and was rolled back",e);
