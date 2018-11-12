@@ -29,7 +29,7 @@ public abstract class DBConnection {
     private int updates=0;
     private long updatetime=0;
     private long updatemax=0;
-    
+  
     public class DBStats {
         public int queries;
         public float queryaverage;
@@ -74,6 +74,7 @@ public abstract class DBConnection {
         this.sourcename=sourcename;
         logger=Logger.getLogger(this.getClass().getName()+"."+sourcename);
     }
+    public String getName() { return sourcename; }
     /** dont forget to call this during setup! */
     protected void register() { DB.register(sourcename,this); }
 
