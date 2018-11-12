@@ -32,23 +32,19 @@ public abstract class DBConnection {
   
     public class DBStats {
         public int queries;
-        public float queryaverage;
-        public float querymax;
+        public long querytotal;
+        public long querymax;
         public int updates;
-        public float updateaverage;
-        public float updatemax;
-        public DBStats(int q,float qa,float qm,int u,float ua,float um) { queries=q; queryaverage=qa; querymax=qm; updates=u; ua=updateaverage; um=updatemax; }
+        public long updatetotal;
+        public long updatemax;
+        public DBStats(int q,long qt,long qm,int u,long ut,long um) { queries=q; querytotal=qt; querymax=qm; updates=u; updatetotal=ut; updatemax=um; }
     }
     
     public DBStats getStats() {
         if (!accumulatestats) { throw new IllegalStateException("Stats are disabled"); }
         synchronized(querylock) {
             synchronized(updatelock) {
-                float queriesaverage=0;
-                if (queries>0) { queriesaverage=querytime/((float)queries); }
-                float updateaverage=0;
-                if (updates>0) { updateaverage=updatetime/((float)updates); }
-                DBStats stats=new DBStats(queries,queriesaverage,querymax,updates,updateaverage,updatemax);
+                DBStats stats=new DBStats(queries,querytime,querymax,updates,updatetime,updatemax);
                 queries=0; querytime=0; querymax=0;
                 updates=0; updatetime=0; updatemax=0;
                 return stats;
