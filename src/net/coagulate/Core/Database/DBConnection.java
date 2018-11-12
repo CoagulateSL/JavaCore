@@ -44,7 +44,11 @@ public abstract class DBConnection {
         if (!accumulatestats) { throw new IllegalStateException("Stats are disabled"); }
         synchronized(querylock) {
             synchronized(updatelock) {
-                DBStats stats=new DBStats(queries,querytime/((float)queries),querymax,updates,updatetime/((float)updates),updatemax);
+                float queriesaverage=0;
+                if (queries>0) { queriesaverage=querytime/((float)queries); }
+                float updateaverage=0;
+                if (updates>0) { updateaverage=updatetime/((float)updates); }
+                DBStats stats=new DBStats(queries,queriesaverage,querymax,updates,updateaverage,updatemax);
                 queries=0; querytime=0; querymax=0;
                 updates=0; updatetime=0; updatemax=0;
                 return stats;
