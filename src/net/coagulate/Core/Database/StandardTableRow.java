@@ -11,5 +11,4 @@ public abstract class StandardTableRow extends TableRow {
     @Override
     public String getIdColumn() { return "id"; }
 
-    
 }

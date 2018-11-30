@@ -15,18 +15,18 @@ public abstract class TableRow extends Table {
     int id;
     public TableRow(int id) { this.id=id; }
     
-    protected String getString(String column) { return dqs(true,"select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId()); }
-    protected Integer getInt(String column) { return dqi(true,"select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId()); }
-    protected Long getLong(String column) { return dql(true,"select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId()); }
-    protected boolean getBool(String columnname) {
+    public String getString(String column) { return dqs(true,"select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId()); }
+    public Integer getInt(String column) { return dqi(true,"select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId()); }
+    public Long getLong(String column) { return dql(true,"select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId()); }
+    public boolean getBool(String columnname) {
         Integer val=getInt(columnname);
         if (val==null || val==0) { return false; }
         if (val==1) { return true; }
         throw new DBException("Unexpected value "+val+" parsing DB boolean field selfmodify on attribute "+this);
     }    
-    protected void set(String columnname,Boolean value) { set(columnname,(value?1:0)); }
-    protected void set(String columnname,String value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
-    protected void set(String columnname,Integer value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
+    public void set(String columnname,Boolean value) { set(columnname,(value?1:0)); }
+    public void set(String columnname,String value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
+    public void set(String columnname,Integer value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
     
     // we use a factory style design to make sure that the same object is always returned
     // this is where we store our factory data, indexed by Type (string), ID (int) and then the DBObject subclass
