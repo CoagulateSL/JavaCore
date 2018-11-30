@@ -115,6 +115,10 @@ public abstract class DBConnection {
                     if (p instanceof NullInteger) {
                         ps.setNull(i,Types.INTEGER); parsed=true;
                     }
+                    if (p instanceof Float)
+                    {
+                        ps.setFloat(i,(Float)p); parsed=true;
+                    }
                     if (p instanceof Boolean) { ps.setBoolean(i,(Boolean)p); parsed=true; }
                     if (p instanceof Long) { ps.setLong(i, (Long)p); parsed=true; }
                     if (p==null) { ps.setNull(i,Types.VARCHAR); parsed=true; }
