@@ -204,7 +204,20 @@ public abstract class DBConnection {
      * @param parameterisedcommand SQL query
      * @param params SQL arguments.
      */
-    public void d(String parameterisedcommand,Object... params)
+    public void d(String parameterisedcommand,Object... params) {
+        int tries=3;
+        while (tries>0) {
+            try {
+                _d(parameterisedcommand,params);
+                return;
+            }
+            catch (LockException e) {
+                tries--;
+                if (tries==0) { throw e; }
+            }
+        }
+    }
+    public void _d(String parameterisedcommand,Object... params)
     {
         if (logsql) {
             if (sqllog.containsKey(parameterisedcommand)) {
