@@ -305,6 +305,11 @@ public abstract class DBConnection {
         if (row==null) { return null; }
         return row.getInt();
     }
+    public Float dqf(boolean mandatory,String sql,Object... params) {
+        ResultsRow row=dqone(mandatory,sql,params);
+        if (row==null) { return null; }
+        return row.getFloat();
+    }
     public Long dql(boolean mandatory,String sql,Object... params) {
         ResultsRow row=dqone(mandatory,sql,params);
         if (row==null) { return null; }
