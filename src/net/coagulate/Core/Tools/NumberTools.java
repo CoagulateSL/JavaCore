@@ -7,10 +7,10 @@ package net.coagulate.Core.Tools;
 public class NumberTools {
     private static final boolean debug=true;
     public static String fixdp(float number, int dp) {
-        if (debug) { System.out.println("SRC "+number); }
+        if (debug) { System.out.println("SRC "+number+" for dp "+dp); }
         int whole=(int) Math.round(Math.floor(number));
         if (debug) { System.out.println("whole:"+whole); }
-        int decimal=Math.round((number-whole)*((float)(10^dp)));
+        int decimal=Math.round((number-((float)whole))*((float)(10^dp)));
         if (debug) { System.out.println("dec:"+decimal); }
         String decstr=decimal+"";
         if (debug) { System.out.println("decstr:"+decstr); }
