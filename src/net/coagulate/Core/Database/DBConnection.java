@@ -171,11 +171,14 @@ public abstract class DBConnection {
                     sqllogsum.put(parameterisedcommand,diff);
                 }
             }
-            if (accumulatestats) {
-                synchronized(querylock) {
-                    queries++;
-                    querytime+=(diff);
-                    if (querymax<diff) { querymax=diff; }
+            if (!slowquery) { 
+                // these just horribly skew the average/sd etc... but they're still logged in the logsql above so smiley face
+                if (accumulatestats) {
+                    synchronized(querylock) {
+                        queries++;
+                        querytime+=(diff);
+                        if (querymax<diff) { querymax=diff; }
+                    }
                 }
             }
             Results results=new Results(rs);
