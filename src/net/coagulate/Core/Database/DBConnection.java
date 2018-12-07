@@ -138,7 +138,14 @@ public abstract class DBConnection {
      * @param params SQL parameters
      * @return Results (Set of Rows)
      */
-    public Results dq(String parameterisedcommand,Object... params)
+    public Results dq(String parameterisedcommand,Object... params) {
+        return _dq(false,parameterisedcommand,params);
+    }
+    public Results dqSlow(String parameterisedcommand,Object... params) {
+        return _dq(true,parameterisedcommand,params);
+    }
+            
+    public Results _dq(boolean slowquery,String parameterisedcommand,Object... params)
     {
         if (logsql) {
             if (sqllog.containsKey(parameterisedcommand)) {
@@ -155,7 +162,8 @@ public abstract class DBConnection {
             rs=stm.executeQuery();
             long end=new Date().getTime();
             long diff=end-start;
-            if (DB.sqldebug_queries || (diff)>=DB.SLOWQUERYTHRESHOLD_QUERY) { logger.config("SQL ["+formatCaller()+"]:"+(diff)+"ms "+stm.toString()); }
+            // slow query mode turns off debug warnings about it being a slow query =)
+            if (!slowquery && (DB.sqldebug_queries || (diff)>=DB.SLOWQUERYTHRESHOLD_QUERY)) { logger.config("SQL ["+formatCaller()+"]:"+(diff)+"ms "+stm.toString()); }
             if (logsql) {
                 if (sqllogsum.containsKey(parameterisedcommand)) {
                     sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(diff));
@@ -187,7 +195,7 @@ public abstract class DBConnection {
         return caller;
     }
     public String formatFrame(int framenumber,String def) {
-        if (Thread.currentThread().getStackTrace().length>framenumber) {
+        if (Thread.currentThread().getStackTrace().length>framenumber) { 
             StackTraceElement element = Thread.currentThread().getStackTrace()[framenumber];
             String caller = element.getClassName()+"."+element.getMethodName();
             if (element.getLineNumber()>=0) { caller=caller+":"+element.getLineNumber(); }
