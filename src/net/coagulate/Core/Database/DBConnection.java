@@ -224,6 +224,7 @@ public abstract class DBConnection {
             }
             catch (LockException e) {
                 tries--;
+                try { Thread.sleep((long)(50.0*Math.random())); } catch (InterruptedException ee) {}
                 if (tries==0) { throw e; }
             }
         }
