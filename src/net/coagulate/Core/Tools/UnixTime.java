@@ -10,6 +10,14 @@ import java.util.TimeZone;
  * @author Iain Price
  */
 public abstract class UnixTime {
+    
+    public static final int SECOND=1;
+    public static final int MINUTE=60*SECOND;
+    public static final int HOUR=60*MINUTE;
+    public static final int DAY=24*HOUR;
+    public static final int WEEK=7*DAY;
+    public static final int MONTH=4*WEEK;
+    public static final int YEAR=365*DAY;
 
     /** Convert a specific date time into unixtime
      *
