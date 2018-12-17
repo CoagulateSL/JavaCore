@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.Manifest;
 import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -149,6 +150,7 @@ public abstract class ClassTools {
         } catch (Throwable e) { // note this is usually bad.  but we can get 'errors' here we dont care about
             if (DEBUG) { System.out.println("FAILED TO ADD "+classname+" because "+e); }
             //Logger.getLogger(ClassTools.class.getCanonicalName()).log(INFO,"Failed to load class "+classname+" : "+e.getLocalizedMessage());
+            Logger.getLogger(ClassTools.class.getCanonicalName()).log(SEVERE,"Failed to load class "+classname,e);
         }
         if (DEBUG) { System.out.println("Post processed "+classname); }
     }
