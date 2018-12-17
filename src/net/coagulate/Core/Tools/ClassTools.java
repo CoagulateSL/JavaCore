@@ -91,9 +91,13 @@ public abstract class ClassTools {
         Set<Class> classes=new HashSet<>(); 
         if (DEBUG) { System.out.println("CLASS PATH IS "+System.getProperty("java.class.path")); }
         for (String element : System.getProperty("java.class.path").split(Pattern.quote(System.getProperty("path.separator")))) {
-            if (DEBUG) { System.out.println("Path element: "+element); }
-            File f=new File(element);
-            inspectFile(f,f,classes);
+            try {
+                if (DEBUG) { System.out.println("Path element: "+element); }
+                File f=new File(element);
+                inspectFile(f,f,classes);
+            } catch (IOException e) {
+                if (DEBUG) { Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING,"Exceptioned loading classpath element "+element+" - "+e.getLocalizedMessage()); }
+            }
         }
         if (DEBUG) { System.out.println("FINAL LIST OF ENUMERATED ACCEPTED CLASSES:"); 
             for (Class c:classes) { System.out.println(c.getCanonicalName()); }
@@ -113,7 +117,8 @@ public abstract class ClassTools {
         if (DEBUG) { System.out.println("Dir recurse in "+directory.getAbsolutePath()+" base "+base.getAbsolutePath()); }
         File[] content=directory.listFiles();
         for (File f:content) {
-            inspectFile(f,base,classes);
+            try { inspectFile(f,base,classes); }
+            catch (IOException e) { if (DEBUG) { Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING,"Exceptioned recursing "+f+" - "+e.getLocalizedMessage()); } }
         }
     }
     
