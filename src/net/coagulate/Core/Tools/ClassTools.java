@@ -137,12 +137,17 @@ public abstract class ClassTools {
             classname+=element;
         }
         totalclasses++;
-        if (!classname.startsWith("net.coagulate.")) { return; }
+        if (!classname.startsWith("net.coagulate.")) {
+            if (DEBUG) { System.out.println("Drop "+classname+" due to prefix failure"); }
+            return;
+        }
         // examine named class and instansiate if appropriate.
         try {
             Class c=Class.forName(classname);
             classes.add(c);
+            if (DEBUG) { System.out.println("ADDED "+classname); }
         } catch (Throwable e) { // note this is usually bad.  but we can get 'errors' here we dont care about
+            if (DEBUG) { System.out.println("FAILED TO ADD "+classname+" because "+e); }
             //Logger.getLogger(ClassTools.class.getCanonicalName()).log(INFO,"Failed to load class "+classname+" : "+e.getLocalizedMessage());
         }
     }
