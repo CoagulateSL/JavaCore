@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.Manifest;
 import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import java.util.logging.Logger;
@@ -157,6 +158,7 @@ public abstract class ClassTools {
 
     private static void recurseJar(File f, Set<Class> classes) throws IOException {
         if (DEBUG) { System.out.println("JAR recurse in "+f.getAbsolutePath()); }
+        if (!f.canRead()) { Logger.getLogger(ClassTools.class.getCanonicalName()).log(INFO,"Unreadable file accessed during class scanning:"+f.getAbsolutePath()); return; }
         ZipInputStream zip = new ZipInputStream(new FileInputStream(f.getAbsolutePath()));
         for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
             if (!entry.isDirectory() && entry.getName().endsWith(".class")) {
