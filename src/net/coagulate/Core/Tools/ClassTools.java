@@ -150,6 +150,7 @@ public abstract class ClassTools {
             if (DEBUG) { System.out.println("FAILED TO ADD "+classname+" because "+e); }
             //Logger.getLogger(ClassTools.class.getCanonicalName()).log(INFO,"Failed to load class "+classname+" : "+e.getLocalizedMessage());
         }
+        if (DEBUG) { System.out.println("Post processed "+classname); }
     }
 
     private static void recurseJar(File f, Set<Class> classes) throws IOException {
