@@ -52,7 +52,7 @@ public class LogHandler extends Handler {
             //if (!thrown instanceof UserException) {
                 System.out.println(ExceptionTools.toString(thrown));
             try {
-                MailTools.mail(mailprefix+" {log} "+thrown.getLocalizedMessage(),ExceptionTools.toHTML(thrown));
+                MailTools.mail(mailprefix+" {log} "+message+" - "+thrown.getLocalizedMessage(),ExceptionTools.toHTML(thrown));
             } catch (MessagingException ex) {
                 System.out.println("EXCEPTION IN EXCEPTION MAILER");
                 System.out.println("EXCEPTION IN EXCEPTION MAILER");
