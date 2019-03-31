@@ -57,9 +57,18 @@ public abstract class DBConnection {
     Map<String,Integer> sqllog=new HashMap<>();
     Map<String,Long> sqllogsum=new HashMap<>();
     
-    public void getSqlLogs(Map<String,Integer> count,Map<String,Long> runtime) throws UserException {
+    public void getSqlLogs(Map<String,Integer> count,Map<String,Long> runtime,Map<String,Double> per) throws UserException {
         if (!logsql) { throw new UserException("SQL Auditing is not enabled"); }
         count.putAll(sqllog); runtime.putAll(sqllogsum);
+        for (String statement:sqllog.keySet()) {
+            Integer c=sqllog.get(statement);
+            Long runfor=runtime.get(statement);
+            if (c==null || runfor==null || c==0) {
+                per.put(statement,0d); // explicitly a double.  even though it can be infered, and is.  "wah wah this is an int not a double"...  it's both! :P
+            } else {
+                per.put(statement,((double)runfor)/((double)c)); /// :P
+            }
+        }
     }
 
     public abstract void shutdown();
@@ -78,7 +87,7 @@ public abstract class DBConnection {
     
     public boolean test() {
         try {
-            int result=dqi(true,"select count(*) from ping");
+            int result=dqi(true,"select 1");
             if (result!=1) { throw new DBException("Select count(*) from ping returned not 1 ("+result+")"); }
             return true;
         }
