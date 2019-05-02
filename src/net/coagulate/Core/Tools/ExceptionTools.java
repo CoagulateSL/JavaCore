@@ -26,4 +26,5 @@ public abstract class ExceptionTools {
         return p;
     }   
     public static String toHTML(Throwable e) { return dumpException(e); }
+
 }

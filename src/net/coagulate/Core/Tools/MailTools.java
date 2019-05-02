@@ -1,12 +1,12 @@
 package net.coagulate.Core.Tools;
 
-import java.util.Date;
-import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  *
@@ -44,5 +44,5 @@ public abstract class MailTools {
         if (defaulttoname==null || defaulttoaddress==null) { throw new SystemException("Mail called without default to address configured"); }
         mail(defaulttoname,defaulttoaddress,subject,body);
     }
-    
+
 }

@@ -1,11 +1,9 @@
 package net.coagulate.Core.Tools;
 
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 import javax.mail.MessagingException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.*;
 
 /**
  *
@@ -13,6 +11,7 @@ import javax.mail.MessagingException;
  */
 public class LogHandler extends Handler {
 
+    private static Set<Throwable> alreadymailed=new HashSet<>(); //may eventually overflow, if we spam exceptions :P
     public static String mailprefix="[UNKNOWN]";
     public static final void initialise() {
         LogManager.getLogManager().reset();
@@ -52,7 +51,8 @@ public class LogHandler extends Handler {
             //if (!thrown instanceof UserException) {
                 System.out.println(ExceptionTools.toString(thrown));
             try {
-                MailTools.mail(mailprefix+" {log} "+message+" - "+thrown.getLocalizedMessage(),ExceptionTools.toHTML(thrown));
+                if (alreadymailed.contains(thrown)) { alreadymailed.remove(thrown); }
+                else { MailTools.mail(mailprefix+" {LOG FALLTHROUGH} "+message+" - "+thrown.getLocalizedMessage(),ExceptionTools.toHTML(thrown)); }
             } catch (MessagingException ex) {
                 System.out.println("EXCEPTION IN EXCEPTION MAILER");
                 System.out.println("EXCEPTION IN EXCEPTION MAILER");
@@ -83,4 +83,6 @@ public class LogHandler extends Handler {
         return "????";
     }
     String postpad(String in,int len) { while (in.length()<len) { in=in+" "; } return in; }
+
+    public static void alreadyMailed(Throwable t) { alreadymailed.add(t); }
 }
