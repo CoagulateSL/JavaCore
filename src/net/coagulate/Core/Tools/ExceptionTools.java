@@ -11,7 +11,7 @@ public abstract class ExceptionTools {
         p=p+"<h3>"+e.getClass().getName()+" - "+e.getLocalizedMessage()+"</h3>";
         for (StackTraceElement st:e.getStackTrace()) {
             p+="<pre>";
-            p+=st.getClassName()+"."+st.getMethodName()+":"+st.getLineNumber();
+            p+=" at "+st.getClassName()+"."+st.getMethodName()+"("+st.getFileName()+":"+st.getLineNumber()+")";
             p+="</pre>";
         }
         return p;
