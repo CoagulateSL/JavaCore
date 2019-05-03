@@ -26,7 +26,6 @@ public abstract class ClassTools {
 	private static Set<Class> classmap = null;
 	private static int totalclasses = 0;
 
-	@SuppressWarnings("unchecked")
 	public static Set<Class> getAnnotatedClasses(Class<? extends Annotation> annotation) {
 		Set<Class> classes = new HashSet<>();
 		for (Class c : classmap) {
