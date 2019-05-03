@@ -177,7 +177,7 @@ public abstract class Passwords {
 	}
 
 	@SuppressWarnings("serial")
-	static public class InvalidHashException extends Exception {
+	public static class InvalidHashException extends Exception {
 		public InvalidHashException(String message) {
 			super(message);
 		}
@@ -188,7 +188,7 @@ public abstract class Passwords {
 	}
 
 	@SuppressWarnings("serial")
-	static public class CannotPerformOperationException extends Exception {
+	public static class CannotPerformOperationException extends Exception {
 		public CannotPerformOperationException(String message) {
 			super(message);
 		}
