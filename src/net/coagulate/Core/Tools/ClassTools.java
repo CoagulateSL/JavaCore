@@ -83,7 +83,7 @@ public abstract class ClassTools {
 		return classmap;
 	}
 
-	public static Set<Class> enumerateClasses() throws IOException {
+	public static Set<Class> enumerateClasses() {
 		Set<Class> classes = new HashSet<>();
 		if (DEBUG) { System.out.println("CLASS PATH IS " + System.getProperty("java.class.path")); }
 		for (String element : System.getProperty("java.class.path").split(Pattern.quote(System.getProperty("path.separator")))) {
@@ -122,7 +122,7 @@ public abstract class ClassTools {
 	}
 
 	// takes a given location (classpath element or discovered) and iterates (recursively for directories) over its contents, extracting the class name and examining that
-	private static void recurse(File directory, File base, Set<Class> classes) throws IOException {
+	private static void recurse(File directory, File base, Set<Class> classes) {
 		if (DEBUG) {
 			System.out.println("Dir recurse in " + directory.getAbsolutePath() + " base " + base.getAbsolutePath());
 		}
@@ -136,7 +136,7 @@ public abstract class ClassTools {
 		}
 	}
 
-	private static void recurseClass(String fullname, Set<Class> classes) throws IOException {
+	private static void recurseClass(String fullname, Set<Class> classes) {
 		if (DEBUG) { System.out.println("Class consider " + fullname); }
 		fullname = fullname.replaceAll("\\.class$", "");
 		String relativename = "";
