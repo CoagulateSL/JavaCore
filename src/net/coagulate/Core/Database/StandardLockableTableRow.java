@@ -32,8 +32,6 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 	 * LOCKS LAST NO MORE THAN 30 SECONDS! then they're assumed expired.  Be quick.
 	 * Remember to unlock, don't just let it expire, thats antisocial.
 	 *
-	 * @param tablename Table name to lock
-	 * @param id        ID number for the row to lock
 	 * @return The serial for the lock
 	 */
 	public int lock(int lockdurationseconds) {
@@ -86,8 +84,6 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 	/**
 	 * You must supply the serial you locked with.  Unlocking without the right serial is an Exception.
 	 *
-	 * @param tablename Table name
-	 * @param id        ResultsRow id number to unlock
 	 * @param serial    Current/valid serial number for the lock
 	 */
 	public void unlock(int serial) {
