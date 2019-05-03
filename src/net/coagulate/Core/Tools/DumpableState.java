@@ -8,53 +8,52 @@ import java.util.TreeMap;
 public class DumpableState {
 
 
-
-
-    public String toHTML() {
-        String ret="<table>";
-        for (Field f:this.getClass().getDeclaredFields()) {
-            ret+="<tr><th valign=top>"+f.getName()+"</th><td valign=top>";
-            try {
+	public String toHTML() {
+		String ret = "<table>";
+		for (Field f : this.getClass().getDeclaredFields()) {
+			ret += "<tr><th valign=top>" + f.getName() + "</th><td valign=top>";
+			try {
                 /*if (!f.canAccess(this)) {
                     f.setAccessible(true);
                 }*/
-                f.setAccessible(true);
-                Object content=f.get(this);
-                ret+=toHTML(content);
-            } catch (IllegalArgumentException ex) {
-                ret+="IllegalArgument";
-            } catch (IllegalAccessException ex) {
-                ret+="IllegalAccess";
-            }
-            ret+="</td></tr>";
-        }
-        ret+="</table>";
-        return ret;
-    }
+				f.setAccessible(true);
+				Object content = f.get(this);
+				ret += toHTML(content);
+			} catch (IllegalArgumentException ex) {
+				ret += "IllegalArgument";
+			} catch (IllegalAccessException ex) {
+				ret += "IllegalAccess";
+			}
+			ret += "</td></tr>";
+		}
+		ret += "</table>";
+		return ret;
+	}
 
-    private String toHTML(Object o) {
-        if (o==null) { return "</td><td valign=top><i>NULL</i>"; }
-        String ret=o.getClass().getSimpleName()+"</td><td valign=top>";
-        boolean handled=false;
-        if (o instanceof Header[]) {
-            ret+="<table>"; handled=true;
-            for (Header h:((Header[])o)) {
-                ret+="<tr><td valign=top>"+h.getName()+"</td><td valign=top>"+h.getValue()+"</td></tr>";
-            }
-            ret+="</table>";
-        }
-        if (o instanceof TreeMap) {
-            handled=true;
-            ret+="<table border=1>";
-            TreeMap map=(TreeMap)o;
-            for (Object oo:map.keySet()) {
-                ret+="<tr><td valign=top>"+toHTML(oo)+"</td>";
-                ret+="<td valign=top>"+toHTML(map.get(oo))+"</td></tr>";
-            }
-            ret+="</table>";
-        }
-        if (!handled) { ret+=o.toString(); }
-        return ret;
-    }
+	private String toHTML(Object o) {
+		if (o == null) { return "</td><td valign=top><i>NULL</i>"; }
+		String ret = o.getClass().getSimpleName() + "</td><td valign=top>";
+		boolean handled = false;
+		if (o instanceof Header[]) {
+			ret += "<table>";
+			handled = true;
+			for (Header h : ((Header[]) o)) {
+				ret += "<tr><td valign=top>" + h.getName() + "</td><td valign=top>" + h.getValue() + "</td></tr>";
+			}
+			ret += "</table>";
+		}
+		if (o instanceof TreeMap) {
+			handled = true;
+			ret += "<table border=1>";
+			TreeMap map = (TreeMap) o;
+			for (Object oo : map.keySet()) {
+				ret += "<tr><td valign=top>" + toHTML(oo) + "</td>";
+				ret += "<td valign=top>" + toHTML(map.get(oo)) + "</td></tr>";
+			}
+			ret += "</table>";
+		}
+		if (!handled) { ret += o.toString(); }
+		return ret;
+	}
 
 }
