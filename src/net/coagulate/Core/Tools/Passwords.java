@@ -74,7 +74,7 @@ public abstract class Passwords {
 		}
 
 		// Currently, Java only supports SHA1.
-		if (!params[HASH_ALGORITHM_INDEX].equals("sha1")) {
+		if (!"sha1".equals(params[HASH_ALGORITHM_INDEX])) {
 			throw new CannotPerformOperationException(
 					"Unsupported hash type."
 			);

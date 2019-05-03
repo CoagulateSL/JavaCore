@@ -68,7 +68,7 @@ public class ResultsRow {
 	public String toString() {
 		String output = "[";
 		for (String k : keySet()) {
-			if (!output.equals("[")) { output = output + ", "; }
+			if (!"[".equals(output)) { output = output + ", "; }
 			output = output + k + "=" + getString(k);
 		}
 		output += "]";

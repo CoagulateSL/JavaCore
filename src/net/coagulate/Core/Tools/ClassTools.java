@@ -140,12 +140,12 @@ public abstract class ClassTools {
 		fullname = fullname.replaceAll("\\.class$", "");
 		String relativename = "";
 		for (String element : fullname.split(Pattern.quote("\\"))) {
-			if (!relativename.equals("")) { relativename += "."; }
+			if (!"".equals(relativename)) { relativename += "."; }
 			relativename += element;
 		}
 		String classname = "";
 		for (String element : relativename.split(Pattern.quote("/"))) {
-			if (!classname.equals("")) { classname += "."; }
+			if (!"".equals(classname)) { classname += "."; }
 			classname += element;
 		}
 		totalclasses++;
@@ -179,7 +179,7 @@ public abstract class ClassTools {
 				String classname = entry.getName();
 				recurseClass(classname, classes);
 			}
-			if (entry.getName().equals("META-INF/MANIFEST.MF")) {
+			if ("META-INF/MANIFEST.MF".equals(entry.getName())) {
 				if (DEBUG) { System.out.println("WE HAVE A MANIFEST!!!!"); }
 				Manifest manifest = new Manifest(zip);
 				if (manifest.getMainAttributes().getValue("Class-Path") != null) {
