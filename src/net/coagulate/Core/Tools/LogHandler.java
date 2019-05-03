@@ -18,7 +18,7 @@ public class LogHandler extends Handler {
 		setLevel(Level.ALL);
 	}
 
-	public static final void initialise() {
+	public static void initialise() {
 		LogManager.getLogManager().reset();
 		Logger.getLogger("").setLevel(Level.ALL);
 		Logger.getLogger("").addHandler(new LogHandler());
