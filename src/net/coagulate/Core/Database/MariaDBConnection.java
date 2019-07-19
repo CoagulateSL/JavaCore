@@ -14,7 +14,7 @@ import static java.util.logging.Level.SEVERE;
  * @author Iain Price
  */
 public class MariaDBConnection extends DBConnection {
-	private static final boolean TABLECOUNT = false;
+	private static final boolean TABLECOUNT = true;
 	private MariaDbPoolDataSource pool;
 
 	public MariaDBConnection(String sourcename, String host, String username, String password, String dbname) {
