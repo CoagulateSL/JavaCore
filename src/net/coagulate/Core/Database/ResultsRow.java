@@ -38,6 +38,10 @@ public class ResultsRow {
 		if (result == null) { return null; }
 		return Integer.parseInt(result);
 	}
+	public Boolean getBool(String s) {
+		if (getString(s)==null) { return null; }
+		if (getString(s).equals("1")) { return true; } return false;
+	}
 
 	public float getFloat(String s) { return Float.parseFloat(getString(s)); }
 
@@ -45,6 +49,11 @@ public class ResultsRow {
 		if (row.size() != 1) { throw new DBException("Column count !=1 - " + row.size()); }
 		for (String s : row.keySet()) { return row.get(s); }
 		return null;
+	}
+
+	public Boolean getBool() {
+		if (getString()==null) { return null; }
+		if (getString().equals("1")) { return true; } return false;
 	}
 
 	public Integer getInt() {
