@@ -51,4 +51,12 @@ public abstract class MailTools {
 		mail(defaulttoname, defaulttoaddress, subject, body);
 	}
 
+	public static void logTrace(String subject,String intro) {
+		String body=intro+"\n<br>\n";
+		for (StackTraceElement ele:Thread.currentThread().getStackTrace()) {
+			body+="Caller: "+ele.getClassName()+"/"+ele.getMethodName()+":"+ele.getLineNumber()+"\n<br>\n";
+		}
+		try { MailTools.mail("Trace: "+subject, body); } catch (MessagingException ee){}
+	}
+
 }
