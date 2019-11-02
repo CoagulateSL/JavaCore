@@ -387,6 +387,12 @@ public abstract class DBConnection {
 		return row.getString();
 	}
 
+	public byte[] dqbyte(boolean mandatory, String sql, Object... params) {
+		ResultsRow row=dqone(mandatory,sql,params);
+		if (row==null) { return null; }
+		return row.getBytes();
+	}
+
 	public class DBStats {
 		public int queries;
 		public long querytotal;

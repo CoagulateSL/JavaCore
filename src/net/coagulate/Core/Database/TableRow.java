@@ -71,5 +71,7 @@ public abstract class TableRow extends Table {
 
 	public void set(String columnname, Integer value) { d("update " + getTableName() + " set " + columnname + "=? where " + getIdColumn() + "=?", value, getId()); }
 
-
+	public byte[] getBytes(String columnname) {
+		return dqbyte(true,"select "+columnname+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
+	}
 }

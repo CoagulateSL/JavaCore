@@ -5,7 +5,7 @@ import org.apache.http.Header;
 import java.lang.reflect.Field;
 import java.util.TreeMap;
 
-public class DumpableState {
+public abstract class DumpableState {
 
 
 	public String toHTML() {
@@ -27,8 +27,11 @@ public class DumpableState {
 			ret += "</td></tr>";
 		}
 		ret += "</table>";
+		ret+=dumpAdditionalStateToHtml();
 		return ret;
 	}
+
+	protected abstract String dumpAdditionalStateToHtml();
 
 	private String toHTML(Object o) {
 		if (o == null) { return "</td><td valign=top><i>NULL</i>"; }

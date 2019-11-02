@@ -15,7 +15,7 @@ import java.util.TreeMap;
 
 public class ResultsRow {
 	private final Map<String, String> row = new TreeMap<>();
-
+	private final Map<String,byte[]> byteform=new TreeMap<>();
 	/** Construct the frow from a resultset.
 	 *
 	 * @param rs Resultset to read the row from
@@ -24,6 +24,7 @@ public class ResultsRow {
 		try {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+				byteform.put(rsmd.getColumnName(i),rs.getBytes(i));
 				row.put(rsmd.getColumnName(i), rs.getString(i));
 			}
 		} catch (SQLException ex) {
@@ -83,4 +84,12 @@ public class ResultsRow {
 		output += "]";
 		return output;
 	}
+
+	public byte[] getBytes() {
+		if (byteform.size() != 1) { throw new DBException("Column count !=1 - " + byteform.size()); }
+		for (String s : byteform.keySet()) { return byteform.get(s); }
+		return null;
+	}
+
+	public byte[] getBytes(String s) { return byteform.get(s); }
 }

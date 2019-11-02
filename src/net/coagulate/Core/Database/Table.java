@@ -25,4 +25,6 @@ public abstract class Table {
 	public final Long dql(boolean mandatory, String sql, Object... params) { return getDatabase().dql(mandatory, sql, params); }
 
 	public final String dqs(boolean mandatory, String sql, Object... params) { return getDatabase().dqs(mandatory, sql, params); }
+
+	public final byte[] dqbyte(boolean mandatory,String sql,Object... params) { return getDatabase().dqbyte(mandatory,sql,params); }
 }
