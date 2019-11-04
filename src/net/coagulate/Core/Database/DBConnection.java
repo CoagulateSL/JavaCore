@@ -108,6 +108,10 @@ public abstract class DBConnection {
 						parsed = true;
 					}
 				}
+				if (p instanceof byte[]) {
+					ps.setBytes(i,(byte[])p);
+					parsed=true;
+				}
 				if (p instanceof Byte[]) {
 					Byte[] in=(Byte[])p;
 					byte[] out=new byte[in.length];
