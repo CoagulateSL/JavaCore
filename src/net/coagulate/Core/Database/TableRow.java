@@ -53,6 +53,8 @@ public abstract class TableRow extends Table {
 
 	public Integer getInt(String column) { return dqi(true, "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
+	public Float getFloat(String column) { return dqf(true, "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+
 	public Long getLong(String column) { return dql(true, "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
 	public boolean getBool(String columnname) {

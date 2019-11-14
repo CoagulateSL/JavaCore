@@ -22,6 +22,8 @@ public abstract class Table {
 
 	public final Integer dqi(boolean mandatory, String sql, Object... params) { return getDatabase().dqi(mandatory, sql, params); }
 
+	public final Float dqf(boolean mandatory, String sql, Object... params) { return getDatabase().dqf(mandatory, sql, params); }
+
 	public final Long dql(boolean mandatory, String sql, Object... params) { return getDatabase().dql(mandatory, sql, params); }
 
 	public final String dqs(boolean mandatory, String sql, Object... params) { return getDatabase().dqs(mandatory, sql, params); }
