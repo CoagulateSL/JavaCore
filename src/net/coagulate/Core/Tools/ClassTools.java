@@ -23,12 +23,12 @@ public abstract class ClassTools {
 	private static final boolean DEBUG = false;
 	private static final Object initlock = new Object();
 	private static boolean initialised = false;
-	private static Set<Class> classmap = null;
+	private static Set<Class<? extends Object>> classmap = null;
 	private static int totalclasses = 0;
 
-	public static Set<Class> getAnnotatedClasses(Class<? extends Annotation> annotation) {
-		Set<Class> classes = new HashSet<>();
-		for (Class c : classmap) {
+	public static Set<Class<? extends Object>> getAnnotatedClasses(Class<? extends Annotation> annotation) {
+		Set<Class<? extends Object>> classes = new HashSet<>();
+		for (Class<? extends Object> c : classmap) {
 			if (c.isAnnotationPresent(annotation)) { classes.add(c); }
 		}
 		return classes;
@@ -36,7 +36,7 @@ public abstract class ClassTools {
 
 	public static Set<Method> getAnnotatedMethods(Class<? extends Annotation> annotation) {
 		Set<Method> methods = new HashSet<>();
-		for (Class c : classmap) {
+		for (Class<? extends Object> c : classmap) {
 			for (Method m : c.getMethods()) {
 				if (m.isAnnotationPresent(annotation)) { methods.add(m); }
 			}
@@ -45,11 +45,11 @@ public abstract class ClassTools {
 	}
 
 
-	public static Set<Constructor> getAnnotatedConstructors(Class<? extends Annotation> annotation) {
-		Set<Constructor> constructors = new HashSet<>();
-		for (Class c : classmap) {
+	public static Set<Constructor<? extends Object>> getAnnotatedConstructors(Class<? extends Annotation> annotation) {
+		Set<Constructor<? extends Object>> constructors = new HashSet<>();
+		for (Class<? extends Object> c : classmap) {
 			try {
-				Constructor cons = c.getConstructor(new Class[0]);
+				Constructor<? extends Object> cons = c.getConstructor();
 				if (cons.isAnnotationPresent(annotation)) { constructors.add(cons); }
 			} catch (NoSuchMethodException | SecurityException ex) {
 				// no such method - this is fine, many classes wont have a zero param constructor =)
@@ -76,14 +76,14 @@ public abstract class ClassTools {
 		}
 	}
 
-	public static Set<Class> getClasses() {
+	public static Set<Class<? extends Object>> getClasses() {
 		if (initialised()) { return classmap; }
 		initialise();
 		return classmap;
 	}
 
-	public static Set<Class> enumerateClasses() {
-		Set<Class> classes = new HashSet<>();
+	public static Set<Class<? extends Object>> enumerateClasses() {
+		Set<Class<? extends Object>> classes = new HashSet<>();
 		if (DEBUG) { System.out.println("CLASS PATH IS " + System.getProperty("java.class.path")); }
 		for (String element : System.getProperty("java.class.path").split(Pattern.quote(System.getProperty("path.separator")))) {
 			try {
@@ -98,12 +98,12 @@ public abstract class ClassTools {
 		}
 		if (DEBUG) {
 			System.out.println("FINAL LIST OF ENUMERATED ACCEPTED CLASSES:");
-			for (Class c : classes) { System.out.println(c.getCanonicalName()); }
+			for (Class<? extends Object> c : classes) { System.out.println(c.getCanonicalName()); }
 		}
 		return classes;
 	}
 
-	private static void inspectFile(File f, File base, Set<Class> classes) throws IOException {
+	private static void inspectFile(File f, File base, Set<Class<? extends Object>> classes) throws IOException {
 		if (DEBUG) { System.out.println("Inspecting file " + f + " in base " + base); }
 		if (f.isDirectory()) {
 			recurse(f, base, classes);
@@ -121,7 +121,7 @@ public abstract class ClassTools {
 	}
 
 	// takes a given location (classpath element or discovered) and iterates (recursively for directories) over its contents, extracting the class name and examining that
-	private static void recurse(File directory, File base, Set<Class> classes) {
+	private static void recurse(File directory, File base, Set<Class<? extends Object>> classes) {
 		if (DEBUG) {
 			System.out.println("Dir recurse in " + directory.getAbsolutePath() + " base " + base.getAbsolutePath());
 		}
@@ -135,7 +135,7 @@ public abstract class ClassTools {
 		}
 	}
 
-	private static void recurseClass(String fullname, Set<Class> classes) {
+	private static void recurseClass(String fullname, Set<Class <? extends Object>> classes) {
 		if (DEBUG) { System.out.println("Class consider " + fullname); }
 		fullname = fullname.replaceAll("\\.class$", "");
 		String relativename = "";
@@ -155,7 +155,7 @@ public abstract class ClassTools {
 		}
 		// examine named class and instansiate if appropriate.
 		try {
-			Class c = Class.forName(classname);
+			Class<? extends Object> c = Class.forName(classname);
 			classes.add(c);
 			if (DEBUG) { System.out.println("ADDED " + classname); }
 		} catch (Throwable e) { // note this is usually bad.  but we can get 'errors' here we dont care about
@@ -166,7 +166,7 @@ public abstract class ClassTools {
 		if (DEBUG) { System.out.println("Post processed " + classname); }
 	}
 
-	private static void recurseJar(File f, Set<Class> classes) throws IOException {
+	private static void recurseJar(File f, Set<Class<? extends Object>> classes) throws IOException {
 		if (DEBUG) { System.out.println("JAR recurse in " + f.getAbsolutePath()); }
 		if (!f.canRead()) {
 			Logger.getLogger(ClassTools.class.getCanonicalName()).log(INFO, "Unreadable file accessed during class scanning:" + f.getAbsolutePath());

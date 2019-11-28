@@ -48,7 +48,7 @@ public abstract class DumpableState {
 		if (o instanceof TreeMap) {
 			handled = true;
 			ret += "<table border=1>";
-			TreeMap map = (TreeMap) o;
+			@SuppressWarnings("unchecked") TreeMap<Object, Object> map = (TreeMap<Object, Object>) o;
 			for (Object oo : map.keySet()) {
 				ret += "<tr><td valign=top>" + toHTML(oo) + "</td>";
 				ret += "<td valign=top>" + toHTML(map.get(oo)) + "</td></tr>";

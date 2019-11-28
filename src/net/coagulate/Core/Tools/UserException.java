@@ -7,6 +7,7 @@ package net.coagulate.Core.Tools;
  * @author Iain Price
  */
 public class UserException extends RuntimeException {
+	private static final long serialVersionUID=1L;
 	public UserException(String reason) { super(reason); }
 
 	public UserException(String reason, Throwable cause) { super(reason, cause); }

@@ -40,7 +40,7 @@ public class Results implements Iterable<ResultsRow> {
 	 * @return Iterator over the rows of the Results
 	 */
 	@Override
-	public Iterator<ResultsRow> iterator() { return (Iterator<ResultsRow>) (data.iterator()); }
+	public Iterator<ResultsRow> iterator() { return data.iterator(); }
 
 	/** Size of results
 	 *
