@@ -8,6 +8,8 @@ package net.coagulate.Core.Database;
  * @author Iain Price <gphud@predestined.net>
  */
 
+import org.jetbrains.annotations.NotNull;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -39,6 +41,7 @@ public class Results implements Iterable<ResultsRow> {
 	 *
 	 * @return Iterator over the rows of the Results
 	 */
+	@NotNull
 	@Override
 	public Iterator<ResultsRow> iterator() { return data.iterator(); }
 

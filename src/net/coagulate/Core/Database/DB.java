@@ -54,7 +54,7 @@ public abstract class DB {
 		for (String source : names) {
 			// Logger.getLogger(DB.class.getName()).config("Closing database connection "+source); // logged by shutdown method
 			datasources.get(source).shutdown();
-			datasources.remove(names);
+			datasources.remove(source);
 		}
 	}
 
