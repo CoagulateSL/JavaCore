@@ -3,6 +3,7 @@ package net.coagulate.Core.Tools;
 import org.apache.http.Header;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.TreeMap;
 
 public abstract class DumpableState {
@@ -49,9 +50,9 @@ public abstract class DumpableState {
 			handled = true;
 			ret += "<table border=1>";
 			@SuppressWarnings("unchecked") TreeMap<Object, Object> map = (TreeMap<Object, Object>) o;
-			for (Object oo : map.keySet()) {
-				ret += "<tr><td valign=top>" + toHTML(oo) + "</td>";
-				ret += "<td valign=top>" + toHTML(map.get(oo)) + "</td></tr>";
+			for (Map.Entry<Object, Object> entry : map.entrySet()) {
+				ret += "<tr><td valign=top>" + toHTML(entry.getKey()) + "</td>";
+				ret += "<td valign=top>" + toHTML(entry.getValue()) + "</td></tr>";
 			}
 			ret += "</table>";
 		}

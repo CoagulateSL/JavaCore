@@ -56,8 +56,9 @@ public abstract class DBConnection {
 		if (!logsql) { throw new UserException("SQL Auditing is not enabled"); }
 		count.putAll(sqllog);
 		runtime.putAll(sqllogsum);
-		for (String statement : sqllog.keySet()) {
-			Integer c = sqllog.get(statement);
+		for (Map.Entry<String, Integer> entry : sqllog.entrySet()) {
+			String statement = entry.getKey();
+			Integer c = entry.getValue();
 			Long runfor = runtime.get(statement);
 			if (c == null || runfor == null || c == 0) {
 				per.put(statement, 0d); // explicitly a double.  even though it can be infered, and is.  "wah wah this is an int not a double"...  it's both! :P
