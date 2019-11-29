@@ -118,7 +118,7 @@ public class HTTPSListener {
 	}
 
 	private class ShutdownHook extends Thread {
-		private HTTPSListener target;
+		private final HTTPSListener target;
 
 		public ShutdownHook(HTTPSListener target) { this.target = target; }
 

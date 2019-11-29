@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Results implements Iterable<ResultsRow> {
-	private List<ResultsRow> data = new ArrayList<>();
+	private final List<ResultsRow> data = new ArrayList<>();
 	private String statement = "";
 
 	/** Unpack a resultset into our data structure.

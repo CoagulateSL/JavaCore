@@ -20,9 +20,9 @@ public abstract class DBConnection {
 	private final Object querylock = new Object();
 	private final Object updatelock = new Object();
 	private final String sourcename;
-	Map<String, Integer> sqllog = new HashMap<>();
-	Map<String, Long> sqllogsum = new HashMap<>();
-	Logger logger;
+	final Map<String, Integer> sqllog = new HashMap<>();
+	final Map<String, Long> sqllogsum = new HashMap<>();
+	final Logger logger;
 	private int queries = 0;
 	private long querytime = 0;
 	private long querymax = 0;
@@ -398,12 +398,12 @@ public abstract class DBConnection {
 	}
 
 	public class DBStats {
-		public int queries;
-		public long querytotal;
-		public long querymax;
-		public int updates;
-		public long updatetotal;
-		public long updatemax;
+		public final int queries;
+		public final long querytotal;
+		public final long querymax;
+		public final int updates;
+		public final long updatetotal;
+		public final long updatemax;
 
 		public DBStats(int q, long qt, long qm, int u, long ut, long um) {
 			queries = q;

@@ -11,7 +11,7 @@ import java.util.logging.*;
 public class LogHandler extends Handler {
 
 	public static String mailprefix = "[UNKNOWN]";
-	private static Set<Throwable> alreadymailed = new HashSet<>(); //may eventually overflow, if we spam exceptions :P
+	private static final Set<Throwable> alreadymailed = new HashSet<>(); //may eventually overflow, if we spam exceptions :P
 
 	public LogHandler() {
 		super();
