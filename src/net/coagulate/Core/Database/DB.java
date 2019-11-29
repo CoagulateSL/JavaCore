@@ -46,8 +46,7 @@ public abstract class DB {
 	}
 
 	public static Set<DBConnection> get() {
-		Set<DBConnection> connections = new HashSet<>(datasources.values());
-		return connections;
+		return new HashSet<>(datasources.values());
 	}
 
 	public static void shutdown() {
