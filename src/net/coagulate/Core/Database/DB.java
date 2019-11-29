@@ -50,8 +50,7 @@ public abstract class DB {
 	}
 
 	public static void shutdown() {
-		Set<String> names = new HashSet<>();
-		names.addAll(datasources.keySet());
+		Set<String> names = new HashSet<>(datasources.keySet());
 		for (String source : names) {
 			// Logger.getLogger(DB.class.getName()).config("Closing database connection "+source); // logged by shutdown method
 			datasources.get(source).shutdown();
