@@ -38,7 +38,7 @@ public class LogHandler extends Handler {
 		long when = record.getMillis();
 		if (!system.startsWith("net.coagulate.")) { return; }
 		system = system.replaceFirst("net\\.coagulate\\.", "");
-		while (classname.indexOf(".") != -1) {
+		while (classname.contains(".")) {
 			classname = classname.substring(classname.indexOf(".") + 1);
 		}
 		if (parameters != null && parameters.length > 0) {

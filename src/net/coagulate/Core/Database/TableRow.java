@@ -10,7 +10,7 @@ import java.util.TreeMap;
  */
 public abstract class TableRow extends Table {
 	// use of the factory is of course optional :)
-	protected static final Map<String, Map<Integer, TableRow>> factory = new TreeMap<String, Map<Integer, TableRow>>();
+	protected static final Map<String, Map<Integer, TableRow>> factory = new TreeMap<>();
 	final int id;
 
 	public TableRow(int id) { this.id = id; }

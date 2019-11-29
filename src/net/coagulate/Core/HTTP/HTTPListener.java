@@ -84,7 +84,7 @@ public class HTTPListener {
 		}
 	}
 
-	private class ShutdownHook extends Thread {
+	private static class ShutdownHook extends Thread {
 		private final HTTPListener target;
 
 		public ShutdownHook(HTTPListener target) { this.target = target; }

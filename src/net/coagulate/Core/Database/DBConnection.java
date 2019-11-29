@@ -275,11 +275,7 @@ public abstract class DBConnection {
 				sqllog.put(parameterisedcommand, 1);
 			}
 		}
-		Connection conn = null;
-		PreparedStatement stm = null;
-		try {
-			conn = getConnection();
-			stm = prepare(conn, parameterisedcommand, params);
+		try (Connection conn = getConnection(); PreparedStatement stm = prepare(conn, parameterisedcommand, params)) {
 			long start = new Date().getTime();
 			stm.execute();
 			conn.commit();
@@ -306,9 +302,6 @@ public abstract class DBConnection {
 			throw new LockException("Transaction conflicted and was rolled back", e);
 		} catch (SQLException e) {
 			throw new DBException("SQL error during command " + parameterisedcommand, e);
-		} finally {
-			if (stm != null) { try {stm.close();} catch (SQLException e) {}}
-			if (conn != null) { try { conn.close(); } catch (SQLException e) {}}
 		}
 
 	}
@@ -397,7 +390,7 @@ public abstract class DBConnection {
 		return row.getBytes();
 	}
 
-	public class DBStats {
+	public static class DBStats {
 		public final int queries;
 		public final long querytotal;
 		public final long querymax;
