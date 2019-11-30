@@ -30,7 +30,7 @@ public abstract class DB {
 
 	private static final Map<String, DBConnection> datasources = new HashMap<>();
 
-	static void register(String sourcename, DBConnection connection) {
+	static void register(@Nonnull String sourcename,@Nonnull DBConnection connection) {
 		if (datasources.containsKey(sourcename)) {
 			Logger.getLogger(DB.class.getName()).warning("Re-registering DB connection " + sourcename);
 			DBConnection outgoing = datasources.get(sourcename);
@@ -39,7 +39,8 @@ public abstract class DB {
 		datasources.put(sourcename, connection);
 	}
 
-	public static DBConnection get(String datasourcename) {
+	@Nonnull
+	public static DBConnection get(@Nonnull String datasourcename) {
 		if (!datasources.containsKey(datasourcename)) {
 			throw new SystemException("Attempt to retrieve non-existant data source " + datasourcename);
 		}

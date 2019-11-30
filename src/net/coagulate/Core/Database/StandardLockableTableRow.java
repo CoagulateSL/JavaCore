@@ -19,7 +19,7 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 
 	@Nullable
 	public ResultsRow getLock() {
-		return getDatabase().dqone(true, "select lockedby,lockeduntil,lockedserial from " + getTableName() + " where " + getIdColumn() + "=?", getId());
+		return getDatabase().dqone( "select lockedby,lockeduntil,lockedserial from " + getTableName() + " where " + getIdColumn() + "=?", getId());
 	}
 
 	public int lock() { return lock(30); }

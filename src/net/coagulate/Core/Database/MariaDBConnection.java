@@ -36,7 +36,7 @@ public class MariaDBConnection extends DBConnection {
 				Map<String, Integer> notempty = new TreeMap<>();
 				for (ResultsRow r : tables) {
 					String tablename = r.getString();
-					int rows = dqi(true, "select count(*) from " + tablename);
+					int rows = dqi("select count(*) from " + tablename);
 					if (rows > 0) {
 						notempty.put(tablename, rows);
 					} else {

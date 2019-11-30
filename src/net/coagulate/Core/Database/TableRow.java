@@ -53,16 +53,16 @@ public abstract class TableRow extends Table {
 	public int getId() { return id; }
 
 	@Nullable
-	public String getString(String column) { return dqs(true, "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public String getString(String column) { return dqs( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
 	@Nullable
-	public Integer getInt(String column) { return dqi(true, "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public Integer getInt(String column) { return dqi( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
 	@Nullable
-	public Float getFloat(String column) { return dqf(true, "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public Float getFloat(String column) { return dqf( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
 	@Nullable
-	public Long getLong(String column) { return dql(true, "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public Long getLong(String column) { return dql( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
 	public boolean getBool(String columnname) {
 		Integer val = getInt(columnname);
@@ -82,6 +82,6 @@ public abstract class TableRow extends Table {
 
 	@Nullable
 	public byte[] getBytes(String columnname) {
-		return dqbyte(true,"select "+columnname+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
+		return dqbyte("select "+columnname+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
 }
