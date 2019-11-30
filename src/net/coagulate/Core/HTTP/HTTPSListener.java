@@ -31,7 +31,7 @@ public class HTTPSListener {
 
 	private final Object hasshutdownlock = new Object();
 	private ServerBootstrap bootstrap = null;
-	private Logger logger;
+	private Logger logger = null;
 	private HttpServer server = null;
 	private String name = "HTTPS";
 	private int port = -1;
