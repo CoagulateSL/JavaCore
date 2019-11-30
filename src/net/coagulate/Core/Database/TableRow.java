@@ -2,6 +2,8 @@ package net.coagulate.Core.Database;
 
 import net.coagulate.Core.Tools.SystemException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -45,16 +47,21 @@ public abstract class TableRow extends Table {
 		return factory.get(type).get(id);
 	}
 
+	@Nonnull
 	public abstract String getIdColumn();
 
 	public int getId() { return id; }
 
+	@Nullable
 	public String getString(String column) { return dqs(true, "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
+	@Nullable
 	public Integer getInt(String column) { return dqi(true, "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
+	@Nullable
 	public Float getFloat(String column) { return dqf(true, "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
+	@Nullable
 	public Long getLong(String column) { return dql(true, "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
 	public boolean getBool(String columnname) {
@@ -73,6 +80,7 @@ public abstract class TableRow extends Table {
 
 	public void set(String columnname, Integer value) { d("update " + getTableName() + " set " + columnname + "=? where " + getIdColumn() + "=?", value, getId()); }
 
+	@Nullable
 	public byte[] getBytes(String columnname) {
 		return dqbyte(true,"select "+columnname+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
