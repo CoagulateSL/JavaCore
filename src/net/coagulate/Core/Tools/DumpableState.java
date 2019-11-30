@@ -10,54 +10,54 @@ public abstract class DumpableState {
 
 
 	public String toHTML() {
-		String ret = "<table>";
+		StringBuilder ret = new StringBuilder("<table>");
 		for (Field f : this.getClass().getDeclaredFields()) {
-			ret += "<tr><th valign=top>" + f.getName() + "</th><td valign=top>";
+			ret.append("<tr><th valign=top>").append(f.getName()).append("</th><td valign=top>");
 			try {
                 /*if (!f.canAccess(this)) {
                     f.setAccessible(true);
                 }*/
 				f.setAccessible(true);
 				Object content = f.get(this);
-				ret += toHTML(content);
+				ret.append(toHTML(content));
 			} catch (IllegalArgumentException ex) {
-				ret += "IllegalArgument";
+				ret.append("IllegalArgument");
 			} catch (IllegalAccessException ex) {
-				ret += "IllegalAccess";
+				ret.append("IllegalAccess");
 			}
-			ret += "</td></tr>";
+			ret.append("</td></tr>");
 		}
-		ret += "</table>";
-		ret+=dumpAdditionalStateToHtml();
-		return ret;
+		ret.append("</table>");
+		ret.append(dumpAdditionalStateToHtml());
+		return ret.toString();
 	}
 
 	protected abstract String dumpAdditionalStateToHtml();
 
 	private String toHTML(Object o) {
 		if (o == null) { return "</td><td valign=top><i>NULL</i>"; }
-		String ret = o.getClass().getSimpleName() + "</td><td valign=top>";
+		StringBuilder ret = new StringBuilder(o.getClass().getSimpleName() + "</td><td valign=top>");
 		boolean handled = false;
 		if (o instanceof Header[]) {
-			ret += "<table>";
+			ret.append("<table>");
 			handled = true;
 			for (Header h : ((Header[]) o)) {
-				ret += "<tr><td valign=top>" + h.getName() + "</td><td valign=top>" + h.getValue() + "</td></tr>";
+				ret.append("<tr><td valign=top>").append(h.getName()).append("</td><td valign=top>").append(h.getValue()).append("</td></tr>");
 			}
-			ret += "</table>";
+			ret.append("</table>");
 		}
 		if (o instanceof TreeMap) {
 			handled = true;
-			ret += "<table border=1>";
+			ret.append("<table border=1>");
 			@SuppressWarnings("unchecked") TreeMap<Object, Object> map = (TreeMap<Object, Object>) o;
 			for (Map.Entry<Object, Object> entry : map.entrySet()) {
-				ret += "<tr><td valign=top>" + toHTML(entry.getKey()) + "</td>";
-				ret += "<td valign=top>" + toHTML(entry.getValue()) + "</td></tr>";
+				ret.append("<tr><td valign=top>").append(toHTML(entry.getKey())).append("</td>");
+				ret.append("<td valign=top>").append(toHTML(entry.getValue())).append("</td></tr>");
 			}
-			ret += "</table>";
+			ret.append("</table>");
 		}
-		if (!handled) { ret += o.toString(); }
-		return ret;
+		if (!handled) { ret.append(o.toString()); }
+		return ret.toString();
 	}
 
 }

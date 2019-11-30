@@ -12,9 +12,9 @@ public class NumberTools {
 		if (debug) { System.out.println("whole:" + whole); }
 		int decimal = Math.round((number - ((float) whole)) * ((float) (Math.pow(10, dp))));
 		if (debug) { System.out.println("dec:" + decimal); }
-		String decstr = decimal + "";
+		StringBuilder decstr = new StringBuilder(decimal + "");
 		if (debug) { System.out.println("decstr:" + decstr); }
-		while (decstr.length() < dp) { decstr = decstr + "0"; }
+		while (decstr.length() < dp) { decstr.append("0"); }
 		if (debug) { System.out.println("decstr:" + decstr); }
 		String out = whole + "." + decstr;
 		if (debug) { System.out.println("OUT " + out); }

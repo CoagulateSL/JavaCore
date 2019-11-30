@@ -52,11 +52,11 @@ public abstract class MailTools {
 	}
 
 	public static void logTrace(String subject,String intro) {
-		String body=intro+"\n<br>\n";
+		StringBuilder body= new StringBuilder(intro + "\n<br>\n");
 		for (StackTraceElement ele:Thread.currentThread().getStackTrace()) {
-			body+="Caller: "+ele.getClassName()+"/"+ele.getMethodName()+":"+ele.getLineNumber()+"\n<br>\n";
+			body.append("Caller: ").append(ele.getClassName()).append("/").append(ele.getMethodName()).append(":").append(ele.getLineNumber()).append("\n<br>\n");
 		}
-		try { MailTools.mail("Trace: "+subject, body); } catch (MessagingException ee){}
+		try { MailTools.mail("Trace: "+subject, body.toString()); } catch (MessagingException ee){}
 	}
 
 }

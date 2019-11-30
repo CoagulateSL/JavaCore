@@ -91,7 +91,8 @@ public class LogHandler extends Handler {
 	}
 
 	String postpad(String in, int len) {
-		while (in.length() < len) { in = in + " "; }
-		return in;
+		StringBuilder pad = new StringBuilder(in);
+		while (pad.length() < len) { pad.append(" "); }
+		return pad.toString();
 	}
 }
