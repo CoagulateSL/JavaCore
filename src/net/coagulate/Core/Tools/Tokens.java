@@ -1,5 +1,7 @@
 package net.coagulate.Core.Tools;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Iain Price
  */
@@ -7,6 +9,7 @@ public abstract class Tokens {
 
 	private static final String tokenfont = "0123456789abdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+	@Nonnull
 	public static String generateToken() {
 		StringBuilder token = new StringBuilder();
 		while (token.length() < 64) {

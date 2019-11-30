@@ -1,10 +1,13 @@
 package net.coagulate.Core.Tools;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Iain Price
  */
 public abstract class ExceptionTools {
-	public static String dumpException(Throwable e) {
+	@Nonnull
+	public static String dumpException(@Nonnull Throwable e) {
 		StringBuilder p = new StringBuilder();
 		if (e.getCause() != null) { p.append(dumpException(e.getCause())); }
 		p.append("<h3>").append(e.getClass().getName()).append(" - ").append(e.getLocalizedMessage()).append("</h3>");
@@ -16,7 +19,8 @@ public abstract class ExceptionTools {
 		return p.toString();
 	}
 
-	public static String toString(Throwable e) {
+	@Nonnull
+	public static String toString(@Nonnull Throwable e) {
 		StringBuilder p = new StringBuilder();
 		if (e.getCause() != null) { p.append(dumpException(e.getCause())); }
 		p.append("***EXCEPTION***: ").append(e.getClass().getName()).append(" - ").append(e.getLocalizedMessage()).append("\n");
@@ -26,6 +30,7 @@ public abstract class ExceptionTools {
 		return p.toString();
 	}
 
-	public static String toHTML(Throwable e) { return dumpException(e); }
+	@Nonnull
+	public static String toHTML(@Nonnull Throwable e) { return dumpException(e); }
 
 }

@@ -10,6 +10,7 @@ package net.coagulate.Core.Database;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ public class Results implements Iterable<ResultsRow> {
 	 * After this, the resultset / connection can be released (which is done in Database class)
 	 * @param rs The ResultSet
 	 */
-	public Results(ResultSet rs) {
+	public Results(@Nonnull ResultSet rs) {
 		try {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			while (rs.next()) {

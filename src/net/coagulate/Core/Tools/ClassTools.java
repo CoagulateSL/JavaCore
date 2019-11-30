@@ -1,5 +1,7 @@
 package net.coagulate.Core.Tools;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,9 +25,11 @@ public abstract class ClassTools {
 	private static final boolean DEBUG = false;
 	private static final Object initlock = new Object();
 	private static boolean initialised = false;
+	@Nullable
 	private static Set<Class<? extends Object>> classmap = null;
 	private static int totalclasses = 0;
 
+	@Nonnull
 	public static Set<Class<? extends Object>> getAnnotatedClasses(Class<? extends Annotation> annotation) {
 		Set<Class<? extends Object>> classes = new HashSet<>();
 		for (Class<? extends Object> c : classmap) {
@@ -34,6 +38,7 @@ public abstract class ClassTools {
 		return classes;
 	}
 
+	@Nonnull
 	public static Set<Method> getAnnotatedMethods(Class<? extends Annotation> annotation) {
 		Set<Method> methods = new HashSet<>();
 		for (Class<? extends Object> c : classmap) {
@@ -45,13 +50,14 @@ public abstract class ClassTools {
 	}
 
 
+	@Nonnull
 	public static Set<Constructor<? extends Object>> getAnnotatedConstructors(Class<? extends Annotation> annotation) {
 		Set<Constructor<? extends Object>> constructors = new HashSet<>();
 		for (Class<? extends Object> c : classmap) {
 			try {
 				Constructor<? extends Object> cons = c.getConstructor();
 				if (cons.isAnnotationPresent(annotation)) { constructors.add(cons); }
-			} catch (NoSuchMethodException | SecurityException ex) {
+			} catch (@Nonnull NoSuchMethodException | SecurityException ex) {
 				// no such method - this is fine, many classes wont have a zero param constructor =)
 				// securityexception - this is also fine, we'll find protected classes or other things we're not supposed to instansiate, so we wont.
 			}
@@ -76,12 +82,14 @@ public abstract class ClassTools {
 		}
 	}
 
+	@Nullable
 	public static Set<Class<? extends Object>> getClasses() {
 		if (initialised()) { return classmap; }
 		initialise();
 		return classmap;
 	}
 
+	@Nonnull
 	public static Set<Class<? extends Object>> enumerateClasses() {
 		Set<Class<? extends Object>> classes = new HashSet<>();
 		if (DEBUG) { System.out.println("CLASS PATH IS " + System.getProperty("java.class.path")); }
@@ -103,7 +111,7 @@ public abstract class ClassTools {
 		return classes;
 	}
 
-	private static void inspectFile(File f, File base, Set<Class<? extends Object>> classes) throws IOException {
+	private static void inspectFile(@Nonnull File f, @Nonnull File base, @Nonnull Set<Class<? extends Object>> classes) throws IOException {
 		if (DEBUG) { System.out.println("Inspecting file " + f + " in base " + base); }
 		if (f.isDirectory()) {
 			recurse(f, base, classes);
@@ -121,7 +129,7 @@ public abstract class ClassTools {
 	}
 
 	// takes a given location (classpath element or discovered) and iterates (recursively for directories) over its contents, extracting the class name and examining that
-	private static void recurse(File directory, File base, Set<Class<? extends Object>> classes) {
+	private static void recurse(@Nonnull File directory, @Nonnull File base, @Nonnull Set<Class<? extends Object>> classes) {
 		if (DEBUG) {
 			System.out.println("Dir recurse in " + directory.getAbsolutePath() + " base " + base.getAbsolutePath());
 		}
@@ -135,7 +143,7 @@ public abstract class ClassTools {
 		}
 	}
 
-	private static void recurseClass(String fullname, Set<Class <? extends Object>> classes) {
+	private static void recurseClass(String fullname, @Nonnull Set<Class <? extends Object>> classes) {
 		if (DEBUG) { System.out.println("Class consider " + fullname); }
 		fullname = fullname.replaceAll("\\.class$", "");
 		String relativename = "";
@@ -166,7 +174,7 @@ public abstract class ClassTools {
 		if (DEBUG) { System.out.println("Post processed " + classname); }
 	}
 
-	private static void recurseJar(File f, Set<Class<? extends Object>> classes) throws IOException {
+	private static void recurseJar(@Nonnull File f, @Nonnull Set<Class<? extends Object>> classes) throws IOException {
 		if (DEBUG) { System.out.println("JAR recurse in " + f.getAbsolutePath()); }
 		if (!f.canRead()) {
 			Logger.getLogger(ClassTools.class.getCanonicalName()).log(INFO, "Unreadable file accessed during class scanning:" + f.getAbsolutePath());

@@ -1,5 +1,6 @@
 package net.coagulate.Core.Tools;
 
+import javax.annotation.Nonnull;
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -10,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public abstract class Crypto {
 
-	public static String SHA1(String string) {
+	public static String SHA1(@Nonnull String string) {
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA-1");
@@ -20,7 +21,7 @@ public abstract class Crypto {
 		}
 	}
 
-	public static String SHA256(String string) {
+	public static String SHA256(@Nonnull String string) {
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA-256");

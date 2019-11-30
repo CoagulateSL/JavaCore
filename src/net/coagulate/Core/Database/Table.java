@@ -1,5 +1,6 @@
 package net.coagulate.Core.Database;
 
+import javax.annotation.Nonnull;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -12,7 +13,7 @@ public abstract class Table {
 	public abstract String getTableName();
 
 	// helpful methods
-	protected final PreparedStatement prepare(Connection conn, String parameterisedcommand, Object... params) { return getDatabase().prepare(conn, parameterisedcommand, params); }
+	protected final PreparedStatement prepare(@Nonnull Connection conn, String parameterisedcommand, Object... params) { return getDatabase().prepare(conn, parameterisedcommand, params); }
 
 	public final Results dq(String parameterisedcommand, Object... params) { return getDatabase().dq(parameterisedcommand, params); }
 

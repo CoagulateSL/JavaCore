@@ -1,5 +1,6 @@
 package net.coagulate.Core.Tools;
 
+import javax.annotation.Nullable;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -12,10 +13,15 @@ import java.util.Properties;
  * @author Iain Price
  */
 public abstract class MailTools {
+	@Nullable
 	public static String defaultserver = null;
+	@Nullable
 	public static String defaultfromname = null;
+	@Nullable
 	public static String defaultfromaddress = null;
+	@Nullable
 	public static String defaulttoname = null;
+	@Nullable
 	public static String defaulttoaddress = null;
 
 	public static void mail(String server, String fromname, String fromaddress, String toname, String toaddress, String subject, String body) throws MessagingException {

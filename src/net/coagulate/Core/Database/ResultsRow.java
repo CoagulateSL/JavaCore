@@ -6,6 +6,8 @@ package net.coagulate.Core.Database;
  * @author Iain Price <gphud@predestined.net>
  */
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -20,7 +22,7 @@ public class ResultsRow {
 	 *
 	 * @param rs Resultset to read the row from
 	 */
-	public ResultsRow(ResultSet rs) throws DBException {
+	public ResultsRow(@Nonnull ResultSet rs) throws DBException {
 		try {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
@@ -34,11 +36,13 @@ public class ResultsRow {
 
 	public String getString(String s) { return row.get(s); }
 
+	@Nullable
 	public Integer getInt(String s) {
 		String result = getString(s);
 		if (result == null) { return null; }
 		return Integer.parseInt(result);
 	}
+	@Nullable
 	public Boolean getBool(String s) {
 		if (getString(s)==null) { return null; }
 		if (getString(s).equals("1")) { return true; } return false;
@@ -46,34 +50,41 @@ public class ResultsRow {
 
 	public float getFloat(String s) { return Float.parseFloat(getString(s)); }
 
+	@Nullable
 	public String getString() {
 		if (row.size() != 1) { throw new DBException("Column count !=1 - " + row.size()); }
 		for (String value : row.values()) { return value; }
 		return null;
 	}
 
+	@Nullable
 	public Boolean getBool() {
 		if (getString()==null) { return null; }
 		if (getString().equals("1")) { return true; } return false;
 	}
 
+	@Nullable
 	public Integer getInt() {
 		if (getString() == null) { return null; }
 		return Integer.parseInt(getString());
 	}
 
+	@Nullable
 	public Long getLong() {
 		if (getString() == null) { return null; }
 		return Long.parseLong(getString());
 	}
 
+	@Nullable
 	public Float getFloat() {
 		if (getString() == null) { return null; }
 		return Float.parseFloat(getString());
 	}
 
+	@Nonnull
 	public Set<String> keySet() { return row.keySet(); }
 
+	@Nonnull
 	@Override
 	public String toString() {
 		String output = "[";
@@ -85,6 +96,7 @@ public class ResultsRow {
 		return output;
 	}
 
+	@Nullable
 	public byte[] getBytes() {
 		if (byteform.size() != 1) { throw new DBException("Column count !=1 - " + byteform.size()); }
 		for (byte[] bytes : byteform.values()) { return bytes; }

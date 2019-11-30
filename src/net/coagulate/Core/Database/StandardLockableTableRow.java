@@ -3,6 +3,7 @@ package net.coagulate.Core.Database;
 import net.coagulate.Core.Tools.SystemException;
 import net.coagulate.Core.Tools.UnixTime;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -16,6 +17,7 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 
 	public abstract int getNode();
 
+	@Nullable
 	public ResultsRow getLock() {
 		return getDatabase().dqone(true, "select lockedby,lockeduntil,lockedserial from " + getTableName() + " where " + getIdColumn() + "=?", getId());
 	}

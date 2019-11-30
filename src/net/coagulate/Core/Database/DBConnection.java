@@ -2,6 +2,8 @@ package net.coagulate.Core.Database;
 
 import net.coagulate.Core.Tools.UserException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.sql.*;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,6 +38,7 @@ public abstract class DBConnection {
 
 	public static boolean sqlLogging() { return logsql; }
 
+	@Nonnull
 	public DBStats getStats() {
 		if (!accumulatestats) { throw new IllegalStateException("Stats are disabled"); }
 		synchronized (querylock) {
@@ -52,7 +55,7 @@ public abstract class DBConnection {
 		}
 	}
 
-	public void getSqlLogs(Map<String, Integer> count, Map<String, Long> runtime, Map<String, Double> per) throws UserException {
+	public void getSqlLogs(@Nonnull Map<String, Integer> count, @Nonnull Map<String, Long> runtime, @Nonnull Map<String, Double> per) throws UserException {
 		if (!logsql) { throw new UserException("SQL Auditing is not enabled"); }
 		count.putAll(sqllog);
 		runtime.putAll(sqllogsum);
@@ -97,7 +100,7 @@ public abstract class DBConnection {
 	 * @return PreparedStatement as required
 	 * @throws DBException If there is an error.
 	 */
-	protected PreparedStatement prepare(Connection conn, String parameterisedcommand, Object... params) {
+	protected PreparedStatement prepare(@Nonnull Connection conn, String parameterisedcommand, @Nonnull Object... params) {
 		try {
 			PreparedStatement ps = conn.prepareStatement(parameterisedcommand);
 			for (int i = 1; i <= params.length; i++) {
@@ -164,6 +167,7 @@ public abstract class DBConnection {
 	 * @param params               SQL parameters
 	 * @return Results (Set of Rows)
 	 */
+	@Nullable
 	public Results dq(String parameterisedcommand, Object... params) {
 		return _dq(false, parameterisedcommand, params);
 	}
@@ -171,10 +175,12 @@ public abstract class DBConnection {
 
 	// master query (dq - database query) - unpacks the resultset into a Results object containing Rows, and then closes everything out
 
+	@Nullable
 	public Results dqSlow(String parameterisedcommand, Object... params) {
 		return _dq(true, parameterisedcommand, params);
 	}
 
+	@Nullable
 	public Results _dq(boolean slowquery, String parameterisedcommand, Object... params) {
 		if (logsql) {
 			if (sqllog.containsKey(parameterisedcommand)) {
@@ -320,6 +326,7 @@ public abstract class DBConnection {
 	 * @return The singular row result, assuming exactly one row was found, or null if zero rows are found and mandatory is not set.
 	 */
 
+	@Nullable
 	public ResultsRow dqone(boolean mandatory, String parameterisedcommand, Object... params) {
 		Results results = dq(parameterisedcommand, params);
 		if (results.size() == 0) {
@@ -349,18 +356,21 @@ public abstract class DBConnection {
 	 * @param params    Paramters to SQL
 	 * @return The integer form of the only column of the only row returned.  Can be null only if mandatory is false, and there are zero rows returned.  Or if the cell's contents are null.
 	 */
+	@Nullable
 	public Integer dqi(boolean mandatory, String sql, Object... params) {
 		ResultsRow row = dqone(mandatory, sql, params);
 		if (row == null) { return null; }
 		return row.getInt();
 	}
 
+	@Nullable
 	public Float dqf(boolean mandatory, String sql, Object... params) {
 		ResultsRow row = dqone(mandatory, sql, params);
 		if (row == null) { return null; }
 		return row.getFloat();
 	}
 
+	@Nullable
 	public Long dql(boolean mandatory, String sql, Object... params) {
 		ResultsRow row = dqone(mandatory, sql, params);
 		if (row == null) { return null; }
@@ -379,12 +389,14 @@ public abstract class DBConnection {
 	 * @param params    SQL parameters
 	 * @return A String of the one column of the one row queried.  Null if the string in the DB is null.  Null if mandatory is false and zero rows are found.
 	 */
+	@Nullable
 	public String dqs(boolean mandatory, String sql, Object... params) {
 		ResultsRow row = dqone(mandatory, sql, params);
 		if (row == null) { return null; }
 		return row.getString();
 	}
 
+	@Nullable
 	public byte[] dqbyte(boolean mandatory, String sql, Object... params) {
 		ResultsRow row=dqone(mandatory,sql,params);
 		if (row==null) { return null; }

@@ -2,6 +2,8 @@ package net.coagulate.Core.Database;
 
 import org.mariadb.jdbc.MariaDbPoolDataSource;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
@@ -15,6 +17,7 @@ import static java.util.logging.Level.SEVERE;
  */
 public class MariaDBConnection extends DBConnection {
 	private static final boolean TABLECOUNT = true;
+	@Nullable
 	private MariaDbPoolDataSource pool;
 
 	public MariaDBConnection(String sourcename, String host, String username, String password, String dbname) {
@@ -46,7 +49,7 @@ public class MariaDBConnection extends DBConnection {
 				}
 			}
 
-		} catch (SQLException | DBException ex) {
+		} catch (@Nonnull SQLException | DBException ex) {
 			logger.log(SEVERE, "Failed connectivity test to database", ex);
 			System.exit(1);
 		}

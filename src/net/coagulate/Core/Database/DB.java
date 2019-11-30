@@ -2,6 +2,7 @@ package net.coagulate.Core.Database;
 
 import net.coagulate.Core.Tools.SystemException;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -45,6 +46,7 @@ public abstract class DB {
 		return datasources.get(datasourcename);
 	}
 
+	@Nonnull
 	public static Set<DBConnection> get() {
 		return new HashSet<>(datasources.values());
 	}
