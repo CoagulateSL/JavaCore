@@ -349,7 +349,7 @@ public abstract class DBConnection {
 	@Nullable
 	public Integer dqi(@Nonnull String sql, Object... params) {
 		ResultsRow row = dqone(sql, params);
-		return row.getInt();
+		return row.getIntNullable();
 	}
 
 	@Nullable
@@ -372,7 +372,7 @@ public abstract class DBConnection {
 	@Nullable
 	public String dqs(@Nonnull String sql, Object... params) {
 		ResultsRow row = dqone(sql, params);
-		return row.getString();
+		return row.getStringNullable();
 	}
 
 	@Nullable
@@ -380,6 +380,39 @@ public abstract class DBConnection {
 		ResultsRow row=dqone(sql,params);
 		return row.getBytes();
 	}
+
+	@Nonnull
+	public byte[] dqbytenn(String sql, Object... params) {
+		byte[] b=dqbyte(sql,params);
+		if (b==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
+		return b;
+	}
+
+	public int dqinn(String sql, Object... params) {
+		Integer i=dqi(sql,params);
+		if (i==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
+		return i;
+	}
+
+	public float dqfnn(String sql, Object... params) {
+		Float f=dqf(sql,params);
+		if (f==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
+		return f;
+	}
+
+	public long dqlnn(String sql, Object... params) {
+		Long l=dql(sql,params);
+		if (l==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
+		return l;
+	}
+
+	@Nonnull
+	public String dqsnn(String sql, Object... params) {
+		String s=dqs(sql,params);
+		if (s==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
+		return s;
+	}
+
 
 	public static class DBStats {
 		public final int queries;

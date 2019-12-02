@@ -56,7 +56,13 @@ public abstract class TableRow extends Table {
 	public String getString(String column) { return dqs( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
 	@Nullable
-	public Integer getInt(String column) { return dqi( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public Integer getIntNullable(String column) { return dqi( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+
+	public int getInt(String column) {
+		Integer i= getIntNullable(column);
+		if (i==null) { throw new NoDataException("Null integer for column "+column); }
+		return i;
+	}
 
 	@Nullable
 	public Float getFloat(String column) { return dqf( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
@@ -65,7 +71,7 @@ public abstract class TableRow extends Table {
 	public Long getLong(String column) { return dql( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
 	public boolean getBool(String columnname) {
-		Integer val = getInt(columnname);
+		Integer val = getIntNullable(columnname);
 		if (val == null || val == 0) { return false; }
 		if (val == 1) { return true; }
 		throw new DBException("Unexpected value " + val + " parsing DB boolean field selfmodify on attribute " + this);

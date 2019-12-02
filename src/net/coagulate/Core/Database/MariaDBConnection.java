@@ -35,7 +35,7 @@ public class MariaDBConnection extends DBConnection {
 				Results tables = dq("show tables");
 				Map<String, Integer> notempty = new TreeMap<>();
 				for (ResultsRow r : tables) {
-					String tablename = r.getString();
+					String tablename = r.getStringNullable();
 					int rows = dqi("select count(*) from " + tablename);
 					if (rows > 0) {
 						notempty.put(tablename, rows);
@@ -69,6 +69,7 @@ public class MariaDBConnection extends DBConnection {
 		catch (Exception e) { logger.log(CONFIG, "Error closing DB connection: " + e.getLocalizedMessage()); }
 	}
 
+	@Nonnull
 	public Connection getConnection() {
 		try { return pool.getConnection(); } catch (SQLException e) {
 			throw new DBException("Unable to get database pooled connection", e);

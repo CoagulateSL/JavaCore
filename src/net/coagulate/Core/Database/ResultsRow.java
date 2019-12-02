@@ -6,6 +6,8 @@ package net.coagulate.Core.Database;
  * @author Iain Price <gphud@predestined.net>
  */
 
+import net.coagulate.Core.Tools.SystemException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.ResultSet;
@@ -34,51 +36,82 @@ public class ResultsRow {
 		}
 	}
 
-	public String getString(String s) { return row.get(s); }
+	public String getStringNullable(String s) { return row.get(s); }
 
 	@Nullable
-	public Integer getInt(String s) {
-		String result = getString(s);
+	public Integer getIntNullable(String s) {
+		String result = getStringNullable(s);
 		if (result == null) { return null; }
 		return Integer.parseInt(result);
 	}
-	@Nullable
-	public Boolean getBool(String s) {
-		if (getString(s)==null) { return null; }
-		if (getString(s).equals("1")) { return true; } return false;
+
+	public int getInt() {
+		Integer result= getIntNullable();
+		if (result==null) { throw new NoDataException("Got null value for integer default column"); }
+		return result;
 	}
 
-	public float getFloat(String s) { return Float.parseFloat(getString(s)); }
+	public int getInt(String s) {
+		Integer result = getIntNullable(s);
+		if (result == null) { throw new NoDataException("Got null value for integer column "+s); }
+		return result;
+	}
+	@Nullable
+	public Boolean getBool(String s) {
+		if (getStringNullable(s)==null) { return null; }
+		if (getStringNullable(s).equals("1")) { return true; } return false;
+	}
+
+	public boolean getBoolNoNull(String s) {
+		Boolean b=getBool(s);
+		if (b==null) { throw new NoDataException("Got null value for boolean column "+s); }
+		return b;
+	}
+	public float getFloat(String s) { return Float.parseFloat(getStringNullable(s)); }
 
 	@Nullable
-	public String getString() {
+	public String getStringNullable() {
 		if (row.size() != 1) { throw new DBException("Column count !=1 - " + row.size()); }
 		for (String value : row.values()) { return value; }
 		return null;
 	}
 
-	@Nullable
-	public Boolean getBool() {
-		if (getString()==null) { return null; }
-		if (getString().equals("1")) { return true; } return false;
+	@Nonnull
+	public String getString() {
+		String s=getStringNullable();
+		if (s==null) { throw new SystemException("Got null DB/string where not expected"); }
+		return s;
+	}
+
+	@Nonnull
+	public String getString(String column) {
+		String s=getStringNullable(column);
+		if (s==null) { throw new SystemException("Got null DB/string where not expected"); }
+		return s;
 	}
 
 	@Nullable
-	public Integer getInt() {
-		if (getString() == null) { return null; }
-		return Integer.parseInt(getString());
+	public Boolean getBool() {
+		if (getStringNullable()==null) { return null; }
+		if (getStringNullable().equals("1")) { return true; } return false;
+	}
+
+	@Nullable
+	public Integer getIntNullable() {
+		if (getStringNullable() == null) { return null; }
+		return Integer.parseInt(getStringNullable());
 	}
 
 	@Nullable
 	public Long getLong() {
-		if (getString() == null) { return null; }
-		return Long.parseLong(getString());
+		if (getStringNullable() == null) { return null; }
+		return Long.parseLong(getStringNullable());
 	}
 
 	@Nullable
 	public Float getFloat() {
-		if (getString() == null) { return null; }
-		return Float.parseFloat(getString());
+		if (getStringNullable() == null) { return null; }
+		return Float.parseFloat(getStringNullable());
 	}
 
 	@Nonnull
@@ -90,7 +123,7 @@ public class ResultsRow {
 		String output = "[";
 		for (String k : keySet()) {
 			if (!"[".equals(output)) { output = output + ", "; }
-			output = output + k + "=" + getString(k);
+			output = output + k + "=" + getStringNullable(k);
 		}
 		output += "]";
 		return output;

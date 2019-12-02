@@ -40,9 +40,9 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 		// discover current lock state
 		int serial = random.nextInt();
 		ResultsRow row = getLock();
-		int lockedby = row.getInt("lockedby");
-		int lockeduntil = row.getInt("lockeduntil");
-		int lockedserial = row.getInt("lockedserial");
+		int lockedby = row.getIntNullable("lockedby");
+		int lockeduntil = row.getIntNullable("lockeduntil");
+		int lockedserial = row.getIntNullable("lockedserial");
 		if (lockeduntil > UnixTime.getUnixTime() && lockedby >= 0) {
 			//lock is claimed
 			throw new LockException("Already locked by node " + lockedby + " (we are " + getNode() + ")");
@@ -51,9 +51,9 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 		getDatabase().d("update " + getTableName() + " set lockedby=?,lockeduntil=?,lockedserial=? where " + getIdColumn() + "=? and lockedby=? and lockeduntil=? and lockedserial=?", getNode(), UnixTime.getUnixTime() + lockdurationseconds, serial, getId(), lockedby, lockeduntil, lockedserial);
 		// see if the update actually worked
 		row = getLock();
-		lockedby = row.getInt("lockedby");
-		lockeduntil = row.getInt("lockeduntil");
-		lockedserial = row.getInt("lockedserial");
+		lockedby = row.getIntNullable("lockedby");
+		lockeduntil = row.getIntNullable("lockeduntil");
+		lockedserial = row.getIntNullable("lockedserial");
 		if (lockedby != getNode()) {
 			throw new LockException("Failed to claim lock, attempted but claimed by node " + lockedby + " (we are " + getNode() + ")");
 		}
@@ -69,18 +69,18 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 
 	public void extendLock(int serial, int lockdurationseconds) {
 		ResultsRow row = getLock();
-		int lockedby = row.getInt("lockedby");
-		int lockeduntil = row.getInt("lockeduntil");
-		int lockedserial = row.getInt("lockedserial");
+		int lockedby = row.getIntNullable("lockedby");
+		int lockeduntil = row.getIntNullable("lockeduntil");
+		int lockedserial = row.getIntNullable("lockedserial");
 		if (lockedby != getNode()) { throw new SystemException("Extending a lock we do not hold?"); }
 		if (lockeduntil < UnixTime.getUnixTime()) { throw new SystemException("Extending a lock that expired?"); }
 		if (lockedserial != serial) { throw new SystemException("Extending a lock with the wrong serial?"); }
 		getDatabase().d("update " + getTableName() + " set lockeduntil=? where " + getIdColumn() + "=? and lockedby=? and lockeduntil=? and lockedserial=?", UnixTime.getUnixTime() + lockdurationseconds, getId(), lockedby, lockeduntil, lockedserial);
 		row = getLock();
-		if (row.getInt("lockedby") != getNode()) {
+		if (row.getIntNullable("lockedby") != getNode()) {
 			throw new SystemException("Lock lost to other node while extending it");
 		}
-		if (row.getInt("lockedserial") != serial) { throw new SystemException("Lock serial lost during extension"); }
+		if (row.getIntNullable("lockedserial") != serial) { throw new SystemException("Lock serial lost during extension"); }
 	}
 
 	/**
@@ -90,9 +90,9 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 	 */
 	public void unlock(int serial) {
 		ResultsRow row = getLock();
-		int lockedby = row.getInt("lockedby");
-		int lockeduntil = row.getInt("lockeduntil");
-		int lockedserial = row.getInt("lockedserial");
+		int lockedby = row.getIntNullable("lockedby");
+		int lockeduntil = row.getIntNullable("lockeduntil");
+		int lockedserial = row.getIntNullable("lockedserial");
 		if (lockedby != getNode()) {
 			throw new SystemException("Attempt to release lock held by node " + lockedby + " (we are " + getNode() + ")");
 		}
