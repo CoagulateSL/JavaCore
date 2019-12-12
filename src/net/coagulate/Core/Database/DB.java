@@ -46,18 +46,15 @@ public abstract class DB {
 	}
 
 	public static Set<DBConnection> get() {
-		Set<DBConnection> connections = new HashSet<>();
-		connections.addAll(datasources.values());
-		return connections;
+		return new HashSet<>(datasources.values());
 	}
 
 	public static void shutdown() {
-		Set<String> names = new HashSet<>();
-		for (String source : datasources.keySet()) { names.add(source); }
+		Set<String> names = new HashSet<>(datasources.keySet());
 		for (String source : names) {
 			// Logger.getLogger(DB.class.getName()).config("Closing database connection "+source); // logged by shutdown method
 			datasources.get(source).shutdown();
-			datasources.remove(names);
+			datasources.remove(source);
 		}
 	}
 

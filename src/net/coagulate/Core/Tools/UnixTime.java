@@ -43,8 +43,7 @@ public abstract class UnixTime {
 		Date d = cal.getTime();
 		long l = d.getTime();
 		l = (l / (long) 1000.0);
-		int unixtime = (int) l;
-		return unixtime;
+		return (int) l;
 	}
 
 	/**

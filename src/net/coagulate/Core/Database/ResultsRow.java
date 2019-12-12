@@ -48,7 +48,7 @@ public class ResultsRow {
 
 	public String getString() {
 		if (row.size() != 1) { throw new DBException("Column count !=1 - " + row.size()); }
-		for (String s : row.keySet()) { return row.get(s); }
+		for (String value : row.values()) { return value; }
 		return null;
 	}
 
@@ -87,7 +87,7 @@ public class ResultsRow {
 
 	public byte[] getBytes() {
 		if (byteform.size() != 1) { throw new DBException("Column count !=1 - " + byteform.size()); }
-		for (String s : byteform.keySet()) { return byteform.get(s); }
+		for (byte[] bytes : byteform.values()) { return bytes; }
 		return null;
 	}
 

@@ -11,7 +11,7 @@ import java.util.logging.*;
 public class LogHandler extends Handler {
 
 	public static String mailprefix = "[UNKNOWN]";
-	private static Set<Throwable> alreadymailed = new HashSet<>(); //may eventually overflow, if we spam exceptions :P
+	private static final Set<Throwable> alreadymailed = new HashSet<>(); //may eventually overflow, if we spam exceptions :P
 
 	public LogHandler() {
 		super();
@@ -38,7 +38,7 @@ public class LogHandler extends Handler {
 		long when = record.getMillis();
 		if (!system.startsWith("net.coagulate.")) { return; }
 		system = system.replaceFirst("net\\.coagulate\\.", "");
-		while (classname.indexOf(".") != -1) {
+		while (classname.contains(".")) {
 			classname = classname.substring(classname.indexOf(".") + 1);
 		}
 		if (parameters != null && parameters.length > 0) {

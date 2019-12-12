@@ -20,9 +20,9 @@ public abstract class DBConnection {
 	private final Object querylock = new Object();
 	private final Object updatelock = new Object();
 	private final String sourcename;
-	Map<String, Integer> sqllog = new HashMap<>();
-	Map<String, Long> sqllogsum = new HashMap<>();
-	Logger logger;
+	final Map<String, Integer> sqllog = new HashMap<>();
+	final Map<String, Long> sqllogsum = new HashMap<>();
+	final Logger logger;
 	private int queries = 0;
 	private long querytime = 0;
 	private long querymax = 0;
@@ -56,8 +56,9 @@ public abstract class DBConnection {
 		if (!logsql) { throw new UserException("SQL Auditing is not enabled"); }
 		count.putAll(sqllog);
 		runtime.putAll(sqllogsum);
-		for (String statement : sqllog.keySet()) {
-			Integer c = sqllog.get(statement);
+		for (Map.Entry<String, Integer> entry : sqllog.entrySet()) {
+			String statement = entry.getKey();
+			Integer c = entry.getValue();
 			Long runfor = runtime.get(statement);
 			if (c == null || runfor == null || c == 0) {
 				per.put(statement, 0d); // explicitly a double.  even though it can be infered, and is.  "wah wah this is an int not a double"...  it's both! :P
@@ -275,11 +276,7 @@ public abstract class DBConnection {
 				sqllog.put(parameterisedcommand, 1);
 			}
 		}
-		Connection conn = null;
-		PreparedStatement stm = null;
-		try {
-			conn = getConnection();
-			stm = prepare(conn, parameterisedcommand, params);
+		try (Connection conn = getConnection(); PreparedStatement stm = prepare(conn, parameterisedcommand, params)) {
 			long start = new Date().getTime();
 			stm.execute();
 			conn.commit();
@@ -306,9 +303,6 @@ public abstract class DBConnection {
 			throw new LockException("Transaction conflicted and was rolled back", e);
 		} catch (SQLException e) {
 			throw new DBException("SQL error during command " + parameterisedcommand, e);
-		} finally {
-			if (stm != null) { try {stm.close();} catch (SQLException e) {}}
-			if (conn != null) { try { conn.close(); } catch (SQLException e) {}}
 		}
 
 	}
@@ -397,13 +391,13 @@ public abstract class DBConnection {
 		return row.getBytes();
 	}
 
-	public class DBStats {
-		public int queries;
-		public long querytotal;
-		public long querymax;
-		public int updates;
-		public long updatetotal;
-		public long updatemax;
+	public static class DBStats {
+		public final int queries;
+		public final long querytotal;
+		public final long querymax;
+		public final int updates;
+		public final long updatetotal;
+		public final long updatemax;
 
 		public DBStats(int q, long qt, long qm, int u, long ut, long um) {
 			queries = q;

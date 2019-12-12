@@ -40,9 +40,9 @@ public class MariaDBConnection extends DBConnection {
 						logger.fine("Table " + tablename + " is empty");
 					}
 				}
-				for (String tablename : notempty.keySet()) {
-					int rows = notempty.get(tablename);
-					logger.fine("Table " + tablename + " contains " + rows + " entries");
+				for (Map.Entry<String, Integer> entry : notempty.entrySet()) {
+					int rows = entry.getValue();
+					logger.fine("Table " + entry.getKey() + " contains " + rows + " entries");
 				}
 			}
 

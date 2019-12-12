@@ -8,6 +8,7 @@ package net.coagulate.Core.Tools;
  * @author Iain Price
  */
 public class SystemException extends RuntimeException {
+	private static final long serialVersionUID=1L;
 	public SystemException(String reason) { super(reason); }
 
 	public SystemException(String reason, Throwable cause) { super(reason, cause); }

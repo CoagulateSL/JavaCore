@@ -14,6 +14,7 @@ import net.coagulate.Core.Tools.SystemException;
  * @author Iain Price <gphud@predestined.net>
  */
 public class DBException extends SystemException {
+	private static final long serialVersionUID=1L;
 	public DBException(String s) { super(s); }
 
 	public DBException(String s, Throwable t) { super(s, t); }

@@ -6,6 +6,7 @@ package net.coagulate.Core.Database;
  * @author Iain Price <gphud@predestined.net>
  */
 public class TooMuchDataException extends DBException {
+	private static final long serialVersionUID=1L;
 	public TooMuchDataException(String s) { super(s); }
 
 	public TooMuchDataException(String e, Throwable t) { super(e, t); }

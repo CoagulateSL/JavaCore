@@ -45,14 +45,13 @@ public abstract class Passwords {
 		int hashSize = hash.length;
 
 		// format: algorithm:iterations:hashSize:salt:hash
-		String parts = "sha1:" +
+		return "sha1:" +
 				PBKDF2_ITERATIONS +
 				":" + hashSize +
 				":" +
 				toBase64(salt) +
 				":" +
 				toBase64(hash);
-		return parts;
 	}
 
 	public static boolean verifyPassword(String password, String correctHash) {
