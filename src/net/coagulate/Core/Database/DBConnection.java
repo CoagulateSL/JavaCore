@@ -2,6 +2,8 @@ package net.coagulate.Core.Database;
 
 import net.coagulate.Core.Tools.UserException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.sql.*;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,6 +38,7 @@ public abstract class DBConnection {
 
 	public static boolean sqlLogging() { return logsql; }
 
+	@Nonnull
 	public DBStats getStats() {
 		if (!accumulatestats) { throw new IllegalStateException("Stats are disabled"); }
 		synchronized (querylock) {
@@ -52,7 +55,7 @@ public abstract class DBConnection {
 		}
 	}
 
-	public void getSqlLogs(Map<String, Integer> count, Map<String, Long> runtime, Map<String, Double> per) throws UserException {
+	public void getSqlLogs(@Nonnull Map<String, Integer> count, @Nonnull Map<String, Long> runtime, @Nonnull Map<String, Double> per) throws UserException {
 		if (!logsql) { throw new UserException("SQL Auditing is not enabled"); }
 		count.putAll(sqllog);
 		runtime.putAll(sqllogsum);
@@ -70,8 +73,10 @@ public abstract class DBConnection {
 
 	public abstract void shutdown();
 
+	@Nonnull
 	public abstract Connection getConnection();
 
+	@Nonnull
 	public String getName() { return sourcename; }
 
 	/**
@@ -81,7 +86,7 @@ public abstract class DBConnection {
 
 	public boolean test() {
 		try {
-			int result = dqi(true, "select 1");
+			int result = dqi("select 1");
 			if (result != 1) { throw new DBException("Select count(*) from ping returned not 1 (" + result + ")"); }
 			return true;
 		} catch (Exception e) { logger.log(SEVERE, "Database connectivity test failure", e); }
@@ -97,7 +102,8 @@ public abstract class DBConnection {
 	 * @return PreparedStatement as required
 	 * @throws DBException If there is an error.
 	 */
-	protected PreparedStatement prepare(Connection conn, String parameterisedcommand, Object... params) {
+	@Nonnull
+	protected PreparedStatement prepare(@Nonnull Connection conn, String parameterisedcommand, @Nonnull Object... params) {
 		try {
 			PreparedStatement ps = conn.prepareStatement(parameterisedcommand);
 			for (int i = 1; i <= params.length; i++) {
@@ -164,18 +170,21 @@ public abstract class DBConnection {
 	 * @param params               SQL parameters
 	 * @return Results (Set of Rows)
 	 */
-	public Results dq(String parameterisedcommand, Object... params) {
+	@Nonnull
+	public Results dq(@Nonnull String parameterisedcommand, Object... params) {
 		return _dq(false, parameterisedcommand, params);
 	}
 
 
 	// master query (dq - database query) - unpacks the resultset into a Results object containing Rows, and then closes everything out
 
-	public Results dqSlow(String parameterisedcommand, Object... params) {
+	@Nonnull
+	public Results dqSlow(@Nonnull String parameterisedcommand, Object... params) {
 		return _dq(true, parameterisedcommand, params);
 	}
 
-	public Results _dq(boolean slowquery, String parameterisedcommand, Object... params) {
+	@Nonnull
+	public Results _dq(boolean slowquery, @Nonnull String parameterisedcommand, Object... params) {
 		if (logsql) {
 			if (sqllog.containsKey(parameterisedcommand)) {
 				sqllog.put(parameterisedcommand, sqllog.get(parameterisedcommand) + 1);
@@ -226,6 +235,7 @@ public abstract class DBConnection {
 		}
 	}
 
+	@Nonnull
 	public String formatCaller() {
 		String caller = formatFrame(5, "Unknown");
 		String caller2 = formatFrame(6, "");
@@ -233,7 +243,8 @@ public abstract class DBConnection {
 		return caller;
 	}
 
-	public String formatFrame(int framenumber, String def) {
+	@Nonnull
+	public String formatFrame(int framenumber, @Nonnull String def) {
 		if (Thread.currentThread().getStackTrace().length > framenumber) {
 			StackTraceElement element = Thread.currentThread().getStackTrace()[framenumber];
 			String caller = element.getClassName() + "." + element.getMethodName();
@@ -252,7 +263,7 @@ public abstract class DBConnection {
 	 * @param parameterisedcommand SQL query
 	 * @param params               SQL arguments.
 	 */
-	public void d(String parameterisedcommand, Object... params) {
+	public void d(@Nonnull String parameterisedcommand, Object... params) {
 		int tries = 3;
 		while (tries > 0) {
 			try {
@@ -268,7 +279,7 @@ public abstract class DBConnection {
 
 	// database do, statement with no results
 
-	public void _d(String parameterisedcommand, Object... params) {
+	public void _d(@Nonnull String parameterisedcommand, Object... params) {
 		if (logsql) {
 			if (sqllog.containsKey(parameterisedcommand)) {
 				sqllog.put(parameterisedcommand, sqllog.get(parameterisedcommand) + 1);
@@ -308,26 +319,17 @@ public abstract class DBConnection {
 	}
 
 	/**
-	 * for when we only expect one response, optionally exceptioning for zero results.
-	 * Mandatory is mainly intended to be used when you're /sure/ there should be a result, like you just made it, or referential integrity in the DB mandates it.
-	 * As such, were this to fail, throwing a SystemException is reasonable - the user will get a "Oops, we broke" and mailouts will happen.  This should not be routine.
-	 * If set to 'false' for mandatory, you get a null back, and you can handle this with your application level user error, if appropriate.  E.g. searching a username should return one, but the user might mess it up.
-	 * Note we always exception if we find more than one result, you should be using "dq()" directly if you expect 0 to many results, this method is only appropriate if you expect zero/one result, with "usually" one result.
 	 *
-	 * @param mandatory            Set true to return SQL exception on zero results, set false to return 'null'
 	 * @param parameterisedcommand SQL command
 	 * @param params               SQL parameters
-	 * @return The singular row result, assuming exactly one row was found, or null if zero rows are found and mandatory is not set.
+	 * @return The singular row result, assuming exactly one row was found
 	 */
 
-	public ResultsRow dqone(boolean mandatory, String parameterisedcommand, Object... params) {
+	@Nonnull
+	public ResultsRow dqone(@Nonnull String parameterisedcommand, Object... params) {
 		Results results = dq(parameterisedcommand, params);
 		if (results.size() == 0) {
-			if (mandatory) {
-				throw new NoDataException("Query " + results.getStatement() + " returned zero results and mandatory was set");
-			} else {
-				return null;
-			}
+			throw new NoDataException("Query " + results.getStatement() + " returned zero results was set");
 		}
 		if (results.size() > 1) {
 			throw new TooMuchDataException("Query " + results.getStatement() + " returned " + results.size() + " results and we expected one");
@@ -338,58 +340,79 @@ public abstract class DBConnection {
 	/**
 	 * Convenience method for getting an integer.
 	 * Assumes a singular row result will be returned, containing a singular column, that we can convert to an integer.
-	 * The returned object is Integer NOT int, this is because Integers can be null.  This method may return a null Integer if and only if the mandatory flag is false, and zero results are found.
 	 * If you attempt to cast the null Integer to an int by auto(un)boxing, you'll throw runtime exceptions.
-	 * If you pass mandatory to be true, you should be /fine/ to auto assume it can convert to "int", because instead of a null result, a SytstemException would occur.
-	 * Please see dqone() for notes on the mandatory flag and exception behaviour policy in GPHUD.
-	 * Note null ints in the database are also returned as nulls, this will become ambiguous if you set mandatory to false.
 	 *
-	 * @param mandatory If true, exceptions for zero results, otherwise returns "Null"
 	 * @param sql       SQL to query
 	 * @param params    Paramters to SQL
-	 * @return The integer form of the only column of the only row returned.  Can be null only if mandatory is false, and there are zero rows returned.  Or if the cell's contents are null.
+	 * @return The integer form of the only column of the only row returned.  Can be null only if the cell's contents are null.
 	 */
-	public Integer dqi(boolean mandatory, String sql, Object... params) {
-		ResultsRow row = dqone(mandatory, sql, params);
-		if (row == null) { return null; }
-		return row.getInt();
+	@Nullable
+	public Integer dqi(@Nonnull String sql, Object... params) {
+		ResultsRow row = dqone(sql, params);
+		return row.getIntNullable();
 	}
 
-	public Float dqf(boolean mandatory, String sql, Object... params) {
-		ResultsRow row = dqone(mandatory, sql, params);
-		if (row == null) { return null; }
+	@Nullable
+	public Float dqf(@Nonnull String sql, Object... params) {
+		ResultsRow row = dqone(sql, params);
 		return row.getFloat();
 	}
 
-	public Long dql(boolean mandatory, String sql, Object... params) {
-		ResultsRow row = dqone(mandatory, sql, params);
-		if (row == null) { return null; }
+	@Nullable
+	public Long dql(@Nonnull String sql, Object... params) {
+		ResultsRow row = dqone(sql, params);
 		return row.getLong();
 	}
 
 	/**
-	 * Query for a string.
-	 * Returns the string from the first column of the only row returned.
-	 * Will systemexception (from called method) if multiple rows returned.
-	 * If no rows returned, will exception if mandatory is true, and return null if false.
-	 * Null values in the database will always be returned as nulls.  As such, mandatory=false masks two possibilities.
-	 *
-	 * @param mandatory Exception if there are zero rows and mandatory is true.
 	 * @param sql       SQL query
 	 * @param params    SQL parameters
-	 * @return A String of the one column of the one row queried.  Null if the string in the DB is null.  Null if mandatory is false and zero rows are found.
+	 * @return A String of the one column of the one row queried.  Null if the string in the DB is null.
 	 */
-	public String dqs(boolean mandatory, String sql, Object... params) {
-		ResultsRow row = dqone(mandatory, sql, params);
-		if (row == null) { return null; }
-		return row.getString();
+	@Nullable
+	public String dqs(@Nonnull String sql, Object... params) {
+		ResultsRow row = dqone(sql, params);
+		return row.getStringNullable();
 	}
 
-	public byte[] dqbyte(boolean mandatory, String sql, Object... params) {
-		ResultsRow row=dqone(mandatory,sql,params);
-		if (row==null) { return null; }
+	@Nullable
+	public byte[] dqbyte(@Nonnull String sql, Object... params) {
+		ResultsRow row=dqone(sql,params);
 		return row.getBytes();
 	}
+
+	@Nonnull
+	public byte[] dqbytenn(String sql, Object... params) {
+		byte[] b=dqbyte(sql,params);
+		if (b==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
+		return b;
+	}
+
+	public int dqinn(String sql, Object... params) {
+		Integer i=dqi(sql,params);
+		if (i==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
+		return i;
+	}
+
+	public float dqfnn(String sql, Object... params) {
+		Float f=dqf(sql,params);
+		if (f==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
+		return f;
+	}
+
+	public long dqlnn(String sql, Object... params) {
+		Long l=dql(sql,params);
+		if (l==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
+		return l;
+	}
+
+	@Nonnull
+	public String dqsnn(String sql, Object... params) {
+		String s=dqs(sql,params);
+		if (s==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
+		return s;
+	}
+
 
 	public static class DBStats {
 		public final int queries;

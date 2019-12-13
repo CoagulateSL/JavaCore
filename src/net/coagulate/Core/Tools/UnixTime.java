@@ -1,5 +1,6 @@
 package net.coagulate.Core.Tools;
 
+import javax.annotation.Nonnull;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,17 +60,20 @@ public abstract class UnixTime {
 		return (int) (new Date().getTime() / 1000.0);
 	}
 
+	@Nonnull
 	public static String fromUnixTime(int date, String timezone) {
 		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
 		df.setTimeZone(TimeZone.getTimeZone(timezone));
 		return fromUnixTime(date, df);
 	}
 
-	public static String fromUnixTime(String date, String timezone) {
+	@Nonnull
+	public static String fromUnixTime(@Nonnull String date, String timezone) {
 		return fromUnixTime(Integer.parseInt(date), timezone);
 	}
 
-	private static String fromUnixTime(int date, DateFormat df) {
+	@Nonnull
+	private static String fromUnixTime(int date, @Nonnull DateFormat df) {
 		return df.format(new Date(((long) (date)) * ((long) 1000)));
 	}
 
@@ -89,6 +93,7 @@ public abstract class UnixTime {
 	 * @param seconds How many seconds the duration is
 	 * @return Duration as a string (e.g. 3h 2m)
 	 */
+	@Nonnull
 	public static String duration(int seconds) {
 		return duration(seconds, false);
 	}
@@ -100,6 +105,7 @@ public abstract class UnixTime {
 	 * @param precise Include number of seconds in the output
 	 * @return Duration as a string (e.g. 3h 2m 1s)
 	 */
+	@Nonnull
 	public static String duration(int t, boolean precise) {
 		String prefix = "";
 		if (t < 0) {
@@ -203,6 +209,7 @@ public abstract class UnixTime {
 	 * @param unixtime Time to compare the difference with
 	 * @return Time between now and then expressed as a duration, with seconds
 	 */
+	@Nonnull
 	public static String durationRelativeToNow(int unixtime) {
 		return durationRelativeToNow(unixtime, true);
 	}
@@ -214,6 +221,7 @@ public abstract class UnixTime {
 	 * @param withseconds Include the seconds in the duration string
 	 * @return Time between now and then expressed as a duration, with optional seconds
 	 */
+	@Nonnull
 	public static String durationRelativeToNow(int unixtime, boolean withseconds) {
 		return duration(relativeToNow(unixtime), withseconds);
 	}

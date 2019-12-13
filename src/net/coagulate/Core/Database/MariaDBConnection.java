@@ -2,6 +2,8 @@ package net.coagulate.Core.Database;
 
 import org.mariadb.jdbc.MariaDbPoolDataSource;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
@@ -15,6 +17,7 @@ import static java.util.logging.Level.SEVERE;
  */
 public class MariaDBConnection extends DBConnection {
 	private static final boolean TABLECOUNT = true;
+	@Nullable
 	private MariaDbPoolDataSource pool;
 
 	public MariaDBConnection(String sourcename, String host, String username, String password, String dbname) {
@@ -32,8 +35,8 @@ public class MariaDBConnection extends DBConnection {
 				Results tables = dq("show tables");
 				Map<String, Integer> notempty = new TreeMap<>();
 				for (ResultsRow r : tables) {
-					String tablename = r.getString();
-					int rows = dqi(true, "select count(*) from " + tablename);
+					String tablename = r.getStringNullable();
+					int rows = dqi("select count(*) from " + tablename);
 					if (rows > 0) {
 						notempty.put(tablename, rows);
 					} else {
@@ -46,7 +49,7 @@ public class MariaDBConnection extends DBConnection {
 				}
 			}
 
-		} catch (SQLException | DBException ex) {
+		} catch (@Nonnull SQLException | DBException ex) {
 			logger.log(SEVERE, "Failed connectivity test to database", ex);
 			System.exit(1);
 		}
@@ -66,6 +69,7 @@ public class MariaDBConnection extends DBConnection {
 		catch (Exception e) { logger.log(CONFIG, "Error closing DB connection: " + e.getLocalizedMessage()); }
 	}
 
+	@Nonnull
 	public Connection getConnection() {
 		try { return pool.getConnection(); } catch (SQLException e) {
 			throw new DBException("Unable to get database pooled connection", e);

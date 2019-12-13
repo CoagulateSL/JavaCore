@@ -7,6 +7,8 @@ import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.impl.bootstrap.ServerBootstrap;
 import org.apache.http.protocol.HttpRequestHandlerMapper;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -30,14 +32,18 @@ import static java.util.logging.Level.SEVERE;
 public class HTTPSListener {
 
 	private final Object hasshutdownlock = new Object();
+	@Nullable
 	private ServerBootstrap bootstrap = null;
+	@Nullable
 	private Logger logger = null;
+	@Nullable
 	private HttpServer server = null;
+	@Nonnull
 	private String name = "HTTPS";
 	private int port = -1;
 	private boolean hasshutdown = false;
 
-	public HTTPSListener(int port, String pemfile, HttpRequestHandlerMapper mapper) {
+	public HTTPSListener(int port, @Nonnull String pemfile, HttpRequestHandlerMapper mapper) {
 		this.port = port;
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
 		try {
@@ -92,6 +98,7 @@ public class HTTPSListener {
 		}
 	}
 
+	@Nullable
 	private Logger logger() {
 		if (logger != null) { return logger; }
 		logger = Logger.getLogger(HTTPSListener.class.getCanonicalName() + "." + port);

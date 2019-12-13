@@ -1,5 +1,6 @@
 package net.coagulate.Core.Tools;
 
+import javax.annotation.Nonnull;
 import javax.mail.MessagingException;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +11,7 @@ import java.util.logging.*;
  */
 public class LogHandler extends Handler {
 
+	@Nonnull
 	public static String mailprefix = "[UNKNOWN]";
 	private static final Set<Throwable> alreadymailed = new HashSet<>(); //may eventually overflow, if we spam exceptions :P
 
@@ -27,7 +29,7 @@ public class LogHandler extends Handler {
 	public static void alreadyMailed(Throwable t) { alreadymailed.add(t); }
 
 	@Override
-	public void publish(LogRecord record) {
+	public void publish(@Nonnull LogRecord record) {
 		Object[] parameters = record.getParameters();
 		Level level = record.getLevel();
 		String system = record.getLoggerName();
@@ -79,6 +81,7 @@ public class LogHandler extends Handler {
 	public void close() throws SecurityException {
 	}
 
+	@Nonnull
 	private String formatLevel(Level level) {
 		if (level == Level.CONFIG) { return "conf"; }
 		if (level == Level.FINE) { return "D   "; }
@@ -90,7 +93,8 @@ public class LogHandler extends Handler {
 		return "????";
 	}
 
-	String postpad(String in, int len) {
+	@Nonnull
+	String postpad(@Nonnull String in, int len) {
 		StringBuilder pad = new StringBuilder(in);
 		while (pad.length() < len) { pad.append(" "); }
 		return pad.toString();

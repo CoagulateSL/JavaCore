@@ -1,5 +1,6 @@
 package net.coagulate.Core.Tools;
 
+import javax.annotation.Nonnull;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -25,7 +26,8 @@ public abstract class Passwords {
 	public static final int SALT_INDEX = 3;
 	public static final int PBKDF2_INDEX = 4;
 
-	public static String createHash(String password) {
+	@Nonnull
+	public static String createHash(@Nonnull String password) {
 		try {
 			return createHash(password.toCharArray());
 		} catch (CannotPerformOperationException ex) {
@@ -33,6 +35,7 @@ public abstract class Passwords {
 		}
 	}
 
+	@Nonnull
 	private static String createHash(char[] password)
 			throws CannotPerformOperationException {
 		// Generate a random salt
@@ -54,15 +57,15 @@ public abstract class Passwords {
 				toBase64(hash);
 	}
 
-	public static boolean verifyPassword(String password, String correctHash) {
+	public static boolean verifyPassword(@Nonnull String password, @Nonnull String correctHash) {
 		try {
 			return verifyPassword(password.toCharArray(), correctHash);
-		} catch (CannotPerformOperationException | InvalidHashException ex) {
+		} catch (@Nonnull CannotPerformOperationException | InvalidHashException ex) {
 			throw new AssertionError("Crypto error verifying password", ex);
 		}
 	}
 
-	private static boolean verifyPassword(char[] password, String correctHash)
+	private static boolean verifyPassword(char[] password, @Nonnull String correctHash)
 			throws CannotPerformOperationException, InvalidHashException {
 		// Decode the hash into its parameters
 		String[] params = correctHash.split(":");
@@ -141,14 +144,14 @@ public abstract class Passwords {
 		return slowEquals(hash, testHash);
 	}
 
-	private static boolean slowEquals(byte[] a, byte[] b) {
+	private static boolean slowEquals(@Nonnull byte[] a, @Nonnull byte[] b) {
 		int diff = a.length ^ b.length;
 		for (int i = 0; i < a.length && i < b.length; i++)
 			diff |= a[i] ^ b[i];
 		return diff == 0;
 	}
 
-	private static byte[] pbkdf2(char[] password, byte[] salt, int iterations, int bytes)
+	private static byte[] pbkdf2(char[] password, @Nonnull byte[] salt, int iterations, int bytes)
 			throws CannotPerformOperationException {
 		try {
 			PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);

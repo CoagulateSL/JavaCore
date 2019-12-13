@@ -2,6 +2,8 @@ package net.coagulate.Core.Tools;
 
 import org.apache.http.Header;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.TreeMap;
@@ -9,6 +11,7 @@ import java.util.TreeMap;
 public abstract class DumpableState {
 
 
+	@Nonnull
 	public String toHTML() {
 		StringBuilder ret = new StringBuilder("<table>");
 		for (Field f : this.getClass().getDeclaredFields()) {
@@ -32,9 +35,11 @@ public abstract class DumpableState {
 		return ret.toString();
 	}
 
+	@Nonnull
 	protected abstract String dumpAdditionalStateToHtml();
 
-	private String toHTML(Object o) {
+	@Nonnull
+	private String toHTML(@Nullable Object o) {
 		if (o == null) { return "</td><td valign=top><i>NULL</i>"; }
 		StringBuilder ret = new StringBuilder(o.getClass().getSimpleName() + "</td><td valign=top>");
 		boolean handled = false;

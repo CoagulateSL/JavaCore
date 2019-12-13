@@ -6,6 +6,8 @@ import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.impl.bootstrap.ServerBootstrap;
 import org.apache.http.protocol.HttpRequestHandlerMapper;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -20,9 +22,13 @@ import static java.util.logging.Level.SEVERE;
 public class HTTPListener {
 
 	private final Object hasshutdownlock = new Object();
+	@Nullable
 	private ServerBootstrap bootstrap = null;
+	@Nullable
 	private Logger logger = null;
+	@Nullable
 	private HttpServer server = null;
+	@Nonnull
 	private String name = "HTTPS";
 	private int port = -1;
 	private boolean hasshutdown = false;
@@ -59,6 +65,7 @@ public class HTTPListener {
 		}
 	}
 
+	@Nullable
 	private Logger logger() {
 		if (logger != null) { return logger; }
 		logger = Logger.getLogger(HTTPListener.class.getCanonicalName() + "." + port);
