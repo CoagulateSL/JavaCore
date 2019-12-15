@@ -24,8 +24,13 @@ public abstract class ExceptionTools {
 		StringBuilder p = new StringBuilder();
 		if (e.getCause() != null) { p.append(dumpException(e.getCause())); }
 		p.append("***EXCEPTION***: ").append(e.getClass().getName()).append(" - ").append(e.getLocalizedMessage()).append("\n");
-		for (StackTraceElement st : e.getStackTrace()) {
-			p.append("___exception___: ").append(st.getClassName()).append(".").append(st.getMethodName()).append(":").append(st.getLineNumber()).append("\n");
+		Throwable loop=e;
+		while (loop!=null) {
+			p.append("___exception___ - ").append(loop.getLocalizedMessage());
+			for (StackTraceElement st : loop.getStackTrace()) {
+				p.append("___exception___: ").append(st.getClassName()).append(".").append(st.getMethodName()).append(":").append(st.getLineNumber()).append("\n");
+			}
+			loop=loop.getCause();
 		}
 		return p.toString();
 	}

@@ -86,7 +86,7 @@ public abstract class DBConnection {
 
 	public boolean test() {
 		try {
-			int result = dqi("select 1");
+			int result = dqinn("select 1");
 			if (result != 1) { throw new DBException("Select count(*) from ping returned not 1 (" + result + ")"); }
 			return true;
 		} catch (Exception e) { logger.log(SEVERE, "Database connectivity test failure", e); }

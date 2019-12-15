@@ -26,13 +26,13 @@ public abstract class ClassTools {
 	private static final Object initlock = new Object();
 	private static boolean initialised = false;
 	@Nullable
-	private static Set<Class<? extends Object>> classmap = null;
+	private static Set<Class<? extends Object>> classmap;
 	private static int totalclasses = 0;
 
 	@Nonnull
 	public static Set<Class<? extends Object>> getAnnotatedClasses(Class<? extends Annotation> annotation) {
 		Set<Class<? extends Object>> classes = new HashSet<>();
-		for (Class<? extends Object> c : classmap) {
+		for (Class<? extends Object> c : getClassmap()) {
 			if (c.isAnnotationPresent(annotation)) { classes.add(c); }
 		}
 		return classes;
@@ -41,7 +41,7 @@ public abstract class ClassTools {
 	@Nonnull
 	public static Set<Method> getAnnotatedMethods(Class<? extends Annotation> annotation) {
 		Set<Method> methods = new HashSet<>();
-		for (Class<? extends Object> c : classmap) {
+		for (Class<? extends Object> c : getClassmap()) {
 			for (Method m : c.getMethods()) {
 				if (m.isAnnotationPresent(annotation)) { methods.add(m); }
 			}
@@ -53,7 +53,7 @@ public abstract class ClassTools {
 	@Nonnull
 	public static Set<Constructor<? extends Object>> getAnnotatedConstructors(Class<? extends Annotation> annotation) {
 		Set<Constructor<? extends Object>> constructors = new HashSet<>();
-		for (Class<? extends Object> c : classmap) {
+		for (Class<? extends Object> c : getClassmap()) {
 			try {
 				Constructor<? extends Object> cons = c.getConstructor();
 				if (cons.isAnnotationPresent(annotation)) { constructors.add(cons); }
@@ -73,8 +73,7 @@ public abstract class ClassTools {
 			synchronized (initlock) {
 				if (initialised) { return; }
 				Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG, "Commencing classpath scanning");
-				classmap = enumerateClasses();
-				Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG, "Classpath scanner found " + classmap.size() + " classes, " + totalclasses + " scanned.");
+				Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG, "Classpath scanner found " + getClassmap().size() + " classes, " + totalclasses + " scanned.");
 				initialised = true;
 			}
 		} catch (Throwable t) {
@@ -82,11 +81,11 @@ public abstract class ClassTools {
 		}
 	}
 
-	@Nullable
+	@Nonnull
 	public static Set<Class<? extends Object>> getClasses() {
-		if (initialised()) { return classmap; }
+		if (initialised()) { return getClassmap(); }
 		initialise();
-		return classmap;
+		return getClassmap();
 	}
 
 	@Nonnull
@@ -134,6 +133,7 @@ public abstract class ClassTools {
 			System.out.println("Dir recurse in " + directory.getAbsolutePath() + " base " + base.getAbsolutePath());
 		}
 		File[] content = directory.listFiles();
+		if (content==null) { throw new SystemException("Failed to enumerate directory, it returned null for listFiles()"); }
 		for (File f : content) {
 			try { inspectFile(f, base, classes); } catch (IOException e) {
 				if (DEBUG) {
@@ -163,6 +163,7 @@ public abstract class ClassTools {
 		}
 		// examine named class and instansiate if appropriate.
 		try {
+			//System.out.println(classname);
 			Class<? extends Object> c = Class.forName(classname);
 			classes.add(c);
 			if (DEBUG) { System.out.println("ADDED " + classname); }
@@ -206,5 +207,11 @@ public abstract class ClassTools {
 		}
 	}
 
+
+	@Nonnull
+	private static Set<Class<? extends Object>> getClassmap() {
+		if (classmap==null) { classmap=enumerateClasses(); }
+		return classmap;
+	}
 
 }

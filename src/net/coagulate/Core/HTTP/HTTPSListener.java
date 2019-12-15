@@ -1,6 +1,7 @@
 package net.coagulate.Core.HTTP;
 
 import net.coagulate.Core.Tools.CertUtils;
+import net.coagulate.Core.Tools.SystemException;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.bootstrap.HttpServer;
@@ -89,6 +90,7 @@ public class HTTPSListener {
 			name = "HTTPS:" + port;
 			//addHandlers(bootstrap);
 			server = bootstrap.create();
+			if (server==null) { throw new SystemException("Server bootstrap was null?"); }
 			logger().config("HTTPS Services starting");
 			server.start();
 		} catch (Exception e) {
@@ -98,7 +100,7 @@ public class HTTPSListener {
 		}
 	}
 
-	@Nullable
+	@Nonnull
 	private Logger logger() {
 		if (logger != null) { return logger; }
 		logger = Logger.getLogger(HTTPSListener.class.getCanonicalName() + "." + port);
