@@ -9,11 +9,11 @@ package net.coagulate.Core.Database;
  */
 public class LockException extends DBException {
 	private static final long serialVersionUID=1L;
-	public LockException(String s, Throwable e) {
+	public LockException(final String s, final Throwable e) {
 		super(s, e);
 	}
 
-	public LockException(String s) {
+	public LockException(final String s) {
 		super(s);
 	}
 

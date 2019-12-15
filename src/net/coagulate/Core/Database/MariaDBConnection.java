@@ -20,36 +20,36 @@ public class MariaDBConnection extends DBConnection {
 	@Nullable
 	private MariaDbPoolDataSource pool;
 
-	public MariaDBConnection(String sourcename, String host, String username, String password, String dbname) {
+	public MariaDBConnection(final String sourcename, final String host, final String username, final String password, final String dbname) {
 		this(sourcename, "jdbc:mariadb://" + host + "/" + dbname + "?user=" + username + "&password=" + password + "&maxPoolSize=10&connectTimeout=5000");
 	}
 
 
-	public MariaDBConnection(String name, String jdbc) {
+	public MariaDBConnection(final String name, final String jdbc) {
 		super(name);
 		try {
 			pool = new MariaDbPoolDataSource(jdbc);
 			if (!test()) { throw new SQLException("Failed to count(*) on table ping which should have one row only"); }
 			// pointless stuff that slows us down =)
 			if (TABLECOUNT) {
-				Results tables = dq("show tables");
-				Map<String, Integer> notempty = new TreeMap<>();
-				for (ResultsRow r : tables) {
-					String tablename = r.getStringNullable();
-					int rows = dqi("select count(*) from " + tablename);
+				final Results tables = dq("show tables");
+				final Map<String, Integer> notempty = new TreeMap<>();
+				for (final ResultsRow r : tables) {
+					final String tablename = r.getStringNullable();
+					final int rows = dqi("select count(*) from " + tablename);
 					if (rows > 0) {
 						notempty.put(tablename, rows);
 					} else {
 						logger.fine("Table " + tablename + " is empty");
 					}
 				}
-				for (Map.Entry<String, Integer> entry : notempty.entrySet()) {
-					int rows = entry.getValue();
+				for (final Map.Entry<String, Integer> entry : notempty.entrySet()) {
+					final int rows = entry.getValue();
 					logger.fine("Table " + entry.getKey() + " contains " + rows + " entries");
 				}
 			}
 
-		} catch (@Nonnull SQLException | DBException ex) {
+		} catch (@Nonnull final SQLException | DBException ex) {
 			logger.log(SEVERE, "Failed connectivity test to database", ex);
 			System.exit(1);
 		}
@@ -65,13 +65,13 @@ public class MariaDBConnection extends DBConnection {
 				pool.close();
 				pool = null;
 			}
-		} catch (NullPointerException e) {} // hmm
-		catch (Exception e) { logger.log(CONFIG, "Error closing DB connection: " + e.getLocalizedMessage()); }
+		} catch (final NullPointerException e) {} // hmm
+		catch (final Exception e) { logger.log(CONFIG, "Error closing DB connection: " + e.getLocalizedMessage()); }
 	}
 
 	@Nonnull
 	public Connection getConnection() {
-		try { return pool.getConnection(); } catch (SQLException e) {
+		try { return pool.getConnection(); } catch (final SQLException e) {
 			throw new DBException("Unable to get database pooled connection", e);
 		}
 	}

@@ -11,7 +11,7 @@ public abstract class Tokens {
 
 	@Nonnull
 	public static String generateToken() {
-		StringBuilder token = new StringBuilder();
+		final StringBuilder token = new StringBuilder();
 		while (token.length() < 64) {
 			token.append(tokenfont.charAt((int) (Math.random() * tokenfont.length())));
 		}

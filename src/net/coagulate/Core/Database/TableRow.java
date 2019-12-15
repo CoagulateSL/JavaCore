@@ -1,6 +1,6 @@
 package net.coagulate.Core.Database;
 
-import net.coagulate.Core.Tools.SystemException;
+import net.coagulate.Core.Exceptions.System.SystemBadValueException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,7 +15,7 @@ public abstract class TableRow extends Table {
 	protected static final Map<String, Map<Integer, TableRow>> factory = new TreeMap<>();
 	final int id;
 
-	public TableRow(int id) { this.id = id; }
+	public TableRow(final int id) { this.id = id; }
 
 	/**
 	 * Thread safe putter into the factory.  Also the getter.
@@ -29,13 +29,13 @@ public abstract class TableRow extends Table {
 	 * @param store DBObject or subclass to store
 	 * @return DBObject that should be used, not necessarily the one that was stored
 	 */
-	protected static synchronized TableRow factoryPut(String type, int id, TableRow store) {
+	protected static synchronized TableRow factoryPut(final String type, final int id, final TableRow store) {
 		if (id == 0) {
-			throw new SystemException("ID zero is expressly prohibited, does not exist, and suggests a programming bug.");
+			throw new SystemBadValueException("ID zero is expressly prohibited, does not exist, and suggests a programming bug.");
 		}
 		if (!factory.containsKey(type)) {
 			// we need this to avoid null pointer below
-			Map<Integer, TableRow> innermap = new TreeMap<>();
+			final Map<Integer, TableRow> innermap = new TreeMap<>();
 			factory.put(type, innermap);
 		}
 		// does this ID exist already
@@ -53,41 +53,41 @@ public abstract class TableRow extends Table {
 	public int getId() { return id; }
 
 	@Nullable
-	public String getString(String column) { return dqs( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public String getString(final String column) { return dqs( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
 	@Nullable
-	public Integer getIntNullable(String column) { return dqi( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public Integer getIntNullable(final String column) { return dqi( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
-	public int getInt(String column) {
-		Integer i= getIntNullable(column);
+	public int getInt(final String column) {
+		final Integer i= getIntNullable(column);
 		if (i==null) { throw new NoDataException("Null integer for column "+column); }
 		return i;
 	}
 
 	@Nullable
-	public Float getFloat(String column) { return dqf( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public Float getFloat(final String column) { return dqf( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
 	@Nullable
-	public Long getLong(String column) { return dql( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public Long getLong(final String column) { return dql( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
-	public boolean getBool(String columnname) {
-		Integer val = getIntNullable(columnname);
+	public boolean getBool(final String columnname) {
+		final Integer val = getIntNullable(columnname);
 		if (val == null || val == 0) { return false; }
 		if (val == 1) { return true; }
 		throw new DBException("Unexpected value " + val + " parsing DB boolean field selfmodify on attribute " + this);
 	}
 
-	public void set(String columnname, Boolean value) { set(columnname, (value ? 1 : 0)); }
+	public void set(final String columnname, final Boolean value) { set(columnname, (value ? 1 : 0)); }
 
 	// we use a factory style design to make sure that the same object is always returned
 	// this is where we store our factory data, indexed by Type (string), ID (int) and then the DBObject subclass
 
-	public void set(String columnname, String value) { d("update " + getTableName() + " set " + columnname + "=? where " + getIdColumn() + "=?", value, getId()); }
+	public void set(final String columnname, final String value) { d("update " + getTableName() + " set " + columnname + "=? where " + getIdColumn() + "=?", value, getId()); }
 
-	public void set(String columnname, Integer value) { d("update " + getTableName() + " set " + columnname + "=? where " + getIdColumn() + "=?", value, getId()); }
+	public void set(final String columnname, final Integer value) { d("update " + getTableName() + " set " + columnname + "=? where " + getIdColumn() + "=?", value, getId()); }
 
 	@Nullable
-	public byte[] getBytes(String columnname) {
+	public byte[] getBytes(final String columnname) {
 		return dqbyte("select "+columnname+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
 }

@@ -1,5 +1,7 @@
 package net.coagulate.Core.Tools;
 
+import net.coagulate.Core.Exceptions.System.SystemInitialisationException;
+
 import javax.annotation.Nullable;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -14,22 +16,22 @@ import java.util.Properties;
  */
 public abstract class MailTools {
 	@Nullable
-	public static String defaultserver = null;
+	public static String defaultserver;
 	@Nullable
-	public static String defaultfromname = null;
+	public static String defaultfromname;
 	@Nullable
-	public static String defaultfromaddress = null;
+	public static String defaultfromaddress;
 	@Nullable
-	public static String defaulttoname = null;
+	public static String defaulttoname;
 	@Nullable
-	public static String defaulttoaddress = null;
+	public static String defaulttoaddress;
 
-	public static void mail(String server, String fromname, String fromaddress, String toname, String toaddress, String subject, String body) throws MessagingException {
-		Properties props = new Properties();
+	public static void mail(final String server, final String fromname, final String fromaddress, final String toname, final String toaddress, final String subject, final String body) throws MessagingException {
+		final Properties props = new Properties();
 		props.put("mail.smtp.host", server);
 		props.put("mail.from", fromname + " <" + fromaddress + ">");
-		Session session = Session.getInstance(props, null);
-		MimeMessage msg = new MimeMessage(session);
+		final Session session = Session.getInstance(props, null);
+		final MimeMessage msg = new MimeMessage(session);
 		msg.setFrom();
 		msg.setRecipients(Message.RecipientType.TO, "toname <" + toaddress + ">");
 		msg.setSubject(subject);
@@ -38,31 +40,31 @@ public abstract class MailTools {
 		Transport.send(msg);
 	}
 
-	public static void mail(String fromname, String fromaddress, String toname, String toaddress, String subject, String body) throws MessagingException {
-		if (defaultserver == null) { throw new SystemException("Mail called without default server configured"); }
+	public static void mail(final String fromname, final String fromaddress, final String toname, final String toaddress, final String subject, final String body) throws MessagingException {
+		if (defaultserver == null) { throw new SystemInitialisationException("Mail called without default server configured"); }
 		mail(defaultserver, fromname, fromaddress, toname, toaddress, subject, body);
 	}
 
-	public static void mail(String toname, String toaddress, String subject, String body) throws MessagingException {
+	public static void mail(final String toname, final String toaddress, final String subject, final String body) throws MessagingException {
 		if (defaultfromname == null || defaultfromaddress == null) {
-			throw new SystemException("Mail called without default from address configured");
+			throw new SystemInitialisationException("Mail called without default from address configured");
 		}
 		mail(defaultfromname, defaultfromaddress, toname, toaddress, subject, body);
 	}
 
-	public static void mail(String subject, String body) throws MessagingException {
+	public static void mail(final String subject, final String body) throws MessagingException {
 		if (defaulttoname == null || defaulttoaddress == null) {
-			throw new SystemException("Mail called without default to address configured");
+			throw new SystemInitialisationException("Mail called without default to address configured");
 		}
 		mail(defaulttoname, defaulttoaddress, subject, body);
 	}
 
-	public static void logTrace(String subject,String intro) {
-		StringBuilder body= new StringBuilder(intro + "\n<br>\n");
-		for (StackTraceElement ele:Thread.currentThread().getStackTrace()) {
+	public static void logTrace(final String subject, final String intro) {
+		final StringBuilder body= new StringBuilder(intro + "\n<br>\n");
+		for (final StackTraceElement ele:Thread.currentThread().getStackTrace()) {
 			body.append("Caller: ").append(ele.getClassName()).append("/").append(ele.getMethodName()).append(":").append(ele.getLineNumber()).append("\n<br>\n");
 		}
-		try { MailTools.mail("Trace: "+subject, body.toString()); } catch (MessagingException ee){}
+		try { MailTools.mail("Trace: "+subject, body.toString()); } catch (final MessagingException ee){}
 	}
 
 }

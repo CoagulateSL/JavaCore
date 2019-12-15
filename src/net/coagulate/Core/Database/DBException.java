@@ -1,6 +1,6 @@
 package net.coagulate.Core.Database;
 
-import net.coagulate.Core.Tools.SystemException;
+import net.coagulate.Core.Exceptions.SystemException;
 
 /**
  * Represents errors with the GPHUD.getDB().
@@ -15,7 +15,7 @@ import net.coagulate.Core.Tools.SystemException;
  */
 public class DBException extends SystemException {
 	private static final long serialVersionUID=1L;
-	public DBException(String s) { super(s); }
+	public DBException(final String s) { super(s); }
 
-	public DBException(String s, Throwable t) { super(s, t); }
+	public DBException(final String s, final Throwable t) { super(s, t); }
 }

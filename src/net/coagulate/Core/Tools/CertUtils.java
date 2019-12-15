@@ -18,22 +18,22 @@ import java.security.spec.PKCS8EncodedKeySpec;
 public abstract class CertUtils {
 
 	@Nonnull
-	public static RSAPrivateKey generatePrivateKeyFromDER(@Nonnull byte[] keyBytes) throws InvalidKeySpecException, NoSuchAlgorithmException {
-		PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-		KeyFactory factory = KeyFactory.getInstance("RSA");
+	public static RSAPrivateKey generatePrivateKeyFromDER(@Nonnull final byte[] keyBytes) throws InvalidKeySpecException, NoSuchAlgorithmException {
+		final PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+		final KeyFactory factory = KeyFactory.getInstance("RSA");
 		return (RSAPrivateKey) factory.generatePrivate(spec);
 	}
 
-	public static byte[] parseDERFromPEM(@Nonnull byte[] pem, @Nonnull String beginDelimiter, @Nonnull String endDelimiter) {
-		String data = new String(pem);
+	public static byte[] parseDERFromPEM(@Nonnull final byte[] pem, @Nonnull final String beginDelimiter, @Nonnull final String endDelimiter) {
+		final String data = new String(pem);
 		String[] tokens = data.split(beginDelimiter);
 		tokens = tokens[1].split(endDelimiter);
 		return DatatypeConverter.parseBase64Binary(tokens[0]);
 	}
 
 	@Nonnull
-	public static X509Certificate generateCertificateFromDER(@Nonnull byte[] certBytes) throws CertificateException {
-		CertificateFactory factory = CertificateFactory.getInstance("X.509");
+	public static X509Certificate generateCertificateFromDER(@Nonnull final byte[] certBytes) throws CertificateException {
+		final CertificateFactory factory = CertificateFactory.getInstance("X.509");
 		return (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(certBytes));
 	}
 

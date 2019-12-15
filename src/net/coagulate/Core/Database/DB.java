@@ -1,6 +1,6 @@
 package net.coagulate.Core.Database;
 
-import net.coagulate.Core.Tools.SystemException;
+import net.coagulate.Core.Exceptions.System.SystemLookupFailureException;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -30,19 +30,19 @@ public abstract class DB {
 
 	private static final Map<String, DBConnection> datasources = new HashMap<>();
 
-	static void register(@Nonnull String sourcename,@Nonnull DBConnection connection) {
+	static void register(@Nonnull final String sourcename, @Nonnull final DBConnection connection) {
 		if (datasources.containsKey(sourcename)) {
 			Logger.getLogger(DB.class.getName()).warning("Re-registering DB connection " + sourcename);
-			DBConnection outgoing = datasources.get(sourcename);
+			final DBConnection outgoing = datasources.get(sourcename);
 			outgoing.shutdown();
 		}
 		datasources.put(sourcename, connection);
 	}
 
 	@Nonnull
-	public static DBConnection get(@Nonnull String datasourcename) {
+	public static DBConnection get(@Nonnull final String datasourcename) {
 		if (!datasources.containsKey(datasourcename)) {
-			throw new SystemException("Attempt to retrieve non-existant data source " + datasourcename);
+			throw new SystemLookupFailureException("Attempt to retrieve non-existant data source " + datasourcename);
 		}
 		return datasources.get(datasourcename);
 	}
@@ -53,8 +53,8 @@ public abstract class DB {
 	}
 
 	public static void shutdown() {
-		Set<String> names = new HashSet<>(datasources.keySet());
-		for (String source : names) {
+		final Set<String> names = new HashSet<>(datasources.keySet());
+		for (final String source : names) {
 			// Logger.getLogger(DB.class.getName()).config("Closing database connection "+source); // logged by shutdown method
 			datasources.get(source).shutdown();
 			datasources.remove(source);
@@ -62,7 +62,7 @@ public abstract class DB {
 	}
 
 	public static boolean test() {
-		for (DBConnection connection : datasources.values()) {
+		for (final DBConnection connection : datasources.values()) {
 			if (!connection.test()) { return false; }
 		}
 		return true;

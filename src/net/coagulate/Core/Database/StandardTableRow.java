@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class StandardTableRow extends TableRow {
 
-	public StandardTableRow(int id) { super(id); }
+	public StandardTableRow(final int id) { super(id); }
 
 	@Nonnull
 	@Override

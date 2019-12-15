@@ -1,7 +1,7 @@
 package net.coagulate.Core.HTTP;
 
+import net.coagulate.Core.Exceptions.System.SystemInitialisationException;
 import net.coagulate.Core.Tools.CertUtils;
-import net.coagulate.Core.Tools.SystemException;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.bootstrap.HttpServer;
@@ -34,44 +34,44 @@ public class HTTPSListener {
 
 	private final Object hasshutdownlock = new Object();
 	@Nullable
-	private ServerBootstrap bootstrap = null;
+	private ServerBootstrap bootstrap;
 	@Nullable
-	private Logger logger = null;
+	private Logger logger;
 	@Nullable
-	private HttpServer server = null;
+	private HttpServer server;
 	@Nonnull
 	private String name = "HTTPS";
 	private int port = -1;
-	private boolean hasshutdown = false;
+	private boolean hasshutdown;
 
-	public HTTPSListener(int port, @Nonnull String pemfile, HttpRequestHandlerMapper mapper) {
+	public HTTPSListener(final int port, @Nonnull final String pemfile, final HttpRequestHandlerMapper mapper) {
 		this.port = port;
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
 		try {
-			SSLContext sslcontext = SSLContext.getInstance("TLS");
+			final SSLContext sslcontext = SSLContext.getInstance("TLS");
 
-			byte[] certAndKey = Files.readAllBytes(new File(pemfile).toPath());
-			byte[] certBytes = CertUtils.parseDERFromPEM(certAndKey, "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
-			byte[] keyBytes = CertUtils.parseDERFromPEM(certAndKey, "-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----");
-			byte[] chainBytes = CertUtils.parseDERFromPEM(Files.readAllBytes(new File("/etc/keys/chain.pem").toPath()), "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
+			final byte[] certAndKey = Files.readAllBytes(new File(pemfile).toPath());
+			final byte[] certBytes = CertUtils.parseDERFromPEM(certAndKey, "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
+			final byte[] keyBytes = CertUtils.parseDERFromPEM(certAndKey, "-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----");
+			final byte[] chainBytes = CertUtils.parseDERFromPEM(Files.readAllBytes(new File("/etc/keys/chain.pem").toPath()), "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
 
-			X509Certificate cert = CertUtils.generateCertificateFromDER(certBytes);
-			X509Certificate chain = CertUtils.generateCertificateFromDER(chainBytes);
-			RSAPrivateKey key = CertUtils.generatePrivateKeyFromDER(keyBytes);
+			final X509Certificate cert = CertUtils.generateCertificateFromDER(certBytes);
+			final X509Certificate chain = CertUtils.generateCertificateFromDER(chainBytes);
+			final RSAPrivateKey key = CertUtils.generatePrivateKeyFromDER(keyBytes);
 
-			KeyStore keystore = KeyStore.getInstance("JKS");
+			final KeyStore keystore = KeyStore.getInstance("JKS");
 			keystore.load(null);
 			keystore.setCertificateEntry("TLS Presentation", cert);
 			keystore.setKeyEntry("key-alias", key, "changeit".toCharArray(), new Certificate[]{cert, chain});
 
-			KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+			final KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
 			kmf.init(keystore, "changeit".toCharArray());
-			KeyManager[] km = kmf.getKeyManagers();
+			final KeyManager[] km = kmf.getKeyManagers();
 			sslcontext.init(km, null, null);
 
 
 			// start creating a server, on the port.  disable keepalive.  probably can get rid of that.
-			SocketConfig reuse = SocketConfig.custom()
+			final SocketConfig reuse = SocketConfig.custom()
 					.setBacklogSize(100)
 					.setSoTimeout(15000)
 					.setTcpNoDelay(true)
@@ -90,10 +90,10 @@ public class HTTPSListener {
 			name = "HTTPS:" + port;
 			//addHandlers(bootstrap);
 			server = bootstrap.create();
-			if (server==null) { throw new SystemException("Server bootstrap was null?"); }
+			if (server==null) { throw new SystemInitialisationException("Server bootstrap was null?"); }
 			logger().config("HTTPS Services starting");
 			server.start();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// "whoops"
 			logger().log(SEVERE, "Listener startup crashed", e);
 			System.exit(1);
@@ -119,7 +119,7 @@ public class HTTPSListener {
 		if (server != null) {
 			logger().log(CONFIG, "Stopping listener");
 			server.stop();
-			try { server.awaitTermination(15, TimeUnit.SECONDS); } catch (InterruptedException e) {}
+			try { server.awaitTermination(15, TimeUnit.SECONDS); } catch (final InterruptedException e) {}
 			logger().log(CONFIG, "Shutting down remaining connections in 15 seconds");
 			server.shutdown(15, TimeUnit.SECONDS);
 			logger().log(CONFIG, "All connections have ended");
@@ -129,7 +129,7 @@ public class HTTPSListener {
 	private static class ShutdownHook extends Thread {
 		private final HTTPSListener target;
 
-		public ShutdownHook(HTTPSListener target) { this.target = target; }
+		public ShutdownHook(final HTTPSListener target) { this.target = target; }
 
 		@Override
 		public void run() {

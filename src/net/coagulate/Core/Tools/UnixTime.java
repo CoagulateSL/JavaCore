@@ -30,18 +30,18 @@ public abstract class UnixTime {
 	 * @param minute
 	 * @return Representative unixtime
 	 */
-	public static int create(String timezone, int day, int month, int year, int hour, int minute) {
-		DateFormat dfslt = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+	public static int create(final String timezone, final int day, int month, int year, final int hour, final int minute) {
+		final DateFormat dfslt = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
 		dfslt.setTimeZone(TimeZone.getTimeZone(timezone));
 		if (year < 100) {
 			year += 2000;
 		} // y2k1 bug.   but then we have a 2037 bug too.
-		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(timezone));
+		final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(timezone));
 		//System.out.println(day+" "+month+" "+year+" "+hour+" "+minute);
 		month--;
 		//System.out.println(day+" "+month+" "+year+" "+hour+" "+minute);
 		cal.set(year, month, day, hour, minute, 0);
-		Date d = cal.getTime();
+		final Date d = cal.getTime();
 		long l = d.getTime();
 		l = (l / (long) 1000.0);
 		return (int) l;
@@ -61,19 +61,19 @@ public abstract class UnixTime {
 	}
 
 	@Nonnull
-	public static String fromUnixTime(int date, String timezone) {
-		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+	public static String fromUnixTime(final int date, final String timezone) {
+		final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
 		df.setTimeZone(TimeZone.getTimeZone(timezone));
 		return fromUnixTime(date, df);
 	}
 
 	@Nonnull
-	public static String fromUnixTime(@Nonnull String date, String timezone) {
+	public static String fromUnixTime(@Nonnull final String date, final String timezone) {
 		return fromUnixTime(Integer.parseInt(date), timezone);
 	}
 
 	@Nonnull
-	private static String fromUnixTime(int date, @Nonnull DateFormat df) {
+	private static String fromUnixTime(final int date, @Nonnull final DateFormat df) {
 		return df.format(new Date(((long) (date)) * ((long) 1000)));
 	}
 
@@ -83,7 +83,7 @@ public abstract class UnixTime {
 	 * @param unixtime Unix time to compare to now
 	 * @return seconds difference, -ve for before now, +ve for after now, 0=now
 	 */
-	public static int relativeToNow(int unixtime) {
+	public static int relativeToNow(final int unixtime) {
 		return getUnixTime() - unixtime;
 	}
 
@@ -94,7 +94,7 @@ public abstract class UnixTime {
 	 * @return Duration as a string (e.g. 3h 2m)
 	 */
 	@Nonnull
-	public static String duration(int seconds) {
+	public static String duration(final int seconds) {
 		return duration(seconds, false);
 	}
 
@@ -106,23 +106,23 @@ public abstract class UnixTime {
 	 * @return Duration as a string (e.g. 3h 2m 1s)
 	 */
 	@Nonnull
-	public static String duration(int t, boolean precise) {
+	public static String duration(int t, final boolean precise) {
 		String prefix = "";
 		if (t < 0) {
 			prefix = "T-";
 			t = 0 - t;
 		}
-		int seconds = t % 60;
+		final int seconds = t % 60;
 		t = t / 60;
-		int minutes = t % 60;
+		final int minutes = t % 60;
 		t = t / 60;
-		int hours = t % 24;
+		final int hours = t % 24;
 		t = t / 24;
-		int days = t % 7;
+		final int days = t % 7;
 		t = t / 7;
-		int weeks = t % 4;
+		final int weeks = t % 4;
 		t = t / 4;
-		int months = t;
+		final int months = t;
 		if (precise) {
 			boolean o = false;
 			String r = prefix;
@@ -210,7 +210,7 @@ public abstract class UnixTime {
 	 * @return Time between now and then expressed as a duration, with seconds
 	 */
 	@Nonnull
-	public static String durationRelativeToNow(int unixtime) {
+	public static String durationRelativeToNow(final int unixtime) {
 		return durationRelativeToNow(unixtime, true);
 	}
 
@@ -222,7 +222,7 @@ public abstract class UnixTime {
 	 * @return Time between now and then expressed as a duration, with optional seconds
 	 */
 	@Nonnull
-	public static String durationRelativeToNow(int unixtime, boolean withseconds) {
+	public static String durationRelativeToNow(final int unixtime, final boolean withseconds) {
 		return duration(relativeToNow(unixtime), withseconds);
 	}
 

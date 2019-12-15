@@ -26,14 +26,14 @@ public class Results implements Iterable<ResultsRow> {
 	 * After this, the resultset / connection can be released (which is done in Database class)
 	 * @param rs The ResultSet
 	 */
-	public Results(@Nonnull ResultSet rs) {
+	public Results(@Nonnull final ResultSet rs) {
 		try {
-			ResultSetMetaData rsmd = rs.getMetaData();
+			final ResultSetMetaData rsmd = rs.getMetaData();
 			while (rs.next()) {
-				ResultsRow r = new ResultsRow(rs);
+				final ResultsRow r = new ResultsRow(rs);
 				data.add(r);
 			}
-		} catch (SQLException ex) {
+		} catch (final SQLException ex) {
 			throw new DBException("SQLException reading a resultset from SQL:'" + statement + "'", ex);
 		}
 	}
@@ -42,9 +42,8 @@ public class Results implements Iterable<ResultsRow> {
 	 *
 	 * @return Iterator over the rows of the Results
 	 */
-	@NotNull
 	@Override
-	public Iterator<ResultsRow> iterator() { return data.iterator(); }
+	public @NotNull Iterator<ResultsRow> iterator() { return data.iterator(); }
 
 	/** Size of results
 	 *
@@ -74,5 +73,5 @@ public class Results implements Iterable<ResultsRow> {
 	 *
 	 * @param stmt SQL Statement
 	 */
-	public void setStatement(String stmt) { statement = stmt; }
+	public void setStatement(final String stmt) { statement = stmt; }
 }

@@ -27,25 +27,25 @@ public abstract class Passwords {
 	public static final int PBKDF2_INDEX = 4;
 
 	@Nonnull
-	public static String createHash(@Nonnull String password) {
+	public static String createHash(@Nonnull final String password) {
 		try {
 			return createHash(password.toCharArray());
-		} catch (CannotPerformOperationException ex) {
+		} catch (final CannotPerformOperationException ex) {
 			throw new AssertionError("Crypto error creating password hash", ex);
 		}
 	}
 
 	@Nonnull
-	private static String createHash(char[] password)
+	private static String createHash(final char[] password)
 			throws CannotPerformOperationException {
 		// Generate a random salt
-		SecureRandom random = new SecureRandom();
-		byte[] salt = new byte[SALT_BYTE_SIZE];
+		final SecureRandom random = new SecureRandom();
+		final byte[] salt = new byte[SALT_BYTE_SIZE];
 		random.nextBytes(salt);
 
 		// Hash the password
-		byte[] hash = pbkdf2(password, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
-		int hashSize = hash.length;
+		final byte[] hash = pbkdf2(password, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
+		final int hashSize = hash.length;
 
 		// format: algorithm:iterations:hashSize:salt:hash
 		return "sha1:" +
@@ -57,18 +57,18 @@ public abstract class Passwords {
 				toBase64(hash);
 	}
 
-	public static boolean verifyPassword(@Nonnull String password, @Nonnull String correctHash) {
+	public static boolean verifyPassword(@Nonnull final String password, @Nonnull final String correctHash) {
 		try {
 			return verifyPassword(password.toCharArray(), correctHash);
-		} catch (@Nonnull CannotPerformOperationException | InvalidHashException ex) {
+		} catch (@Nonnull final CannotPerformOperationException | InvalidHashException ex) {
 			throw new AssertionError("Crypto error verifying password", ex);
 		}
 	}
 
-	private static boolean verifyPassword(char[] password, @Nonnull String correctHash)
+	private static boolean verifyPassword(final char[] password, @Nonnull final String correctHash)
 			throws CannotPerformOperationException, InvalidHashException {
 		// Decode the hash into its parameters
-		String[] params = correctHash.split(":");
+		final String[] params = correctHash.split(":");
 		if (params.length != HASH_SECTIONS) {
 			throw new InvalidHashException(
 					"Fields are missing from the password hash."
@@ -85,7 +85,7 @@ public abstract class Passwords {
 		int iterations = 0;
 		try {
 			iterations = Integer.parseInt(params[ITERATION_INDEX]);
-		} catch (NumberFormatException ex) {
+		} catch (final NumberFormatException ex) {
 			throw new InvalidHashException(
 					"Could not parse the iteration count as an integer.",
 					ex
@@ -102,7 +102,7 @@ public abstract class Passwords {
 		byte[] salt = null;
 		try {
 			salt = fromBase64(params[SALT_INDEX]);
-		} catch (IllegalArgumentException ex) {
+		} catch (final IllegalArgumentException ex) {
 			throw new InvalidHashException(
 					"Base64 decoding of salt failed.",
 					ex
@@ -112,7 +112,7 @@ public abstract class Passwords {
 		byte[] hash = null;
 		try {
 			hash = fromBase64(params[PBKDF2_INDEX]);
-		} catch (IllegalArgumentException ex) {
+		} catch (final IllegalArgumentException ex) {
 			throw new InvalidHashException(
 					"Base64 decoding of pbkdf2 output failed.",
 					ex
@@ -123,7 +123,7 @@ public abstract class Passwords {
 		int storedHashSize = 0;
 		try {
 			storedHashSize = Integer.parseInt(params[HASH_SIZE_INDEX]);
-		} catch (NumberFormatException ex) {
+		} catch (final NumberFormatException ex) {
 			throw new InvalidHashException(
 					"Could not parse the hash size as an integer.",
 					ex
@@ -138,31 +138,31 @@ public abstract class Passwords {
 
 		// Compute the hash of the provided password, using the same salt,
 		// iteration count, and hash length
-		byte[] testHash = pbkdf2(password, salt, iterations, hash.length);
+		final byte[] testHash = pbkdf2(password, salt, iterations, hash.length);
 		// Compare the hashes in constant time. The password is correct if
 		// both hashes match.
 		return slowEquals(hash, testHash);
 	}
 
-	private static boolean slowEquals(@Nonnull byte[] a, @Nonnull byte[] b) {
+	private static boolean slowEquals(@Nonnull final byte[] a, @Nonnull final byte[] b) {
 		int diff = a.length ^ b.length;
 		for (int i = 0; i < a.length && i < b.length; i++)
 			diff |= a[i] ^ b[i];
 		return diff == 0;
 	}
 
-	private static byte[] pbkdf2(char[] password, @Nonnull byte[] salt, int iterations, int bytes)
+	private static byte[] pbkdf2(final char[] password, @Nonnull final byte[] salt, final int iterations, final int bytes)
 			throws CannotPerformOperationException {
 		try {
-			PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
-			SecretKeyFactory skf = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);
+			final PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
+			final SecretKeyFactory skf = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);
 			return skf.generateSecret(spec).getEncoded();
-		} catch (NoSuchAlgorithmException ex) {
+		} catch (final NoSuchAlgorithmException ex) {
 			throw new CannotPerformOperationException(
 					"Hash algorithm not supported.",
 					ex
 			);
-		} catch (InvalidKeySpecException ex) {
+		} catch (final InvalidKeySpecException ex) {
 			throw new CannotPerformOperationException(
 					"Invalid key spec.",
 					ex
@@ -170,32 +170,32 @@ public abstract class Passwords {
 		}
 	}
 
-	private static byte[] fromBase64(String hex) {
+	private static byte[] fromBase64(final String hex) {
 		return DatatypeConverter.parseBase64Binary(hex);
 	}
 
-	private static String toBase64(byte[] array) {
+	private static String toBase64(final byte[] array) {
 		return DatatypeConverter.printBase64Binary(array);
 	}
 
 	@SuppressWarnings("serial")
 	public static class InvalidHashException extends Exception {
-		public InvalidHashException(String message) {
+		public InvalidHashException(final String message) {
 			super(message);
 		}
 
-		public InvalidHashException(String message, Throwable source) {
+		public InvalidHashException(final String message, final Throwable source) {
 			super(message, source);
 		}
 	}
 
 	@SuppressWarnings("serial")
 	public static class CannotPerformOperationException extends Exception {
-		public CannotPerformOperationException(String message) {
+		public CannotPerformOperationException(final String message) {
 			super(message);
 		}
 
-		public CannotPerformOperationException(String message, Throwable source) {
+		public CannotPerformOperationException(final String message, final Throwable source) {
 			super(message, source);
 		}
 	}

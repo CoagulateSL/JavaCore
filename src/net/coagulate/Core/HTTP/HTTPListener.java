@@ -1,6 +1,6 @@
 package net.coagulate.Core.HTTP;
 
-import net.coagulate.Core.Tools.SystemException;
+import net.coagulate.Core.Exceptions.System.SystemInitialisationException;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.bootstrap.HttpServer;
@@ -24,22 +24,22 @@ public class HTTPListener {
 
 	private final Object hasshutdownlock = new Object();
 	@Nullable
-	private ServerBootstrap bootstrap = null;
+	private ServerBootstrap bootstrap;
 	@Nullable
-	private Logger logger = null;
+	private Logger logger;
 	@Nullable
-	private HttpServer server = null;
+	private HttpServer server;
 	@Nonnull
 	private String name = "HTTPS";
 	private int port = -1;
-	private boolean hasshutdown = false;
+	private boolean hasshutdown;
 
-	public HTTPListener(int port, String pemfile, HttpRequestHandlerMapper mapper) {
+	public HTTPListener(final int port, final String pemfile, final HttpRequestHandlerMapper mapper) {
 		this.port = port;
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
 		try {
 			// start creating a server, on the port.  disable keepalive.  probably can get rid of that.
-			SocketConfig reuse = SocketConfig.custom()
+			final SocketConfig reuse = SocketConfig.custom()
 					.setBacklogSize(100)
 					.setSoTimeout(15000)
 					.setTcpNoDelay(true)
@@ -57,10 +57,10 @@ public class HTTPListener {
 			name = "HTTP:" + port;
 			//addHandlers(bootstrap);
 			server = bootstrap.create();
-			if (server==null) { throw new SystemException("Server bootstrap is null?"); }
+			if (server==null) { throw new SystemInitialisationException("Server bootstrap is null?"); }
 			logger().config("HTTP Services starting");
 			server.start();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			// "whoops"
 			logger().log(SEVERE, "Listener startup crashed", e);
 			System.exit(1);
@@ -86,7 +86,7 @@ public class HTTPListener {
 		if (server != null) {
 			logger().log(CONFIG, "Stopping listener");
 			server.stop();
-			try { server.awaitTermination(15, TimeUnit.SECONDS); } catch (InterruptedException e) {}
+			try { server.awaitTermination(15, TimeUnit.SECONDS); } catch (final InterruptedException e) {}
 			logger().log(CONFIG, "Shutting down remaining connections in 15 seconds");
 			server.shutdown(15, TimeUnit.SECONDS);
 			logger().log(CONFIG, "All connections have ended");
@@ -96,7 +96,7 @@ public class HTTPListener {
 	private static class ShutdownHook extends Thread {
 		private final HTTPListener target;
 
-		public ShutdownHook(HTTPListener target) { this.target = target; }
+		public ShutdownHook(final HTTPListener target) { this.target = target; }
 
 		@Override
 		public void run() {

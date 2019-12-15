@@ -10,17 +10,17 @@ import java.util.Scanner;
  */
 public abstract class ByteTools {
 
-	private static String toBase64(byte[] array) {
+	private static String toBase64(final byte[] array) {
 		return DatatypeConverter.printBase64Binary(array);
 	}
 
 	@Nonnull
-	public static String convertStreamToString(@Nonnull InputStream is) {
-		Scanner s = new Scanner(is).useDelimiter("\\A");
+	public static String convertStreamToString(@Nonnull final InputStream is) {
+		final Scanner s = new Scanner(is).useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
 
-	private static byte[] fromBase64(String hex) {
+	private static byte[] fromBase64(final String hex) {
 		return DatatypeConverter.parseBase64Binary(hex);
 	}
 
