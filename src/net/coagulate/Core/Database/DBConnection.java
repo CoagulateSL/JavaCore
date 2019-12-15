@@ -1,5 +1,6 @@
 package net.coagulate.Core.Database;
 
+import net.coagulate.Core.Exceptions.User.UserConfigurationException;
 import net.coagulate.Core.Exceptions.UserException;
 
 import javax.annotation.Nonnull;
