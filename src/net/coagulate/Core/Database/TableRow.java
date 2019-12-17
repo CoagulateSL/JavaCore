@@ -53,22 +53,41 @@ public abstract class TableRow extends Table {
 	public int getId() { return id; }
 
 	@Nullable
-	public String getString(final String column) { return dqs( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public String getStringNullable(final String column) { return dqs( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+
+	@Nonnull
+	public String getString(final String column) {
+		final String ret=getStringNullable(column);
+		if (ret==null) { throw new NoDataException("Null value for get string from "+getTableName()+" columne "+getIdColumn()+" id "+getId()); }
+		return ret;
+	}
 
 	@Nullable
 	public Integer getIntNullable(final String column) { return dqi( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
 
 	public int getInt(final String column) {
 		final Integer i= getIntNullable(column);
-		if (i==null) { throw new NoDataException("Null integer for column "+column); }
+		if (i==null) { throw new NoDataException("Null value for get integer from "+getTableName()+" columne "+getIdColumn()+" id "+getId()); }
 		return i;
 	}
 
 	@Nullable
-	public Float getFloat(final String column) { return dqf( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public Float getFloatNullable(final String column) { return dqf( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+
+	public float getFloat(final String column) {
+		final Float ret=getFloatNullable(column);
+		if (ret==null) { throw new NoDataException("Null value for get float from "+getTableName()+" columne "+getIdColumn()+" id "+getId()); }
+		return ret;
+	}
 
 	@Nullable
-	public Long getLong(final String column) { return dql( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+	public Long getLongNullable(final String column) { return dql( "select " + column + " from " + getTableName() + " where " + getIdColumn() + "=?", getId()); }
+
+	public long getLong(final String column) {
+		final Long ret=getLongNullable(column);
+		if (ret==null) { throw new NoDataException("Null value for get long from "+getTableName()+" columne "+getIdColumn()+" id "+getId()); }
+		return ret;
+	}
 
 	public boolean getBool(final String columnname) {
 		final Integer val = getIntNullable(columnname);
