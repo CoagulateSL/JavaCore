@@ -1,5 +1,6 @@
 package net.coagulate.Core.Database;
 
+import net.coagulate.Core.Exceptions.System.SystemInitialisationException;
 import org.mariadb.jdbc.MariaDbPoolDataSource;
 
 import javax.annotation.Nonnull;
@@ -36,7 +37,7 @@ public class MariaDBConnection extends DBConnection {
 				final Map<String, Integer> notempty = new TreeMap<>();
 				for (final ResultsRow r : tables) {
 					final String tablename = r.getStringNullable();
-					final int rows = dqi("select count(*) from " + tablename);
+					final int rows = dqinn("select count(*) from " + tablename);
 					if (rows > 0) {
 						notempty.put(tablename, rows);
 					} else {
@@ -65,13 +66,16 @@ public class MariaDBConnection extends DBConnection {
 				pool.close();
 				pool = null;
 			}
-		} catch (final NullPointerException e) {} // hmm
-		catch (final Exception e) { logger.log(CONFIG, "Error closing DB connection: " + e.getLocalizedMessage()); }
+		} catch (@Nonnull final NullPointerException e) {} // hmm
+		catch (@Nonnull final Exception e) { logger.log(CONFIG, "Error closing DB connection: " + e.getLocalizedMessage()); }
 	}
 
 	@Nonnull
 	public Connection getConnection() {
-		try { return pool.getConnection(); } catch (final SQLException e) {
+		try {
+			if (pool==null) { throw new SystemInitialisationException("DB Pool is not initialised (is null)"); }
+			return pool.getConnection();
+		} catch (@Nonnull final SQLException e) {
 			throw new DBException("Unable to get database pooled connection", e);
 		}
 	}

@@ -78,7 +78,7 @@ public abstract class ClassTools {
 				Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG, "Classpath scanner found " + getClassmap().size() + " classes, " + totalclasses + " scanned.");
 				initialised = true;
 			}
-		} catch (final Throwable t) {
+		} catch (@Nonnull final Throwable t) {
 			System.out.println("Class explorer leaked " + t);
 		}
 	}
@@ -99,7 +99,7 @@ public abstract class ClassTools {
 				if (DEBUG) { System.out.println("Path element: " + element); }
 				final File f = new File(element);
 				inspectFile(f, f, classes);
-			} catch (final IOException e) {
+			} catch (@Nonnull final IOException e) {
 				if (DEBUG) {
 					Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING, "Exceptioned loading classpath element " + element + " - " + e.getLocalizedMessage());
 				}
@@ -137,7 +137,7 @@ public abstract class ClassTools {
 		final File[] content = directory.listFiles();
 		if (content==null) { throw new SystemConsistencyException("Failed to enumerate directory, it returned null for listFiles()"); }
 		for (final File f : content) {
-			try { inspectFile(f, base, classes); } catch (final IOException e) {
+			try { inspectFile(f, base, classes); } catch (@Nonnull final IOException e) {
 				if (DEBUG) {
 					Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING, "Exceptioned recursing " + f + " - " + e.getLocalizedMessage());
 				}
@@ -169,7 +169,7 @@ public abstract class ClassTools {
 			final Class<? extends Object> c = Class.forName(classname);
 			classes.add(c);
 			if (DEBUG) { System.out.println("ADDED " + classname); }
-		} catch (final Throwable e) { // note this is usually bad.  but we can get 'errors' here we dont care about
+		} catch (@Nonnull final Throwable e) { // note this is usually bad.  but we can get 'errors' here we dont care about
 			if (DEBUG) { System.out.println("FAILED TO ADD " + classname + " because " + e); }
 			//Logger.getLogger(ClassTools.class.getCanonicalName()).log(INFO,"Failed to load class "+classname+" : "+e.getLocalizedMessage());
 			Logger.getLogger(ClassTools.class.getCanonicalName()).log(SEVERE, "Failed to load class " + classname, e);
@@ -198,7 +198,7 @@ public abstract class ClassTools {
 						if (DEBUG) { System.out.println(f.getParentFile().getCanonicalPath() + "/" + element); }
 						try {
 							inspectFile(new File(f.getParentFile().getCanonicalPath() + "/" + element), f.getParentFile(), classes);
-						} catch (final Exception e) {
+						} catch (@Nonnull final Exception e) {
 							if (DEBUG) {
 								Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING, "Failed to recurse MANIFEST.MF", e);
 							}

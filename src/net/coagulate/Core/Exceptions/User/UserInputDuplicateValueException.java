@@ -5,11 +5,11 @@ package net.coagulate.Core.Exceptions.User;
 public class UserInputDuplicateValueException extends UserInputValidationException {
 	private static final long serialVersionUID=1L;
 
-	public UserInputDuplicateValueException(String reason) {
+	public UserInputDuplicateValueException(final String reason) {
 		super(reason);
 	}
 
-	public UserInputDuplicateValueException(String reason, Throwable cause) {
+	public UserInputDuplicateValueException(final String reason, final Throwable cause) {
 		super(reason, cause);
 	}
 }

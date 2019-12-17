@@ -90,7 +90,7 @@ public abstract class DBConnection {
 			final int result = dqinn("select 1");
 			if (result != 1) { throw new DBException("Select count(*) from ping returned not 1 (" + result + ")"); }
 			return true;
-		} catch (final Exception e) { logger.log(SEVERE, "Database connectivity test failure", e); }
+		} catch (@Nonnull final Exception e) { logger.log(SEVERE, "Database connectivity test failure", e); }
 		return false;
 	}
 
@@ -156,7 +156,7 @@ public abstract class DBConnection {
 				}
 			}
 			return ps;
-		} catch (final SQLException e) { throw new DBException("Failed to prepare statement " + parameterisedcommand, e); }
+		} catch (@Nonnull final SQLException e) { throw new DBException("Failed to prepare statement " + parameterisedcommand, e); }
 	}
 
 	// some code I lifted from another project, and modified.  The "NullInteger" is a horrible hack, what am I doing :/
@@ -227,12 +227,12 @@ public abstract class DBConnection {
 			final Results results = new Results(rs);
 			results.setStatement(stm.toString());
 			return results;
-		} catch (final SQLException e) {
+		} catch (@Nonnull final SQLException e) {
 			throw new DBException("SQL Exception executing query " + parameterisedcommand, e);
 		} finally {
-			if (rs != null) { try {rs.close(); } catch (final SQLException e) {} }
-			if (stm != null) { try {stm.close();} catch (final SQLException e) {}}
-			if (conn != null) { try { conn.close(); } catch (final SQLException e) {}}
+			if (rs != null) { try {rs.close(); } catch (@Nonnull final SQLException e) {} }
+			if (stm != null) { try {stm.close();} catch (@Nonnull final SQLException e) {}}
+			if (conn != null) { try { conn.close(); } catch (@Nonnull final SQLException e) {}}
 		}
 	}
 
@@ -270,9 +270,9 @@ public abstract class DBConnection {
 			try {
 				_d(parameterisedcommand, params);
 				return;
-			} catch (final LockException e) {
+			} catch (@Nonnull final LockException e) {
 				tries--;
-				try { Thread.sleep((long) (50.0 * Math.random())); } catch (final InterruptedException ee) {}
+				try { Thread.sleep((long) (50.0 * Math.random())); } catch (@Nonnull final InterruptedException ee) {}
 				if (tries == 0) { throw e; }
 			}
 		}
@@ -311,9 +311,9 @@ public abstract class DBConnection {
 					if (updatemax < diff) { updatemax = diff; }
 				}
 			}
-		} catch (final SQLTransactionRollbackException e) {
+		} catch (@Nonnull final SQLTransactionRollbackException e) {
 			throw new LockException("Transaction conflicted and was rolled back", e);
-		} catch (final SQLException e) {
+		} catch (@Nonnull final SQLException e) {
 			throw new DBException("SQL error during command " + parameterisedcommand, e);
 		}
 
@@ -383,32 +383,32 @@ public abstract class DBConnection {
 	}
 
 	@Nonnull
-	public byte[] dqbytenn(final String sql, final Object... params) {
+	public byte[] dqbytenn(@Nonnull final String sql, final Object... params) {
 		final byte[] b=dqbyte(sql,params);
 		if (b==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return b;
 	}
 
-	public int dqinn(final String sql, final Object... params) {
+	public int dqinn(@Nonnull final String sql, final Object... params) {
 		final Integer i=dqi(sql,params);
 		if (i==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return i;
 	}
 
-	public float dqfnn(final String sql, final Object... params) {
+	public float dqfnn(@Nonnull final String sql, final Object... params) {
 		final Float f=dqf(sql,params);
 		if (f==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return f;
 	}
 
-	public long dqlnn(final String sql, final Object... params) {
+	public long dqlnn(@Nonnull final String sql, final Object... params) {
 		final Long l=dql(sql,params);
 		if (l==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return l;
 	}
 
 	@Nonnull
-	public String dqsnn(final String sql, final Object... params) {
+	public String dqsnn(@Nonnull final String sql, final Object... params) {
 		final String s=dqs(sql,params);
 		if (s==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return s;

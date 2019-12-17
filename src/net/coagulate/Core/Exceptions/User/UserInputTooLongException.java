@@ -5,11 +5,11 @@ package net.coagulate.Core.Exceptions.User;
 public class UserInputTooLongException extends UserInputValidationException {
 	private static final long serialVersionUID=1L;
 
-	public UserInputTooLongException(String reason) {
+	public UserInputTooLongException(final String reason) {
 		super(reason);
 	}
 
-	public UserInputTooLongException(String reason, Throwable cause) {
+	public UserInputTooLongException(final String reason, final Throwable cause) {
 		super(reason, cause);
 	}
 }

@@ -33,7 +33,7 @@ public class Results implements Iterable<ResultsRow> {
 				final ResultsRow r = new ResultsRow(rs);
 				data.add(r);
 			}
-		} catch (final SQLException ex) {
+		} catch (@Nonnull final SQLException ex) {
 			throw new DBException("SQLException reading a resultset from SQL:'" + statement + "'", ex);
 		}
 	}

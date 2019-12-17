@@ -23,9 +23,9 @@ public abstract class DumpableState {
 				f.setAccessible(true);
 				final Object content = f.get(this);
 				ret.append(toHTML(content));
-			} catch (final IllegalArgumentException ex) {
+			} catch (@Nonnull final IllegalArgumentException ex) {
 				ret.append("IllegalArgument");
-			} catch (final IllegalAccessException ex) {
+			} catch (@Nonnull final IllegalAccessException ex) {
 				ret.append("IllegalAccess");
 			}
 			ret.append("</td></tr>");

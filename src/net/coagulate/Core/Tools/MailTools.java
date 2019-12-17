@@ -2,6 +2,7 @@ package net.coagulate.Core.Tools;
 
 import net.coagulate.Core.Exceptions.System.SystemInitialisationException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -64,7 +65,7 @@ public abstract class MailTools {
 		for (final StackTraceElement ele:Thread.currentThread().getStackTrace()) {
 			body.append("Caller: ").append(ele.getClassName()).append("/").append(ele.getMethodName()).append(":").append(ele.getLineNumber()).append("\n<br>\n");
 		}
-		try { MailTools.mail("Trace: "+subject, body.toString()); } catch (final MessagingException ee){}
+		try { MailTools.mail("Trace: "+subject, body.toString()); } catch (@Nonnull final MessagingException ee){}
 	}
 
 }

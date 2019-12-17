@@ -30,7 +30,7 @@ public abstract class Passwords {
 	public static String createHash(@Nonnull final String password) {
 		try {
 			return createHash(password.toCharArray());
-		} catch (final CannotPerformOperationException ex) {
+		} catch (@Nonnull final CannotPerformOperationException ex) {
 			throw new AssertionError("Crypto error creating password hash", ex);
 		}
 	}
@@ -82,10 +82,10 @@ public abstract class Passwords {
 			);
 		}
 
-		int iterations = 0;
+		final int iterations;
 		try {
 			iterations = Integer.parseInt(params[ITERATION_INDEX]);
-		} catch (final NumberFormatException ex) {
+		} catch (@Nonnull final NumberFormatException ex) {
 			throw new InvalidHashException(
 					"Could not parse the iteration count as an integer.",
 					ex
@@ -99,20 +99,20 @@ public abstract class Passwords {
 		}
 
 
-		byte[] salt = null;
+		final byte[] salt;
 		try {
 			salt = fromBase64(params[SALT_INDEX]);
-		} catch (final IllegalArgumentException ex) {
+		} catch (@Nonnull final IllegalArgumentException ex) {
 			throw new InvalidHashException(
 					"Base64 decoding of salt failed.",
 					ex
 			);
 		}
 
-		byte[] hash = null;
+		final byte[] hash;
 		try {
 			hash = fromBase64(params[PBKDF2_INDEX]);
-		} catch (final IllegalArgumentException ex) {
+		} catch (@Nonnull final IllegalArgumentException ex) {
 			throw new InvalidHashException(
 					"Base64 decoding of pbkdf2 output failed.",
 					ex
@@ -120,10 +120,10 @@ public abstract class Passwords {
 		}
 
 
-		int storedHashSize = 0;
+		final int storedHashSize;
 		try {
 			storedHashSize = Integer.parseInt(params[HASH_SIZE_INDEX]);
-		} catch (final NumberFormatException ex) {
+		} catch (@Nonnull final NumberFormatException ex) {
 			throw new InvalidHashException(
 					"Could not parse the hash size as an integer.",
 					ex
@@ -157,12 +157,12 @@ public abstract class Passwords {
 			final PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
 			final SecretKeyFactory skf = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);
 			return skf.generateSecret(spec).getEncoded();
-		} catch (final NoSuchAlgorithmException ex) {
+		} catch (@Nonnull final NoSuchAlgorithmException ex) {
 			throw new CannotPerformOperationException(
 					"Hash algorithm not supported.",
 					ex
 			);
-		} catch (final InvalidKeySpecException ex) {
+		} catch (@Nonnull final InvalidKeySpecException ex) {
 			throw new CannotPerformOperationException(
 					"Invalid key spec.",
 					ex

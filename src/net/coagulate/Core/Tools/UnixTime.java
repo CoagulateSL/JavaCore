@@ -148,7 +148,7 @@ public abstract class UnixTime {
 			}
 			if (seconds > 0 || o) {
 				r = r + seconds + "s ";
-				o = true;
+				//o = true;
 			}
 			return r;
 		}
@@ -198,7 +198,7 @@ public abstract class UnixTime {
 			if (seconds > 0) {
 				r = r + seconds + "s";
 			}
-			steps++;
+			//steps++;
 		}
 		return r;
 	}

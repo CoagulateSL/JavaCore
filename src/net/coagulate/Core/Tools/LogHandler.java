@@ -49,7 +49,7 @@ public class LogHandler extends Handler {
 				//if (replacewith.length()>100) {
 				//    System.out.println("WARNING: Large substitution");
 				//} else {
-				message = message.replaceAll("\\{" + i + "\\}", parameters[i].toString());
+				message = message.replaceAll("\\{" + i + "}", parameters[i].toString());
 				//}
 			}
 		}
@@ -60,9 +60,9 @@ public class LogHandler extends Handler {
 			System.out.println(ExceptionTools.toString(thrown));
 			try {
 				if (alreadymailed.contains(thrown)) { alreadymailed.remove(thrown); } else {
-					MailTools.mail(mailprefix + " {LOG FALLTHROUGH} " + message + " - " + thrown.getLocalizedMessage(), ExceptionTools.toHTML(thrown));
+					MailTools.mail(mailprefix + " {NoLog} " + thrown.getClass().getSimpleName()+" - "+message + " - " + thrown.getLocalizedMessage(), ExceptionTools.toHTML(thrown));
 				}
-			} catch (final MessagingException ex) {
+			} catch (@Nonnull final MessagingException ex) {
 				System.out.println("EXCEPTION IN EXCEPTION MAILER");
 				System.out.println("EXCEPTION IN EXCEPTION MAILER");
 				System.out.println("EXCEPTION IN EXCEPTION MAILER");

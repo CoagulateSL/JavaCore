@@ -31,7 +31,7 @@ public class HTTPListener {
 	private HttpServer server;
 	@Nonnull
 	private String name = "HTTPS";
-	private int port = -1;
+	private final int port;
 	private boolean hasshutdown;
 
 	public HTTPListener(final int port, final String pemfile, final HttpRequestHandlerMapper mapper) {
@@ -60,7 +60,7 @@ public class HTTPListener {
 			if (server==null) { throw new SystemInitialisationException("Server bootstrap is null?"); }
 			logger().config("HTTP Services starting");
 			server.start();
-		} catch (final Exception e) {
+		} catch (@Nonnull final Exception e) {
 			// "whoops"
 			logger().log(SEVERE, "Listener startup crashed", e);
 			System.exit(1);
@@ -86,7 +86,7 @@ public class HTTPListener {
 		if (server != null) {
 			logger().log(CONFIG, "Stopping listener");
 			server.stop();
-			try { server.awaitTermination(15, TimeUnit.SECONDS); } catch (final InterruptedException e) {}
+			try { server.awaitTermination(15, TimeUnit.SECONDS); } catch (@Nonnull final InterruptedException e) {}
 			logger().log(CONFIG, "Shutting down remaining connections in 15 seconds");
 			server.shutdown(15, TimeUnit.SECONDS);
 			logger().log(CONFIG, "All connections have ended");

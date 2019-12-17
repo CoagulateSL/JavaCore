@@ -87,7 +87,13 @@ public abstract class TableRow extends Table {
 	public void set(final String columnname, final Integer value) { d("update " + getTableName() + " set " + columnname + "=? where " + getIdColumn() + "=?", value, getId()); }
 
 	@Nullable
-	public byte[] getBytes(final String columnname) {
+	public byte[] getBytesNullable(final String columnname) {
 		return dqbyte("select "+columnname+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
+	}
+	@Nonnull
+	public byte[] getBytes(final String columnname) {
+		byte[] ret=dqbyte("select "+columnname+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
+		if (ret==null) { ret=new byte[0]; }
+		return ret;
 	}
 }

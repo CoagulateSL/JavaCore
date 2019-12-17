@@ -6,8 +6,6 @@ package net.coagulate.Core.Database;
  * @author Iain Price <gphud@predestined.net>
  */
 
-import net.coagulate.Core.Exceptions.SystemException;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.ResultSet;
@@ -31,7 +29,7 @@ public class ResultsRow {
 				byteform.put(rsmd.getColumnName(i),rs.getBytes(i));
 				row.put(rsmd.getColumnName(i), rs.getString(i));
 			}
-		} catch (final SQLException ex) {
+		} catch (@Nonnull final SQLException ex) {
 			throw new DBException("Exception unpacking result set", ex);
 		}
 	}

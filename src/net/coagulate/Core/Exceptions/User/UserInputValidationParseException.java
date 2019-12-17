@@ -4,11 +4,11 @@ package net.coagulate.Core.Exceptions.User;
 
 public class UserInputValidationParseException extends UserInputValidationException {
 	private static final long serialVersionUID=1L;
-	public UserInputValidationParseException(String reason) {
+	public UserInputValidationParseException(final String reason) {
 		super(reason);
 	}
 
-	public UserInputValidationParseException(String reason, Throwable cause) {
+	public UserInputValidationParseException(final String reason, final Throwable cause) {
 		super(reason, cause);
 	}
 }

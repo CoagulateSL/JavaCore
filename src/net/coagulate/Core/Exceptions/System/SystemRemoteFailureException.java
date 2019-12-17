@@ -7,11 +7,11 @@ import net.coagulate.Core.Exceptions.SystemException;
 public class SystemRemoteFailureException extends SystemException {
 	private static final long serialVersionUID=1L;
 
-	public SystemRemoteFailureException(String reason) {
+	public SystemRemoteFailureException(final String reason) {
 		super(reason);
 	}
 
-	public SystemRemoteFailureException(String reason, Throwable cause) {
+	public SystemRemoteFailureException(final String reason, final Throwable cause) {
 		super(reason, cause);
 	}
 }

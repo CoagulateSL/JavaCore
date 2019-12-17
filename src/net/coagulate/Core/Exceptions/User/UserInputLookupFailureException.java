@@ -7,11 +7,11 @@ import net.coagulate.Core.Exceptions.UserException;
 public class UserInputLookupFailureException extends UserException {
 	private static final long serialVersionUID=1L;
 
-	public UserInputLookupFailureException(String reason) {
+	public UserInputLookupFailureException(final String reason) {
 		super(reason);
 	}
 
-	public UserInputLookupFailureException(String reason, Throwable cause) {
+	public UserInputLookupFailureException(final String reason, final Throwable cause) {
 		super(reason, cause);
 	}
 }
