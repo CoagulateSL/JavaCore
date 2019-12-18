@@ -7,7 +7,10 @@ package net.coagulate.Core.Database;
  */
 public class TooMuchDataException extends DBException {
 	private static final long serialVersionUID=1L;
+
 	public TooMuchDataException(final String s) { super(s); }
 
-	public TooMuchDataException(final String e, final Throwable t) { super(e, t); }
+	public TooMuchDataException(final String e,
+	                            final Throwable t)
+	{ super(e,t); }
 }

@@ -22,27 +22,29 @@ import java.util.logging.Logger;
  * @author Iain Price <gphud@predestined.net>
  */
 public abstract class DB {
-	static final long SLOWQUERYTHRESHOLD_QUERY = 100;
-	static final long SLOWQUERYTHRESHOLD_UPDATE = 250;
-	static final boolean sqldebug_queries = false;
-	static final boolean sqldebug_commands = false;
+	static final long SLOWQUERYTHRESHOLD_QUERY=100;
+	static final long SLOWQUERYTHRESHOLD_UPDATE=250;
+	static final boolean sqldebug_queries=false;
+	static final boolean sqldebug_commands=false;
 
 
-	private static final Map<String, DBConnection> datasources = new HashMap<>();
+	private static final Map<String,DBConnection> datasources=new HashMap<>();
 
-	static void register(@Nonnull final String sourcename, @Nonnull final DBConnection connection) {
+	static void register(@Nonnull final String sourcename,
+	                     @Nonnull final DBConnection connection)
+	{
 		if (datasources.containsKey(sourcename)) {
-			Logger.getLogger(DB.class.getName()).warning("Re-registering DB connection " + sourcename);
-			final DBConnection outgoing = datasources.get(sourcename);
+			Logger.getLogger(DB.class.getName()).warning("Re-registering DB connection "+sourcename);
+			final DBConnection outgoing=datasources.get(sourcename);
 			outgoing.shutdown();
 		}
-		datasources.put(sourcename, connection);
+		datasources.put(sourcename,connection);
 	}
 
 	@Nonnull
 	public static DBConnection get(@Nonnull final String datasourcename) {
 		if (!datasources.containsKey(datasourcename)) {
-			throw new SystemLookupFailureException("Attempt to retrieve non-existant data source " + datasourcename);
+			throw new SystemLookupFailureException("Attempt to retrieve non-existant data source "+datasourcename);
 		}
 		return datasources.get(datasourcename);
 	}
@@ -53,8 +55,8 @@ public abstract class DB {
 	}
 
 	public static void shutdown() {
-		final Set<String> names = new HashSet<>(datasources.keySet());
-		for (final String source : names) {
+		final Set<String> names=new HashSet<>(datasources.keySet());
+		for (final String source: names) {
 			// Logger.getLogger(DB.class.getName()).config("Closing database connection "+source); // logged by shutdown method
 			datasources.get(source).shutdown();
 			datasources.remove(source);
@@ -62,7 +64,7 @@ public abstract class DB {
 	}
 
 	public static boolean test() {
-		for (final DBConnection connection : datasources.values()) {
+		for (final DBConnection connection: datasources.values()) {
 			if (!connection.test()) { return false; }
 		}
 		return true;

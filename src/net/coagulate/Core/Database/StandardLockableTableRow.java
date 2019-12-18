@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public abstract class StandardLockableTableRow extends StandardTableRow {
 
-	private static final Random random = new Random();
+	private static final Random random=new Random();
 
 	public StandardLockableTableRow(final int id) {super(id);}
 
@@ -19,7 +19,9 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 
 	@Nonnull
 	public ResultsRow getLock() {
-		return getDatabase().dqone( "select lockedby,lockeduntil,lockedserial from " + getTableName() + " where " + getIdColumn() + "=?", getId());
+		return getDatabase().dqone("select lockedby,lockeduntil,lockedserial from "+getTableName()+" where "+getIdColumn()+"=?",
+		                           getId()
+		                          );
 	}
 
 	public int lock() { return lock(30); }
@@ -38,71 +40,96 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 	 */
 	public int lock(final int lockdurationseconds) {
 		// discover current lock state
-		final int serial = random.nextInt();
-		ResultsRow row = getLock();
-		int lockedby = row.getInt("lockedby");
-		int lockeduntil = row.getInt("lockeduntil");
-		int lockedserial = row.getInt("lockedserial");
-		if (lockeduntil > UnixTime.getUnixTime() && lockedby >= 0) {
+		final int serial=random.nextInt();
+		ResultsRow row=getLock();
+		int lockedby=row.getInt("lockedby");
+		int lockeduntil=row.getInt("lockeduntil");
+		int lockedserial=row.getInt("lockedserial");
+		if (lockeduntil>UnixTime.getUnixTime() && lockedby >= 0) {
 			//lock is claimed
-			throw new LockException("Already locked by node " + lockedby + " (we are " + getNode() + ")");
+			throw new LockException("Already locked by node "+lockedby+" (we are "+getNode()+")");
 		}
 		// lock is unclaimed or expired, try an update to claim it
-		getDatabase().d("update " + getTableName() + " set lockedby=?,lockeduntil=?,lockedserial=? where " + getIdColumn() + "=? and lockedby=? and lockeduntil=? and lockedserial=?", getNode(), UnixTime.getUnixTime() + lockdurationseconds, serial, getId(), lockedby, lockeduntil, lockedserial);
+		getDatabase().d("update "+getTableName()+" set lockedby=?,lockeduntil=?,lockedserial=? where "+getIdColumn()+"=? and lockedby=? and lockeduntil=? and lockedserial=?",
+		                getNode(),
+		                UnixTime.getUnixTime()+lockdurationseconds,
+		                serial,
+		                getId(),
+		                lockedby,
+		                lockeduntil,
+		                lockedserial
+		               );
 		// see if the update actually worked
-		row = getLock();
-		lockedby = row.getInt("lockedby");
-		lockeduntil = row.getInt("lockeduntil");
-		lockedserial = row.getInt("lockedserial");
-		if (lockedby != getNode()) {
-			throw new LockException("Failed to claim lock, attempted but claimed by node " + lockedby + " (we are " + getNode() + ")");
+		row=getLock();
+		lockedby=row.getInt("lockedby");
+		lockeduntil=row.getInt("lockeduntil");
+		lockedserial=row.getInt("lockedserial");
+		if (lockedby!=getNode()) {
+			throw new LockException("Failed to claim lock, attempted but claimed by node "+lockedby+" (we are "+getNode()+")");
 		}
-		if (lockeduntil < (UnixTime.getUnixTime() + 10)) {
+		if (lockeduntil<(UnixTime.getUnixTime()+10)) {
 			throw new LockException("Failed to claim lock, we hold it but it has little time left on it(?)");
 		}
-		if (lockedserial != serial) {
+		if (lockedserial!=serial) {
 			throw new LockException("Lock is held by this node, but in use by a different process");
 		}
 		// we hold the row lock!
 		return serial;
 	}
 
-	public void extendLock(final int serial, final int lockdurationseconds) {
-		ResultsRow row = getLock();
-		final int lockedby = row.getInt("lockedby");
-		final int lockeduntil = row.getInt("lockeduntil");
-		final int lockedserial = row.getInt("lockedserial");
-		if (lockedby != getNode()) { throw new SystemConsistencyException("Extending a lock we do not hold?"); }
-		if (lockeduntil < UnixTime.getUnixTime()) { throw new SystemConsistencyException("Extending a lock that expired?"); }
-		if (lockedserial != serial) { throw new SystemConsistencyException("Extending a lock with the wrong serial?"); }
-		getDatabase().d("update " + getTableName() + " set lockeduntil=? where " + getIdColumn() + "=? and lockedby=? and lockeduntil=? and lockedserial=?", UnixTime.getUnixTime() + lockdurationseconds, getId(), lockedby, lockeduntil, lockedserial);
-		row = getLock();
-		if (row.getInt("lockedby") != getNode()) {
+	public void extendLock(final int serial,
+	                       final int lockdurationseconds)
+	{
+		ResultsRow row=getLock();
+		final int lockedby=row.getInt("lockedby");
+		final int lockeduntil=row.getInt("lockeduntil");
+		final int lockedserial=row.getInt("lockedserial");
+		if (lockedby!=getNode()) { throw new SystemConsistencyException("Extending a lock we do not hold?"); }
+		if (lockeduntil<UnixTime.getUnixTime()) {
+			throw new SystemConsistencyException("Extending a lock that expired?");
+		}
+		if (lockedserial!=serial) { throw new SystemConsistencyException("Extending a lock with the wrong serial?"); }
+		getDatabase().d("update "+getTableName()+" set lockeduntil=? where "+getIdColumn()+"=? and lockedby=? and lockeduntil=? and lockedserial=?",
+		                UnixTime.getUnixTime()+lockdurationseconds,
+		                getId(),
+		                lockedby,
+		                lockeduntil,
+		                lockedserial
+		               );
+		row=getLock();
+		if (row.getInt("lockedby")!=getNode()) {
 			throw new SystemConsistencyException("Lock lost to other node while extending it");
 		}
-		if (row.getInt("lockedserial") != serial) { throw new SystemConsistencyException("Lock serial lost during extension"); }
+		if (row.getInt("lockedserial")!=serial) {
+			throw new SystemConsistencyException("Lock serial lost during extension");
+		}
 	}
 
 	/**
 	 * You must supply the serial you locked with.  Unlocking without the right serial is an Exception.
 	 *
-	 * @param serial    Current/valid serial number for the lock
+	 * @param serial Current/valid serial number for the lock
 	 */
 	public void unlock(final int serial) {
-		final ResultsRow row = getLock();
-		final int lockedby = row.getInt("lockedby");
-		final int lockeduntil = row.getInt("lockeduntil");
-		final int lockedserial = row.getInt("lockedserial");
-		if (lockedby != getNode()) {
-			throw new SystemConsistencyException("Attempt to release lock held by node " + lockedby + " (we are " + getNode() + ")");
+		final ResultsRow row=getLock();
+		final int lockedby=row.getInt("lockedby");
+		final int lockeduntil=row.getInt("lockeduntil");
+		final int lockedserial=row.getInt("lockedserial");
+		if (lockedby!=getNode()) {
+			throw new SystemConsistencyException("Attempt to release lock held by node "+lockedby+" (we are "+getNode()+")");
 		}
-		if (lockeduntil < UnixTime.getUnixTime()) {
-			throw new SystemConsistencyException("Attempt to release lock that expired " + (UnixTime.getUnixTime() - lockeduntil) + " seconds ago");
+		if (lockeduntil<UnixTime.getUnixTime()) {
+			throw new SystemConsistencyException("Attempt to release lock that expired "+(UnixTime.getUnixTime()-lockeduntil)+" seconds ago");
 		}
-		if (lockedserial != serial) {
-			throw new SystemConsistencyException("Attempt to release lock with wrong serial (" + lockedserial + "!=" + serial + ")");
+		if (lockedserial!=serial) {
+			throw new SystemConsistencyException("Attempt to release lock with wrong serial ("+lockedserial+"!="+serial+")");
 		}
-		getDatabase().d("update " + getTableName() + " set lockedby=-1,lockeduntil=0,lockedserial=0 where " + getIdColumn() + "=? and lockedby=? and lockeduntil=? and lockedserial=?", getId(), lockedby, lockeduntil, serial);
+		getDatabase().d("update "+getTableName()+" set lockedby=-1,lockeduntil=0,lockedserial=0 where "+getIdColumn()+"=? and lockedby=? and lockeduntil=? and lockedserial=?",
+		                getId(),
+		                lockedby,
+		                lockeduntil,
+		                serial
+		               );
 		// released lock :)
 	}
 }

@@ -15,7 +15,10 @@ import net.coagulate.Core.Exceptions.SystemException;
  */
 public class DBException extends SystemException {
 	private static final long serialVersionUID=1L;
+
 	public DBException(final String s) { super(s); }
 
-	public DBException(final String s, final Throwable t) { super(s, t); }
+	public DBException(final String s,
+	                   final Throwable t)
+	{ super(s,t); }
 }

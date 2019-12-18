@@ -7,7 +7,10 @@ package net.coagulate.Core.Database;
  */
 public class NoDataException extends DBException {
 	private static final long serialVersionUID=1L;
+
 	public NoDataException(final String s) { super(s); }
 
-	public NoDataException(final String e, final Throwable t) { super(e, t); }
+	public NoDataException(final String e,
+	                       final Throwable t)
+	{ super(e,t); }
 }

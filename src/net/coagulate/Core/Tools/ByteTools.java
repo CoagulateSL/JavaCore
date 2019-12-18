@@ -16,8 +16,8 @@ public abstract class ByteTools {
 
 	@Nonnull
 	public static String convertStreamToString(@Nonnull final InputStream is) {
-		final Scanner s = new Scanner(is).useDelimiter("\\A");
-		return s.hasNext() ? s.next() : "";
+		final Scanner s=new Scanner(is).useDelimiter("\\A");
+		return s.hasNext()?s.next():"";
 	}
 
 	private static byte[] fromBase64(final String hex) {

@@ -2,7 +2,9 @@ package net.coagulate.Core.Exceptions.User;
 
 import net.coagulate.Core.Exceptions.UserException;
 
-/** Tell the user a remote system failed */
+/**
+ * Tell the user a remote system failed
+ */
 
 public class UserRemoteFailureException extends UserException {
 	private static final long serialVersionUID=1L;
@@ -11,7 +13,9 @@ public class UserRemoteFailureException extends UserException {
 		super(reason);
 	}
 
-	public UserRemoteFailureException(final String reason, final Throwable cause) {
-		super(reason, cause);
+	public UserRemoteFailureException(final String reason,
+	                                  final Throwable cause)
+	{
+		super(reason,cause);
 	}
 }

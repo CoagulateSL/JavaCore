@@ -1,9 +1,11 @@
 package net.coagulate.Core.Exceptions.System;
 
-/** An external system failed something */
 
 import net.coagulate.Core.Exceptions.SystemException;
 
+/**
+ * An external system failed something
+ */
 public class SystemRemoteFailureException extends SystemException {
 	private static final long serialVersionUID=1L;
 
@@ -11,7 +13,9 @@ public class SystemRemoteFailureException extends SystemException {
 		super(reason);
 	}
 
-	public SystemRemoteFailureException(final String reason, final Throwable cause) {
-		super(reason, cause);
+	public SystemRemoteFailureException(final String reason,
+	                                    final Throwable cause)
+	{
+		super(reason,cause);
 	}
 }

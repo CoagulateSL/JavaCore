@@ -1,6 +1,8 @@
 package net.coagulate.Core.Exceptions.User;
 
-/** User input is too short */
+/**
+ * User input is too short
+ */
 
 public class UserInputTooShortException extends UserInputValidationException {
 	private static final long serialVersionUID=1L;
@@ -9,7 +11,9 @@ public class UserInputTooShortException extends UserInputValidationException {
 		super(reason);
 	}
 
-	public UserInputTooShortException(final String reason, final Throwable cause) {
-		super(reason, cause);
+	public UserInputTooShortException(final String reason,
+	                                  final Throwable cause)
+	{
+		super(reason,cause);
 	}
 }

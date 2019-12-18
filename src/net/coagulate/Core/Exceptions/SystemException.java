@@ -9,7 +9,10 @@ package net.coagulate.Core.Exceptions;
  */
 public abstract class SystemException extends RuntimeException {
 	private static final long serialVersionUID=1L;
+
 	public SystemException(final String reason) { super(reason); }
 
-	public SystemException(final String reason, final Throwable cause) { super(reason, cause); }
+	public SystemException(final String reason,
+	                       final Throwable cause)
+	{ super(reason,cause); }
 }
