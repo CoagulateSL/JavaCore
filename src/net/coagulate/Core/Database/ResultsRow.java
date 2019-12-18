@@ -22,7 +22,7 @@ public class ResultsRow {
 	 *
 	 * @param rs Resultset to read the row from
 	 */
-	public ResultsRow(@Nonnull final ResultSet rs) throws DBException {
+	public ResultsRow(@Nonnull final ResultSet rs) {
 		try {
 			final ResultSetMetaData rsmd = rs.getMetaData();
 			for (int i = 1; i <= rsmd.getColumnCount(); i++) {

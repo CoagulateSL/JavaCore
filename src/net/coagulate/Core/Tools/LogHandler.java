@@ -78,7 +78,7 @@ public class LogHandler extends Handler {
 	}
 
 	@Override
-	public void close() throws SecurityException {
+	public void close() {
 	}
 
 	@Nonnull

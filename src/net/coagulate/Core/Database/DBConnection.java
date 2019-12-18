@@ -1,7 +1,6 @@
 package net.coagulate.Core.Database;
 
 import net.coagulate.Core.Exceptions.User.UserConfigurationException;
-import net.coagulate.Core.Exceptions.UserException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,7 +55,7 @@ public abstract class DBConnection {
 		}
 	}
 
-	public void getSqlLogs(@Nonnull final Map<String, Integer> count, @Nonnull final Map<String, Long> runtime, @Nonnull final Map<String, Double> per) throws UserException {
+	public void getSqlLogs(@Nonnull final Map<String, Integer> count, @Nonnull final Map<String, Long> runtime, @Nonnull final Map<String, Double> per) {
 		if (!logsql) { throw new UserConfigurationException("SQL Auditing is not enabled"); }
 		count.putAll(sqllog);
 		runtime.putAll(sqllogsum);
