@@ -26,8 +26,8 @@ public abstract class UnixTime {
 	 * @param day      Day of month
 	 * @param month    Month of year
 	 * @param year     Year (2 digit or 4.  2 digit assumed post y2k)
-	 * @param hour
-	 * @param minute
+	 * @param hour     Hour
+	 * @param minute   Minute
 	 * @return Representative unixtime
 	 */
 	public static int create(final String timezone, final int day, int month, int year, final int hour, final int minute) {
@@ -110,7 +110,7 @@ public abstract class UnixTime {
 		String prefix = "";
 		if (t < 0) {
 			prefix = "T-";
-			t = 0 - t;
+			t = - t;
 		}
 		final int seconds = t % 60;
 		t = t / 60;
