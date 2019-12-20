@@ -61,7 +61,7 @@ public class LogHandler extends Handler {
 			final Throwable thrown=record.getThrown();
 			//if (!thrown instanceof UserException) {
 			if (suppress(thrown)) {
-				System.out.println("Exception Log Suppressed "+getCount(thrown)+"x");
+				System.out.println("Exception Log Suppressed "+getCount(thrown)+"x"+getSignature(thrown));
 			} else {
 				System.out.println(ExceptionTools.toString(thrown));
 				try {
@@ -92,10 +92,13 @@ public class LogHandler extends Handler {
 	public static String getSignature(final Throwable t) {
 		try {
 			final StackTraceElement ste=t.getStackTrace()[0];
-			return t.getClass().getSimpleName()+"@"+ste.getClass()
-			                                           .getCanonicalName()+"."+ste.getMethodName()+":"+ste.getFileName()+":"+ste
-					.getLineNumber();
+			return t.getClass().getSimpleName()+"@"+
+					ste.getClassName()+"."+
+					ste.getMethodName()+":"+ste.getFileName()+":"
+					+ste.getLineNumber();
 		} catch (final RuntimeException ignored) {
+			System.out.println("Exception during GETSIGNATURE");
+			ignored.printStackTrace();
 		}
 		return "";
 	}
@@ -120,7 +123,7 @@ public class LogHandler extends Handler {
 			return true;
 		}
 		final Calendar expires=Calendar.getInstance();
-		expires.add(Calendar.MINUTE,1);
+		expires.add(Calendar.MINUTE,15);
 		suppressionclear.put(signature,expires.getTime());
 		suppressioncount.put(signature,1);
 		return false;
