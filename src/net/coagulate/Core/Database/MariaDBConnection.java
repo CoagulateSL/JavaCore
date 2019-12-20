@@ -25,17 +25,13 @@ public class MariaDBConnection extends DBConnection {
 	                         final String host,
 	                         final String username,
 	                         final String password,
-	                         final String dbname)
-	{
-		this(sourcename,
-		     "jdbc:mariadb://"+host+"/"+dbname+"?user="+username+"&password="+password+"&maxPoolSize=10&connectTimeout=5000"
-		    );
+	                         final String dbname) {
+		this(sourcename,"jdbc:mariadb://"+host+"/"+dbname+"?user="+username+"&password="+password+"&maxPoolSize=10&connectTimeout=5000");
 	}
 
 
 	public MariaDBConnection(final String name,
-	                         final String jdbc)
-	{
+	                         final String jdbc) {
 		super(name);
 		try {
 			pool=new MariaDbPoolDataSource(jdbc);
@@ -49,7 +45,8 @@ public class MariaDBConnection extends DBConnection {
 					final int rows=dqinn("select count(*) from "+tablename);
 					if (rows>0) {
 						notempty.put(tablename,rows);
-					} else {
+					}
+					else {
 						logger.fine("Table "+tablename+" is empty");
 					}
 				}
@@ -59,7 +56,8 @@ public class MariaDBConnection extends DBConnection {
 				}
 			}
 
-		} catch (@Nonnull final SQLException|DBException ex) {
+		}
+		catch (@Nonnull final SQLException|DBException ex) {
 			logger.log(SEVERE,"Failed connectivity test to database",ex);
 			System.exit(1);
 		}
@@ -75,7 +73,8 @@ public class MariaDBConnection extends DBConnection {
 				pool.close();
 				pool=null;
 			}
-		} catch (@Nonnull final NullPointerException e) {} // hmm
+		}
+		catch (@Nonnull final NullPointerException e) {} // hmm
 		catch (@Nonnull final Exception e) {
 			logger.log(CONFIG,"Error closing DB connection: "+e.getLocalizedMessage());
 		}
@@ -86,7 +85,8 @@ public class MariaDBConnection extends DBConnection {
 		try {
 			if (pool==null) { throw new SystemInitialisationException("DB Pool is not initialised (is null)"); }
 			return pool.getConnection();
-		} catch (@Nonnull final SQLException e) {
+		}
+		catch (@Nonnull final SQLException e) {
 			throw new DBException("Unable to get database pooled connection",e);
 		}
 	}

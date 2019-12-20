@@ -36,18 +36,12 @@ public class HTTPListener {
 
 	public HTTPListener(final int port,
 	                    final String pemfile,
-	                    final HttpRequestHandlerMapper mapper)
-	{
+	                    final HttpRequestHandlerMapper mapper) {
 		this.port=port;
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
 		try {
 			// start creating a server, on the port.  disable keepalive.  probably can get rid of that.
-			final SocketConfig reuse=SocketConfig.custom()
-			                                     .setBacklogSize(100)
-			                                     .setSoTimeout(15000)
-			                                     .setTcpNoDelay(true)
-			                                     .setSoReuseAddress(true)
-			                                     .build();
+			final SocketConfig reuse=SocketConfig.custom().setBacklogSize(100).setSoTimeout(15000).setTcpNoDelay(true).setSoReuseAddress(true).build();
 
 			final ServerBootstrap bootstrap=ServerBootstrap.bootstrap()
 			                                               .setListenerPort(port)
@@ -63,7 +57,8 @@ public class HTTPListener {
 			if (server==null) { throw new SystemInitialisationException("Server bootstrap is null?"); }
 			logger().config("HTTP Services starting");
 			server.start();
-		} catch (@Nonnull final Exception e) {
+		}
+		catch (@Nonnull final Exception e) {
 			// "whoops"
 			logger().log(SEVERE,"Listener startup crashed",e);
 			System.exit(1);

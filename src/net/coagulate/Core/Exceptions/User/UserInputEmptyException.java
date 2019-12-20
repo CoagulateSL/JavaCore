@@ -12,8 +12,7 @@ public class UserInputEmptyException extends UserInputValidationException {
 	}
 
 	public UserInputEmptyException(final String reason,
-	                               final Throwable cause)
-	{
+	                               final Throwable cause) {
 		super(reason,cause);
 	}
 }

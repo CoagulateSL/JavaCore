@@ -19,6 +19,5 @@ public class DBException extends SystemException {
 	public DBException(final String s) { super(s); }
 
 	public DBException(final String s,
-	                   final Throwable t)
-	{ super(s,t); }
+	                   final Throwable t) { super(s,t); }
 }

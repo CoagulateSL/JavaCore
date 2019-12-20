@@ -59,7 +59,8 @@ public abstract class ClassTools {
 			try {
 				final Constructor<? extends Object> cons=c.getConstructor();
 				if (cons.isAnnotationPresent(annotation)) { constructors.add(cons); }
-			} catch (@Nonnull final NoSuchMethodException|SecurityException ex) {
+			}
+			catch (@Nonnull final NoSuchMethodException|SecurityException ex) {
 				// no such method - this is fine, many classes wont have a zero param constructor =)
 				// securityexception - this is also fine, we'll find protected classes or other things we're not supposed to instansiate, so we wont.
 			}
@@ -75,13 +76,11 @@ public abstract class ClassTools {
 			synchronized (initlock) {
 				if (initialised) { return; }
 				Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG,"Commencing classpath scanning");
-				Logger.getLogger(ClassTools.class.getCanonicalName())
-				      .log(CONFIG,
-				           "Classpath scanner found "+getClassmap().size()+" classes, "+totalclasses+" scanned."
-				          );
+				Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG,"Classpath scanner found "+getClassmap().size()+" classes, "+totalclasses+" scanned.");
 				initialised=true;
 			}
-		} catch (@Nonnull final Throwable t) {
+		}
+		catch (@Nonnull final Throwable t) {
 			System.out.println("Class explorer leaked "+t);
 		}
 	}
@@ -97,16 +96,15 @@ public abstract class ClassTools {
 	public static Set<Class<? extends Object>> enumerateClasses() {
 		final Set<Class<? extends Object>> classes=new HashSet<>();
 		if (DEBUG) { System.out.println("CLASS PATH IS "+System.getProperty("java.class.path")); }
-		for (final String element: System.getProperty("java.class.path")
-		                                 .split(Pattern.quote(System.getProperty("path.separator")))) {
+		for (final String element: System.getProperty("java.class.path").split(Pattern.quote(System.getProperty("path.separator")))) {
 			try {
 				if (DEBUG) { System.out.println("Path element: "+element); }
 				final File f=new File(element);
 				inspectFile(f,f,classes);
-			} catch (@Nonnull final IOException e) {
+			}
+			catch (@Nonnull final IOException e) {
 				if (DEBUG) {
-					Logger.getLogger(ClassTools.class.getCanonicalName())
-					      .log(WARNING,"Exceptioned loading classpath element "+element+" - "+e.getLocalizedMessage());
+					Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING,"Exceptioned loading classpath element "+element+" - "+e.getLocalizedMessage());
 				}
 			}
 		}
@@ -119,8 +117,7 @@ public abstract class ClassTools {
 
 	private static void inspectFile(@Nonnull final File f,
 	                                @Nonnull final File base,
-	                                @Nonnull final Set<Class<? extends Object>> classes) throws IOException
-	{
+	                                @Nonnull final Set<Class<? extends Object>> classes) throws IOException {
 		if (DEBUG) { System.out.println("Inspecting file "+f+" in base "+base); }
 		if (f.isDirectory()) {
 			recurse(f,base,classes);
@@ -140,8 +137,7 @@ public abstract class ClassTools {
 	// takes a given location (classpath element or discovered) and iterates (recursively for directories) over its contents, extracting the class name and examining that
 	private static void recurse(@Nonnull final File directory,
 	                            @Nonnull final File base,
-	                            @Nonnull final Set<Class<? extends Object>> classes)
-	{
+	                            @Nonnull final Set<Class<? extends Object>> classes) {
 		if (DEBUG) {
 			System.out.println("Dir recurse in "+directory.getAbsolutePath()+" base "+base.getAbsolutePath());
 		}
@@ -150,18 +146,17 @@ public abstract class ClassTools {
 			throw new SystemConsistencyException("Failed to enumerate directory, it returned null for listFiles()");
 		}
 		for (final File f: content) {
-			try { inspectFile(f,base,classes); } catch (@Nonnull final IOException e) {
+			try { inspectFile(f,base,classes); }
+			catch (@Nonnull final IOException e) {
 				if (DEBUG) {
-					Logger.getLogger(ClassTools.class.getCanonicalName())
-					      .log(WARNING,"Exceptioned recursing "+f+" - "+e.getLocalizedMessage());
+					Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING,"Exceptioned recursing "+f+" - "+e.getLocalizedMessage());
 				}
 			}
 		}
 	}
 
 	private static void recurseClass(String fullname,
-	                                 @Nonnull final Set<Class<? extends Object>> classes)
-	{
+	                                 @Nonnull final Set<Class<? extends Object>> classes) {
 		if (DEBUG) { System.out.println("Class consider "+fullname); }
 		fullname=fullname.replaceAll("\\.class$","");
 		String relativename="";
@@ -185,7 +180,8 @@ public abstract class ClassTools {
 			final Class<? extends Object> c=Class.forName(classname);
 			classes.add(c);
 			if (DEBUG) { System.out.println("ADDED "+classname); }
-		} catch (@Nonnull final Throwable e) { // note this is usually bad.  but we can get 'errors' here we dont care about
+		}
+		catch (@Nonnull final Throwable e) { // note this is usually bad.  but we can get 'errors' here we dont care about
 			if (DEBUG) { System.out.println("FAILED TO ADD "+classname+" because "+e); }
 			//Logger.getLogger(ClassTools.class.getCanonicalName()).log(INFO,"Failed to load class "+classname+" : "+e.getLocalizedMessage());
 			Logger.getLogger(ClassTools.class.getCanonicalName()).log(SEVERE,"Failed to load class "+classname,e);
@@ -194,12 +190,10 @@ public abstract class ClassTools {
 	}
 
 	private static void recurseJar(@Nonnull final File f,
-	                               @Nonnull final Set<Class<? extends Object>> classes) throws IOException
-	{
+	                               @Nonnull final Set<Class<? extends Object>> classes) throws IOException {
 		if (DEBUG) { System.out.println("JAR recurse in "+f.getAbsolutePath()); }
 		if (!f.canRead()) {
-			Logger.getLogger(ClassTools.class.getCanonicalName())
-			      .log(INFO,"Unreadable file accessed during class scanning:"+f.getAbsolutePath());
+			Logger.getLogger(ClassTools.class.getCanonicalName()).log(INFO,"Unreadable file accessed during class scanning:"+f.getAbsolutePath());
 			return;
 		}
 		final ZipInputStream zip=new ZipInputStream(new FileInputStream(f.getAbsolutePath()));
@@ -216,14 +210,11 @@ public abstract class ClassTools {
 					for (final String element: manifest.getMainAttributes().getValue("Class-Path").split(" ")) {
 						if (DEBUG) { System.out.println(f.getParentFile().getCanonicalPath()+"/"+element); }
 						try {
-							inspectFile(new File(f.getParentFile().getCanonicalPath()+"/"+element),
-							            f.getParentFile(),
-							            classes
-							           );
-						} catch (@Nonnull final Exception e) {
+							inspectFile(new File(f.getParentFile().getCanonicalPath()+"/"+element),f.getParentFile(),classes);
+						}
+						catch (@Nonnull final Exception e) {
 							if (DEBUG) {
-								Logger.getLogger(ClassTools.class.getCanonicalName())
-								      .log(WARNING,"Failed to recurse MANIFEST.MF",e);
+								Logger.getLogger(ClassTools.class.getCanonicalName()).log(WARNING,"Failed to recurse MANIFEST.MF",e);
 							}
 						}
 					}

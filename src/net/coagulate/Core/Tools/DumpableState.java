@@ -23,9 +23,11 @@ public abstract class DumpableState {
 				f.setAccessible(true);
 				final Object content=f.get(this);
 				ret.append(toHTML(content));
-			} catch (@Nonnull final IllegalArgumentException ex) {
+			}
+			catch (@Nonnull final IllegalArgumentException ex) {
 				ret.append("IllegalArgument");
-			} catch (@Nonnull final IllegalAccessException ex) {
+			}
+			catch (@Nonnull final IllegalAccessException ex) {
 				ret.append("IllegalAccess");
 			}
 			ret.append("</td></tr>");
@@ -47,18 +49,15 @@ public abstract class DumpableState {
 			ret.append("<table>");
 			handled=true;
 			for (final Header h: ((Header[]) o)) {
-				ret.append("<tr><td valign=top>")
-				   .append(h.getName())
-				   .append("</td><td valign=top>")
-				   .append(h.getValue())
-				   .append("</td></tr>");
+				ret.append("<tr><td valign=top>").append(h.getName()).append("</td><td valign=top>").append(h.getValue()).append("</td></tr>");
 			}
 			ret.append("</table>");
 		}
 		if (o instanceof TreeMap) {
 			handled=true;
 			ret.append("<table border=1>");
-			@SuppressWarnings("unchecked") final TreeMap<Object,Object> map=(TreeMap<Object,Object>) o;
+			@SuppressWarnings("unchecked")
+			final TreeMap<Object,Object> map=(TreeMap<Object,Object>) o;
 			for (final Map.Entry<Object,Object> entry: map.entrySet()) {
 				ret.append("<tr><td valign=top>").append(toHTML(entry.getKey())).append("</td>");
 				ret.append("<td valign=top>").append(toHTML(entry.getValue())).append("</td></tr>");

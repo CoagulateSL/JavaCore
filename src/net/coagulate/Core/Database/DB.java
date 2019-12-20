@@ -31,8 +31,7 @@ public abstract class DB {
 	private static final Map<String,DBConnection> datasources=new HashMap<>();
 
 	static void register(@Nonnull final String sourcename,
-	                     @Nonnull final DBConnection connection)
-	{
+	                     @Nonnull final DBConnection connection) {
 		if (datasources.containsKey(sourcename)) {
 			Logger.getLogger(DB.class.getName()).warning("Re-registering DB connection "+sourcename);
 			final DBConnection outgoing=datasources.get(sourcename);

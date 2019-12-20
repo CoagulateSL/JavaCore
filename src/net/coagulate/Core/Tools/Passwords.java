@@ -30,7 +30,8 @@ public abstract class Passwords {
 	public static String createHash(@Nonnull final String password) {
 		try {
 			return createHash(password.toCharArray());
-		} catch (@Nonnull final CannotPerformOperationException ex) {
+		}
+		catch (@Nonnull final CannotPerformOperationException ex) {
 			throw new AssertionError("Crypto error creating password hash",ex);
 		}
 	}
@@ -51,18 +52,17 @@ public abstract class Passwords {
 	}
 
 	public static boolean verifyPassword(@Nonnull final String password,
-	                                     @Nonnull final String correctHash)
-	{
+	                                     @Nonnull final String correctHash) {
 		try {
 			return verifyPassword(password.toCharArray(),correctHash);
-		} catch (@Nonnull final CannotPerformOperationException|InvalidHashException ex) {
+		}
+		catch (@Nonnull final CannotPerformOperationException|InvalidHashException ex) {
 			throw new AssertionError("Crypto error verifying password",ex);
 		}
 	}
 
 	private static boolean verifyPassword(final char[] password,
-	                                      @Nonnull final String correctHash) throws CannotPerformOperationException, InvalidHashException
-	{
+	                                      @Nonnull final String correctHash) throws CannotPerformOperationException, InvalidHashException {
 		// Decode the hash into its parameters
 		final String[] params=correctHash.split(":");
 		if (params.length!=HASH_SECTIONS) {
@@ -77,7 +77,8 @@ public abstract class Passwords {
 		final int iterations;
 		try {
 			iterations=Integer.parseInt(params[ITERATION_INDEX]);
-		} catch (@Nonnull final NumberFormatException ex) {
+		}
+		catch (@Nonnull final NumberFormatException ex) {
 			throw new InvalidHashException("Could not parse the iteration count as an integer.",ex);
 		}
 
@@ -89,14 +90,16 @@ public abstract class Passwords {
 		final byte[] salt;
 		try {
 			salt=fromBase64(params[SALT_INDEX]);
-		} catch (@Nonnull final IllegalArgumentException ex) {
+		}
+		catch (@Nonnull final IllegalArgumentException ex) {
 			throw new InvalidHashException("Base64 decoding of salt failed.",ex);
 		}
 
 		final byte[] hash;
 		try {
 			hash=fromBase64(params[PBKDF2_INDEX]);
-		} catch (@Nonnull final IllegalArgumentException ex) {
+		}
+		catch (@Nonnull final IllegalArgumentException ex) {
 			throw new InvalidHashException("Base64 decoding of pbkdf2 output failed.",ex);
 		}
 
@@ -104,7 +107,8 @@ public abstract class Passwords {
 		final int storedHashSize;
 		try {
 			storedHashSize=Integer.parseInt(params[HASH_SIZE_INDEX]);
-		} catch (@Nonnull final NumberFormatException ex) {
+		}
+		catch (@Nonnull final NumberFormatException ex) {
 			throw new InvalidHashException("Could not parse the hash size as an integer.",ex);
 		}
 
@@ -121,26 +125,25 @@ public abstract class Passwords {
 	}
 
 	private static boolean slowEquals(@Nonnull final byte[] a,
-	                                  @Nonnull final byte[] b)
-	{
+	                                  @Nonnull final byte[] b) {
 		int diff=a.length^b.length;
-		for (int i=0;i<a.length && i<b.length;i++)
-			diff|=a[i]^b[i];
+		for (int i=0;i<a.length && i<b.length;i++) { diff|=a[i]^b[i]; }
 		return diff==0;
 	}
 
 	private static byte[] pbkdf2(final char[] password,
 	                             @Nonnull final byte[] salt,
 	                             final int iterations,
-	                             final int bytes) throws CannotPerformOperationException
-	{
+	                             final int bytes) throws CannotPerformOperationException {
 		try {
 			final PBEKeySpec spec=new PBEKeySpec(password,salt,iterations,bytes*8);
 			final SecretKeyFactory skf=SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);
 			return skf.generateSecret(spec).getEncoded();
-		} catch (@Nonnull final NoSuchAlgorithmException ex) {
+		}
+		catch (@Nonnull final NoSuchAlgorithmException ex) {
 			throw new CannotPerformOperationException("Hash algorithm not supported.",ex);
-		} catch (@Nonnull final InvalidKeySpecException ex) {
+		}
+		catch (@Nonnull final InvalidKeySpecException ex) {
 			throw new CannotPerformOperationException("Invalid key spec.",ex);
 		}
 	}
@@ -160,8 +163,7 @@ public abstract class Passwords {
 		}
 
 		public InvalidHashException(final String message,
-		                            final Throwable source)
-		{
+		                            final Throwable source) {
 			super(message,source);
 		}
 	}
@@ -173,8 +175,7 @@ public abstract class Passwords {
 		}
 
 		public CannotPerformOperationException(final String message,
-		                                       final Throwable source)
-		{
+		                                       final Throwable source) {
 			super(message,source);
 		}
 	}

@@ -12,8 +12,7 @@ public class UserInputStateException extends UserInputValidationException {
 	}
 
 	public UserInputStateException(final String reason,
-	                               final Throwable cause)
-	{
+	                               final Throwable cause) {
 		super(reason,cause);
 	}
 }

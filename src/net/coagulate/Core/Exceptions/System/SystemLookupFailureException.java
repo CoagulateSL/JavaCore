@@ -14,8 +14,7 @@ public class SystemLookupFailureException extends SystemException {
 	}
 
 	public SystemLookupFailureException(final String reason,
-	                                    final Throwable cause)
-	{
+	                                    final Throwable cause) {
 		super(reason,cause);
 	}
 }

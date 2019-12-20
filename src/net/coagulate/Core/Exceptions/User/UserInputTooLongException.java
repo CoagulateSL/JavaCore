@@ -12,8 +12,7 @@ public class UserInputTooLongException extends UserInputValidationException {
 	}
 
 	public UserInputTooLongException(final String reason,
-	                                 final Throwable cause)
-	{
+	                                 final Throwable cause) {
 		super(reason,cause);
 	}
 }

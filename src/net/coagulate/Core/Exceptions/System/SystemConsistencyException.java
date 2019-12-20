@@ -14,8 +14,7 @@ public class SystemConsistencyException extends SystemException {
 	}
 
 	public SystemConsistencyException(final String reason,
-	                                  final Throwable cause)
-	{
+	                                  final Throwable cause) {
 		super(reason,cause);
 	}
 }

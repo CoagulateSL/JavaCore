@@ -19,9 +19,7 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 
 	@Nonnull
 	public ResultsRow getLock() {
-		return getDatabase().dqone("select lockedby,lockeduntil,lockedserial from "+getTableName()+" where "+getIdColumn()+"=?",
-		                           getId()
-		                          );
+		return getDatabase().dqone("select lockedby,lockeduntil,lockedserial from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
 
 	public int lock() { return lock(30); }
@@ -78,8 +76,7 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 	}
 
 	public void extendLock(final int serial,
-	                       final int lockdurationseconds)
-	{
+	                       final int lockdurationseconds) {
 		ResultsRow row=getLock();
 		final int lockedby=row.getInt("lockedby");
 		final int lockeduntil=row.getInt("lockeduntil");
@@ -124,7 +121,8 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 		if (lockedserial!=serial) {
 			throw new SystemConsistencyException("Attempt to release lock with wrong serial ("+lockedserial+"!="+serial+")");
 		}
-		getDatabase().d("update "+getTableName()+" set lockedby=-1,lockeduntil=0,lockedserial=0 where "+getIdColumn()+"=? and lockedby=? and lockeduntil=? and lockedserial=?",
+		getDatabase().d("update "+getTableName()+" set lockedby=-1,lockeduntil=0,lockedserial=0 where "+getIdColumn()+"=? and lockedby=? and lockeduntil=? and "+
+				                "lockedserial=?",
 		                getId(),
 		                lockedby,
 		                lockeduntil,

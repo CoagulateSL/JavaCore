@@ -33,8 +33,7 @@ public abstract class MailTools {
 	                        final String toname,
 	                        final String toaddress,
 	                        final String subject,
-	                        final String body) throws MessagingException
-	{
+	                        final String body) throws MessagingException {
 		final Properties props=new Properties();
 		props.put("mail.smtp.host",server);
 		props.put("mail.from",fromname+" <"+fromaddress+">");
@@ -53,8 +52,7 @@ public abstract class MailTools {
 	                        final String toname,
 	                        final String toaddress,
 	                        final String subject,
-	                        final String body) throws MessagingException
-	{
+	                        final String body) throws MessagingException {
 		if (defaultserver==null) {
 			throw new SystemInitialisationException("Mail called without default server configured");
 		}
@@ -64,8 +62,7 @@ public abstract class MailTools {
 	public static void mail(final String toname,
 	                        final String toaddress,
 	                        final String subject,
-	                        final String body) throws MessagingException
-	{
+	                        final String body) throws MessagingException {
 		if (defaultfromname==null || defaultfromaddress==null) {
 			throw new SystemInitialisationException("Mail called without default from address configured");
 		}
@@ -73,8 +70,7 @@ public abstract class MailTools {
 	}
 
 	public static void mail(final String subject,
-	                        final String body) throws MessagingException
-	{
+	                        final String body) throws MessagingException {
 		if (defaulttoname==null || defaulttoaddress==null) {
 			throw new SystemInitialisationException("Mail called without default to address configured");
 		}
@@ -82,21 +78,15 @@ public abstract class MailTools {
 	}
 
 	public static void logTrace(final String subject,
-	                            final String intro)
-	{
+	                            final String intro) {
 		final StringBuilder body=new StringBuilder(intro+"\n<br>\n");
 		for (final StackTraceElement ele: Thread.currentThread().getStackTrace()) {
-			body.append("Caller: ")
-			    .append(ele.getClassName())
-			    .append("/")
-			    .append(ele.getMethodName())
-			    .append(":")
-			    .append(ele.getLineNumber())
-			    .append("\n<br>\n");
+			body.append("Caller: ").append(ele.getClassName()).append("/").append(ele.getMethodName()).append(":").append(ele.getLineNumber()).append("\n<br>\n");
 		}
 		try {
 			MailTools.mail("Trace: "+subject,body.toString());
-		} catch (@Nonnull final MessagingException ee) {
+		}
+		catch (@Nonnull final MessagingException ee) {
 		}
 	}
 

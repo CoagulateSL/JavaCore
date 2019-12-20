@@ -14,8 +14,7 @@ public class SystemBadValueException extends SystemException {
 	}
 
 	public SystemBadValueException(final String reason,
-	                               final Throwable cause)
-	{
+	                               final Throwable cause) {
 		super(reason,cause);
 	}
 }

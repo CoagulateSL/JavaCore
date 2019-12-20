@@ -10,8 +10,7 @@ public class NumberTools {
 
 	@Nonnull
 	public static String fixdp(final float number,
-	                           final int dp)
-	{
+	                           final int dp) {
 		if (debug) { System.out.println("SRC "+number+" for dp "+dp+" = "+Math.pow(10,dp)); }
 		final int whole=(int) Math.round(Math.floor(number));
 		if (debug) { System.out.println("whole:"+whole); }

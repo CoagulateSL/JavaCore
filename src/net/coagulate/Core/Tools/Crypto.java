@@ -16,7 +16,8 @@ public abstract class Crypto {
 		try {
 			md=MessageDigest.getInstance("SHA-1");
 			return DatatypeConverter.printHexBinary(md.digest(string.getBytes(StandardCharsets.UTF_8)));
-		} catch (@Nonnull final NoSuchAlgorithmException e) {
+		}
+		catch (@Nonnull final NoSuchAlgorithmException e) {
 			throw new AssertionError("No SHA-1 algorithm??");
 		}
 	}
@@ -26,7 +27,8 @@ public abstract class Crypto {
 		try {
 			md=MessageDigest.getInstance("SHA-256");
 			return DatatypeConverter.printHexBinary(md.digest(string.getBytes(StandardCharsets.UTF_8)));
-		} catch (@Nonnull final NoSuchAlgorithmException e) {
+		}
+		catch (@Nonnull final NoSuchAlgorithmException e) {
 			throw new AssertionError("No SHA-256 algorithm??");
 		}
 	}

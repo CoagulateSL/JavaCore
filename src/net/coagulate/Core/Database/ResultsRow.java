@@ -29,7 +29,8 @@ public class ResultsRow {
 				byteform.put(rsmd.getColumnName(i),rs.getBytes(i));
 				row.put(rsmd.getColumnName(i),rs.getString(i));
 			}
-		} catch (@Nonnull final SQLException ex) {
+		}
+		catch (@Nonnull final SQLException ex) {
 			throw new DBException("Exception unpacking result set",ex);
 		}
 	}

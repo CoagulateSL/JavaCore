@@ -14,8 +14,7 @@ public abstract class UserInputValidationException extends UserException {
 	}
 
 	public UserInputValidationException(final String reason,
-	                                    final Throwable cause)
-	{
+	                                    final Throwable cause) {
 		super(reason,cause);
 	}
 }

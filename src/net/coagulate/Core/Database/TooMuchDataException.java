@@ -11,6 +11,5 @@ public class TooMuchDataException extends DBException {
 	public TooMuchDataException(final String s) { super(s); }
 
 	public TooMuchDataException(final String e,
-	                            final Throwable t)
-	{ super(e,t); }
+	                            final Throwable t) { super(e,t); }
 }

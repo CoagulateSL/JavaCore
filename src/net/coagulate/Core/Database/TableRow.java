@@ -32,11 +32,9 @@ public abstract class TableRow extends Table {
 	 */
 	protected static synchronized TableRow factoryPut(final String type,
 	                                                  final int id,
-	                                                  final TableRow store)
-	{
+	                                                  final TableRow store) {
 		if (id==0) {
-			throw new SystemBadValueException(
-					"ID zero is expressly prohibited, does not exist, and suggests a programming bug.");
+			throw new SystemBadValueException("ID zero is expressly prohibited, does not exist, and suggests a programming bug.");
 		}
 		if (!factory.containsKey(type)) {
 			// we need this to avoid null pointer below
@@ -118,19 +116,16 @@ public abstract class TableRow extends Table {
 	}
 
 	public void set(final String columnname,
-	                final Boolean value)
-	{ set(columnname,(value?1:0)); }
+	                final Boolean value) { set(columnname,(value?1:0)); }
 
 	// we use a factory style design to make sure that the same object is always returned
 	// this is where we store our factory data, indexed by Type (string), ID (int) and then the DBObject subclass
 
 	public void set(final String columnname,
-	                final String value)
-	{ d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
+	                final String value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
 
 	public void set(final String columnname,
-	                final Integer value)
-	{ d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
+	                final Integer value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
 
 	@Nullable
 	public byte[] getBytesNullable(final String columnname) {

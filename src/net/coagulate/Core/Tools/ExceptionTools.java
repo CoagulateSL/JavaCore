@@ -35,22 +35,12 @@ public abstract class ExceptionTools {
 		if (e.getCause()!=null) {
 			p.append(dumpException(e.getCause()));
 		}
-		p.append("***EXCEPTION***: ")
-		 .append(e.getClass().getName())
-		 .append(" - ")
-		 .append(e.getLocalizedMessage())
-		 .append("\n");
+		p.append("***EXCEPTION***: ").append(e.getClass().getName()).append(" - ").append(e.getLocalizedMessage()).append("\n");
 		Throwable loop=e;
 		while (loop!=null) {
 			p.append("___exception___ - ").append(loop.getLocalizedMessage());
 			for (final StackTraceElement st: loop.getStackTrace()) {
-				p.append("___exception___: ")
-				 .append(st.getClassName())
-				 .append(".")
-				 .append(st.getMethodName())
-				 .append(":")
-				 .append(st.getLineNumber())
-				 .append("\n");
+				p.append("___exception___: ").append(st.getClassName()).append(".").append(st.getMethodName()).append(":").append(st.getLineNumber()).append("\n");
 			}
 			loop=loop.getCause();
 		}

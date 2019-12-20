@@ -8,8 +8,7 @@ public class DBUnexpectedNullValueException extends NoDataException {
 	}
 
 	public DBUnexpectedNullValueException(final String e,
-	                                      final Throwable t)
-	{
+	                                      final Throwable t) {
 		super(e,t);
 	}
 }

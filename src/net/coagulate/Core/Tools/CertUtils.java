@@ -26,8 +26,7 @@ public abstract class CertUtils {
 
 	public static byte[] parseDERFromPEM(@Nonnull final byte[] pem,
 	                                     @Nonnull final String beginDelimiter,
-	                                     @Nonnull final String endDelimiter)
-	{
+	                                     @Nonnull final String endDelimiter) {
 		final String data=new String(pem);
 		String[] tokens=data.split(beginDelimiter);
 		tokens=tokens[1].split(endDelimiter);

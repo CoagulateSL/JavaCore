@@ -14,8 +14,7 @@ public class UserRemoteFailureException extends UserException {
 	}
 
 	public UserRemoteFailureException(final String reason,
-	                                  final Throwable cause)
-	{
+	                                  final Throwable cause) {
 		super(reason,cause);
 	}
 }

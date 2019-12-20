@@ -58,8 +58,7 @@ public abstract class DBConnection {
 
 	public void getSqlLogs(@Nonnull final Map<String,Integer> count,
 	                       @Nonnull final Map<String,Long> runtime,
-	                       @Nonnull final Map<String,Double> per)
-	{
+	                       @Nonnull final Map<String,Double> per) {
 		if (!logsql) { throw new UserConfigurationException("SQL Auditing is not enabled"); }
 		count.putAll(sqllog);
 		runtime.putAll(sqllogsum);
@@ -68,10 +67,9 @@ public abstract class DBConnection {
 			final Integer c=entry.getValue();
 			final Long runfor=runtime.get(statement);
 			if (c==null || runfor==null || c==0) {
-				per.put(statement,
-				        0d
-				       ); // explicitly a double.  even though it can be infered, and is.  "wah wah this is an int not a double"...  it's both! :P
-			} else {
+				per.put(statement,0d); // explicitly a double.  even though it can be infered, and is.  "wah wah this is an int not a double"...  it's both! :P
+			}
+			else {
 				per.put(statement,((double) runfor)/((double) c)); /// :P
 			}
 		}
@@ -95,7 +93,8 @@ public abstract class DBConnection {
 			final int result=dqinn("select 1");
 			if (result!=1) { throw new DBException("Select count(*) from ping returned not 1 ("+result+")"); }
 			return true;
-		} catch (@Nonnull final Exception e) { logger.log(SEVERE,"Database connectivity test failure",e); }
+		}
+		catch (@Nonnull final Exception e) { logger.log(SEVERE,"Database connectivity test failure",e); }
 		return false;
 	}
 
@@ -113,8 +112,7 @@ public abstract class DBConnection {
 	@Nonnull
 	protected PreparedStatement prepare(@Nonnull final Connection conn,
 	                                    final String parameterisedcommand,
-	                                    @Nonnull final Object... params)
-	{
+	                                    @Nonnull final Object... params) {
 		try {
 			final PreparedStatement ps=conn.prepareStatement(parameterisedcommand);
 			for (int i=1;i<=params.length;i++) {
@@ -166,7 +164,8 @@ public abstract class DBConnection {
 				}
 			}
 			return ps;
-		} catch (@Nonnull final SQLException e) {
+		}
+		catch (@Nonnull final SQLException e) {
 			throw new DBException("Failed to prepare statement "+parameterisedcommand,e);
 		}
 	}
@@ -186,8 +185,7 @@ public abstract class DBConnection {
 	 */
 	@Nonnull
 	public Results dq(@Nonnull final String parameterisedcommand,
-	                  final Object... params)
-	{
+	                  final Object... params) {
 		return _dq(false,parameterisedcommand,params);
 	}
 
@@ -196,20 +194,19 @@ public abstract class DBConnection {
 
 	@Nonnull
 	public Results dqSlow(@Nonnull final String parameterisedcommand,
-	                      final Object... params)
-	{
+	                      final Object... params) {
 		return _dq(true,parameterisedcommand,params);
 	}
 
 	@Nonnull
 	public Results _dq(final boolean slowquery,
 	                   @Nonnull final String parameterisedcommand,
-	                   final Object... params)
-	{
+	                   final Object... params) {
 		if (logsql) {
 			if (sqllog.containsKey(parameterisedcommand)) {
 				sqllog.put(parameterisedcommand,sqllog.get(parameterisedcommand)+1);
-			} else {
+			}
+			else {
 				sqllog.put(parameterisedcommand,1);
 			}
 		}
@@ -230,7 +227,8 @@ public abstract class DBConnection {
 			if (logsql) {
 				if (sqllogsum.containsKey(parameterisedcommand)) {
 					sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(diff));
-				} else {
+				}
+				else {
 					sqllogsum.put(parameterisedcommand,diff);
 				}
 			}
@@ -247,9 +245,11 @@ public abstract class DBConnection {
 			final Results results=new Results(rs);
 			results.setStatement(stm.toString());
 			return results;
-		} catch (@Nonnull final SQLException e) {
+		}
+		catch (@Nonnull final SQLException e) {
 			throw new DBException("SQL Exception executing query "+parameterisedcommand,e);
-		} finally {
+		}
+		finally {
 			if (rs!=null) {
 				try {rs.close(); } catch (@Nonnull final SQLException e) {}
 			}
@@ -272,8 +272,7 @@ public abstract class DBConnection {
 
 	@Nonnull
 	public String formatFrame(final int framenumber,
-	                          @Nonnull final String def)
-	{
+	                          @Nonnull final String def) {
 		if (Thread.currentThread().getStackTrace().length>framenumber) {
 			final StackTraceElement element=Thread.currentThread().getStackTrace()[framenumber];
 			String caller=element.getClassName()+"."+element.getMethodName();
@@ -293,14 +292,14 @@ public abstract class DBConnection {
 	 * @param params               SQL arguments.
 	 */
 	public void d(@Nonnull final String parameterisedcommand,
-	              final Object... params)
-	{
+	              final Object... params) {
 		int tries=3;
 		while (tries>0) {
 			try {
 				_d(parameterisedcommand,params);
 				return;
-			} catch (@Nonnull final LockException e) {
+			}
+			catch (@Nonnull final LockException e) {
 				tries--;
 				try { Thread.sleep((long) (50.0*Math.random())); } catch (@Nonnull final InterruptedException ee) {}
 				if (tries==0) { throw e; }
@@ -311,20 +310,16 @@ public abstract class DBConnection {
 	// database do, statement with no results
 
 	public void _d(@Nonnull final String parameterisedcommand,
-	               final Object... params)
-	{
+	               final Object... params) {
 		if (logsql) {
 			if (sqllog.containsKey(parameterisedcommand)) {
 				sqllog.put(parameterisedcommand,sqllog.get(parameterisedcommand)+1);
-			} else {
+			}
+			else {
 				sqllog.put(parameterisedcommand,1);
 			}
 		}
-		try (final Connection conn=getConnection();final PreparedStatement stm=prepare(conn,
-		                                                                               parameterisedcommand,
-		                                                                               params
-		                                                                              ))
-		{
+		try (final Connection conn=getConnection();final PreparedStatement stm=prepare(conn,parameterisedcommand,params)) {
 			final long start=new Date().getTime();
 			stm.execute();
 			conn.commit();
@@ -336,7 +331,8 @@ public abstract class DBConnection {
 			if (logsql) {
 				if (sqllogsum.containsKey(parameterisedcommand)) {
 					sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(diff));
-				} else {
+				}
+				else {
 					sqllogsum.put(parameterisedcommand,diff);
 				}
 			}
@@ -347,9 +343,11 @@ public abstract class DBConnection {
 					if (updatemax<diff) { updatemax=diff; }
 				}
 			}
-		} catch (@Nonnull final SQLTransactionRollbackException e) {
+		}
+		catch (@Nonnull final SQLTransactionRollbackException e) {
 			throw new LockException("Transaction conflicted and was rolled back",e);
-		} catch (@Nonnull final SQLException e) {
+		}
+		catch (@Nonnull final SQLException e) {
 			throw new DBException("SQL error during command "+parameterisedcommand,e);
 		}
 
@@ -364,8 +362,7 @@ public abstract class DBConnection {
 
 	@Nonnull
 	public ResultsRow dqone(@Nonnull final String parameterisedcommand,
-	                        final Object... params)
-	{
+	                        final Object... params) {
 		final Results results=dq(parameterisedcommand,params);
 		if (results.size()==0) {
 			throw new NoDataException("Query "+results.getStatement()+" returned zero results was set");
@@ -388,24 +385,21 @@ public abstract class DBConnection {
 	 */
 	@Nullable
 	public Integer dqi(@Nonnull final String sql,
-	                   final Object... params)
-	{
+	                   final Object... params) {
 		final ResultsRow row=dqone(sql,params);
 		return row.getIntNullable();
 	}
 
 	@Nullable
 	public Float dqf(@Nonnull final String sql,
-	                 final Object... params)
-	{
+	                 final Object... params) {
 		final ResultsRow row=dqone(sql,params);
 		return row.getFloat();
 	}
 
 	@Nullable
 	public Long dql(@Nonnull final String sql,
-	                final Object... params)
-	{
+	                final Object... params) {
 		final ResultsRow row=dqone(sql,params);
 		return row.getLong();
 	}
@@ -418,48 +412,42 @@ public abstract class DBConnection {
 	 */
 	@Nullable
 	public String dqs(@Nonnull final String sql,
-	                  final Object... params)
-	{
+	                  final Object... params) {
 		final ResultsRow row=dqone(sql,params);
 		return row.getStringNullable();
 	}
 
 	@Nullable
 	public byte[] dqbyte(@Nonnull final String sql,
-	                     final Object... params)
-	{
+	                     final Object... params) {
 		final ResultsRow row=dqone(sql,params);
 		return row.getBytes();
 	}
 
 	@Nonnull
 	public byte[] dqbytenn(@Nonnull final String sql,
-	                       final Object... params)
-	{
+	                       final Object... params) {
 		final byte[] b=dqbyte(sql,params);
 		if (b==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return b;
 	}
 
 	public int dqinn(@Nonnull final String sql,
-	                 final Object... params)
-	{
+	                 final Object... params) {
 		final Integer i=dqi(sql,params);
 		if (i==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return i;
 	}
 
 	public float dqfnn(@Nonnull final String sql,
-	                   final Object... params)
-	{
+	                   final Object... params) {
 		final Float f=dqf(sql,params);
 		if (f==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return f;
 	}
 
 	public long dqlnn(@Nonnull final String sql,
-	                  final Object... params)
-	{
+	                  final Object... params) {
 		final Long l=dql(sql,params);
 		if (l==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return l;
@@ -467,8 +455,7 @@ public abstract class DBConnection {
 
 	@Nonnull
 	public String dqsnn(@Nonnull final String sql,
-	                    final Object... params)
-	{
+	                    final Object... params) {
 		final String s=dqs(sql,params);
 		if (s==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return s;
@@ -488,8 +475,7 @@ public abstract class DBConnection {
 		               final long qm,
 		               final int u,
 		               final long ut,
-		               final long um)
-		{
+		               final long um) {
 			queries=q;
 			querytotal=qt;
 			querymax=qm;

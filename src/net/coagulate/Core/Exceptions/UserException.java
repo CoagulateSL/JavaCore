@@ -12,6 +12,5 @@ public abstract class UserException extends RuntimeException {
 	public UserException(final String reason) { super(reason); }
 
 	public UserException(final String reason,
-	                     final Throwable cause)
-	{ super(reason,cause); }
+	                     final Throwable cause) { super(reason,cause); }
 }

@@ -46,22 +46,15 @@ public class HTTPSListener {
 
 	public HTTPSListener(final int port,
 	                     @Nonnull final String pemfile,
-	                     final HttpRequestHandlerMapper mapper)
-	{
+	                     final HttpRequestHandlerMapper mapper) {
 		this.port=port;
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
 		try {
 			final SSLContext sslcontext=SSLContext.getInstance("TLS");
 
 			final byte[] certAndKey=Files.readAllBytes(new File(pemfile).toPath());
-			final byte[] certBytes=CertUtils.parseDERFromPEM(certAndKey,
-			                                                 "-----BEGIN CERTIFICATE-----",
-			                                                 "-----END CERTIFICATE-----"
-			                                                );
-			final byte[] keyBytes=CertUtils.parseDERFromPEM(certAndKey,
-			                                                "-----BEGIN PRIVATE KEY-----",
-			                                                "-----END PRIVATE KEY-----"
-			                                               );
+			final byte[] certBytes=CertUtils.parseDERFromPEM(certAndKey,"-----BEGIN CERTIFICATE-----","-----END CERTIFICATE-----");
+			final byte[] keyBytes=CertUtils.parseDERFromPEM(certAndKey,"-----BEGIN PRIVATE KEY-----","-----END PRIVATE KEY-----");
 			final byte[] chainBytes=CertUtils.parseDERFromPEM(Files.readAllBytes(new File("/etc/keys/chain.pem").toPath()),
 			                                                  "-----BEGIN CERTIFICATE-----",
 			                                                  "-----END CERTIFICATE-----"
@@ -83,12 +76,7 @@ public class HTTPSListener {
 
 
 			// start creating a server, on the port.  disable keepalive.  probably can get rid of that.
-			final SocketConfig reuse=SocketConfig.custom()
-			                                     .setBacklogSize(100)
-			                                     .setSoTimeout(15000)
-			                                     .setTcpNoDelay(true)
-			                                     .setSoReuseAddress(true)
-			                                     .build();
+			final SocketConfig reuse=SocketConfig.custom().setBacklogSize(100).setSoTimeout(15000).setTcpNoDelay(true).setSoReuseAddress(true).build();
 
 			final ServerBootstrap bootstrap=ServerBootstrap.bootstrap()
 			                                               .setListenerPort(port)
@@ -105,7 +93,8 @@ public class HTTPSListener {
 			if (server==null) { throw new SystemInitialisationException("Server bootstrap was null?"); }
 			logger().config("HTTPS Services starting");
 			server.start();
-		} catch (@Nonnull final Exception e) {
+		}
+		catch (@Nonnull final Exception e) {
 			// "whoops"
 			logger().log(SEVERE,"Listener startup crashed",e);
 			System.exit(1);

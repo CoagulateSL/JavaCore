@@ -14,8 +14,7 @@ public class UserInsufficientCreditException extends UserException {
 	}
 
 	public UserInsufficientCreditException(final String reason,
-	                                       final Throwable cause)
-	{
+	                                       final Throwable cause) {
 		super(reason,cause);
 	}
 }

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 /**
  * Unpacks a resultset into a independant java datastructure.
  * Essentially a List of Rows, and a Row is a String,String Map of column names to values.
@@ -32,7 +33,8 @@ public class Results implements Iterable<ResultsRow> {
 				final ResultsRow r=new ResultsRow(rs);
 				data.add(r);
 			}
-		} catch (@Nonnull final SQLException ex) {
+		}
+		catch (@Nonnull final SQLException ex) {
 			throw new DBException("SQLException reading a resultset from SQL:'"+statement+"'",ex);
 		}
 	}

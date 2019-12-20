@@ -13,6 +13,5 @@ public abstract class SystemException extends RuntimeException {
 	public SystemException(final String reason) { super(reason); }
 
 	public SystemException(final String reason,
-	                       final Throwable cause)
-	{ super(reason,cause); }
+	                       final Throwable cause) { super(reason,cause); }
 }

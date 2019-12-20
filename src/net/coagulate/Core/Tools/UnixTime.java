@@ -36,8 +36,7 @@ public abstract class UnixTime {
 	                         int month,
 	                         int year,
 	                         final int hour,
-	                         final int minute)
-	{
+	                         final int minute) {
 		final DateFormat dfslt=DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
 		dfslt.setTimeZone(TimeZone.getTimeZone(timezone));
 		if (year<100) {
@@ -69,8 +68,7 @@ public abstract class UnixTime {
 
 	@Nonnull
 	public static String fromUnixTime(final int date,
-	                                  final String timezone)
-	{
+	                                  final String timezone) {
 		final DateFormat df=DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
 		df.setTimeZone(TimeZone.getTimeZone(timezone));
 		return fromUnixTime(date,df);
@@ -78,15 +76,13 @@ public abstract class UnixTime {
 
 	@Nonnull
 	public static String fromUnixTime(@Nonnull final String date,
-	                                  final String timezone)
-	{
+	                                  final String timezone) {
 		return fromUnixTime(Integer.parseInt(date),timezone);
 	}
 
 	@Nonnull
 	private static String fromUnixTime(final int date,
-	                                   @Nonnull final DateFormat df)
-	{
+	                                   @Nonnull final DateFormat df) {
 		return df.format(new Date(((long) (date))*((long) 1000)));
 	}
 
@@ -123,8 +119,7 @@ public abstract class UnixTime {
 	 */
 	@Nonnull
 	public static String duration(int t,
-	                              final boolean precise)
-	{
+	                              final boolean precise) {
 		String prefix="";
 		if (t<0) {
 			prefix="T-";
@@ -243,8 +238,7 @@ public abstract class UnixTime {
 	 */
 	@Nonnull
 	public static String durationRelativeToNow(final int unixtime,
-	                                           final boolean withseconds)
-	{
+	                                           final boolean withseconds) {
 		return duration(relativeToNow(unixtime),withseconds);
 	}
 
