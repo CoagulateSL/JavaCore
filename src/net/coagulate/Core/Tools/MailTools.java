@@ -94,7 +94,10 @@ public abstract class MailTools {
 			    .append(ele.getLineNumber())
 			    .append("\n<br>\n");
 		}
-		try { MailTools.mail("Trace: "+subject,body.toString()); } catch (@Nonnull final MessagingException ee) {}
+		try {
+			MailTools.mail("Trace: "+subject,body.toString());
+		} catch (@Nonnull final MessagingException ee) {
+		}
 	}
 
 }

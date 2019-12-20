@@ -2,8 +2,7 @@ package net.coagulate.Core.Tools;
 
 import javax.annotation.Nonnull;
 import javax.mail.MessagingException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.*;
 
 /**
@@ -38,7 +37,9 @@ public class LogHandler extends Handler {
 		final int thread=record.getThreadID();
 		String message=record.getMessage();
 		final long when=record.getMillis();
-		if (!system.startsWith("net.coagulate.")) { return; }
+		if (!system.startsWith("net.coagulate.")) {
+			return;
+		}
 		system=system.replaceFirst("net\\.coagulate\\.","");
 		while (classname.contains(".")) {
 			classname=classname.substring(classname.indexOf(".")+1);
@@ -59,23 +60,81 @@ public class LogHandler extends Handler {
 		if ((level==null || level.intValue()>Level.FINE.intValue()) && record.getThrown()!=null) {
 			final Throwable thrown=record.getThrown();
 			//if (!thrown instanceof UserException) {
-			System.out.println(ExceptionTools.toString(thrown));
-			try {
-				if (alreadymailed.contains(thrown)) { alreadymailed.remove(thrown); } else {
-					MailTools.mail(mailprefix+" {NoLog} "+thrown.getClass()
-					                                            .getSimpleName()+" - "+message+" - "+thrown.getLocalizedMessage(),
-					               ExceptionTools.toHTML(thrown)
-					              );
+			if (suppress(thrown)) {
+				System.out.println("Exception Log Suppressed "+getCount(thrown)+"x");
+			} else {
+				System.out.println(ExceptionTools.toString(thrown));
+				try {
+					if (alreadymailed.contains(thrown)) {
+						alreadymailed.remove(thrown);
+					} else {
+						MailTools.mail(mailprefix+" {NoLog} "+thrown.getClass()
+						                                            .getSimpleName()+" - "+message+" - "+thrown.getLocalizedMessage(),
+						               ExceptionTools.toHTML(thrown)
+						              );
+					}
+				} catch (@Nonnull final MessagingException ex) {
+					System.out.println("EXCEPTION IN EXCEPTION MAILER");
+					System.out.println("EXCEPTION IN EXCEPTION MAILER");
+					System.out.println("EXCEPTION IN EXCEPTION MAILER");
+					System.out.println("EXCEPTION IN EXCEPTION MAILER");
+					System.out.println("EXCEPTION IN EXCEPTION MAILER");
+					System.out.println(ExceptionTools.toString(ex));
 				}
-			} catch (@Nonnull final MessagingException ex) {
-				System.out.println("EXCEPTION IN EXCEPTION MAILER");
-				System.out.println("EXCEPTION IN EXCEPTION MAILER");
-				System.out.println("EXCEPTION IN EXCEPTION MAILER");
-				System.out.println("EXCEPTION IN EXCEPTION MAILER");
-				System.out.println("EXCEPTION IN EXCEPTION MAILER");
-				System.out.println(ExceptionTools.toString(ex));
 			}
 		}
+	}
+
+	private static final Map<String,Integer> suppressioncount=new HashMap<>();
+	private static final Map<String,Date> suppressionclear=new HashMap<>();
+
+	@Nonnull
+	public static String getSignature(final Throwable t) {
+		try {
+			final StackTraceElement ste=t.getStackTrace()[0];
+			return t.getClass().getSimpleName()+"@"+ste.getClass()
+			                                           .getCanonicalName()+"."+ste.getMethodName()+":"+ste.getFileName()+":"+ste
+					.getLineNumber();
+		} catch (final RuntimeException ignored) {
+		}
+		return "";
+	}
+
+	static synchronized void considerExpiring(final String signature) {
+		if (suppressionclear.containsKey(signature)) {
+			if (suppressionclear.get(signature).before(new Date())) {
+				suppressionclear.remove(signature);
+				suppressioncount.remove(signature);
+			}
+		}
+	}
+
+	public static boolean suppress(final Throwable t) {
+		final String signature=getSignature(t);
+		if (signature.isEmpty()) {
+			return false;
+		}
+		considerExpiring(signature);
+		if (suppressioncount.containsKey(signature)) {
+			suppressioncount.put(signature,suppressioncount.get(signature)+1);
+			return true;
+		}
+		final Calendar expires=Calendar.getInstance();
+		expires.add(Calendar.MINUTE,1);
+		suppressionclear.put(signature,expires.getTime());
+		suppressioncount.put(signature,1);
+		return false;
+	}
+
+	public static int getCount(final Throwable t) {
+		final String signature=getSignature(t);
+		if (signature.isEmpty()) {
+			return -1;
+		}
+		if (suppressioncount.containsKey(signature)) {
+			return suppressioncount.get(signature);
+		}
+		return -1;
 	}
 
 	@Override
@@ -88,13 +147,27 @@ public class LogHandler extends Handler {
 
 	@Nonnull
 	private String formatLevel(final Level level) {
-		if (level==Level.CONFIG) { return "conf"; }
-		if (level==Level.FINE) { return "D   "; }
-		if (level==Level.FINER) { return "d   "; }
-		if (level==Level.FINEST) { return "_ "; }
-		if (level==Level.INFO) { return "Info"; }
-		if (level==Level.SEVERE) { return "XXXX"; }
-		if (level==Level.WARNING) { return "WARN"; }
+		if (level==Level.CONFIG) {
+			return "conf";
+		}
+		if (level==Level.FINE) {
+			return "D   ";
+		}
+		if (level==Level.FINER) {
+			return "d   ";
+		}
+		if (level==Level.FINEST) {
+			return "_ ";
+		}
+		if (level==Level.INFO) {
+			return "Info";
+		}
+		if (level==Level.SEVERE) {
+			return "XXXX";
+		}
+		if (level==Level.WARNING) {
+			return "WARN";
+		}
 		return "????";
 	}
 
@@ -103,7 +176,9 @@ public class LogHandler extends Handler {
 	               final int len)
 	{
 		final StringBuilder pad=new StringBuilder(in);
-		while (pad.length()<len) { pad.append(" "); }
+		while (pad.length()<len) {
+			pad.append(" ");
+		}
 		return pad.toString();
 	}
 }

@@ -9,7 +9,9 @@ public abstract class ExceptionTools {
 	@Nonnull
 	public static String dumpException(@Nonnull final Throwable e) {
 		final StringBuilder p=new StringBuilder();
-		if (e.getCause()!=null) { p.append(dumpException(e.getCause())); }
+		if (e.getCause()!=null) {
+			p.append(dumpException(e.getCause()));
+		}
 		p.append("<h3>").append(e.getClass().getName()).append(" - ").append(e.getLocalizedMessage()).append("</h3>");
 		for (final StackTraceElement st: e.getStackTrace()) {
 			p.append("<pre>");
@@ -30,7 +32,9 @@ public abstract class ExceptionTools {
 	@Nonnull
 	public static String toString(@Nonnull final Throwable e) {
 		final StringBuilder p=new StringBuilder();
-		if (e.getCause()!=null) { p.append(dumpException(e.getCause())); }
+		if (e.getCause()!=null) {
+			p.append(dumpException(e.getCause()));
+		}
 		p.append("***EXCEPTION***: ")
 		 .append(e.getClass().getName())
 		 .append(" - ")
