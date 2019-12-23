@@ -110,29 +110,29 @@ public class LogHandler extends Handler {
 		if ((level==null || level.intValue()>Level.FINE.intValue()) && record.getThrown()!=null) {
 			final Throwable thrown=record.getThrown();
 			//if (!thrown instanceof UserException) {
-			if (suppress(thrown)) {
-				System.out.println("Exception Log Suppressed "+getCount(thrown)+"x"+getSignature(thrown));
-			}
-			else {
-				System.out.println(ExceptionTools.toString(thrown));
-				try {
-					if (alreadymailed.contains(thrown)) {
-						alreadymailed.remove(thrown);
+			try {
+				if (alreadymailed.contains(thrown)) {
+					alreadymailed.remove(thrown);
+				}
+				else {
+					if (suppress(thrown)) {
+						System.out.println("Exception Log Suppressed "+getCount(thrown)+"x"+getSignature(thrown));
 					}
 					else {
+						System.out.println(ExceptionTools.toString(thrown));
 						MailTools.mail(mailprefix+" {NoLog} "+thrown.getClass().getSimpleName()+" - "+message+" - "+thrown.getLocalizedMessage(),
 						               ExceptionTools.toHTML(thrown)
 						              );
 					}
 				}
-				catch (@Nonnull final MessagingException ex) {
-					System.out.println("EXCEPTION IN EXCEPTION MAILER");
-					System.out.println("EXCEPTION IN EXCEPTION MAILER");
-					System.out.println("EXCEPTION IN EXCEPTION MAILER");
-					System.out.println("EXCEPTION IN EXCEPTION MAILER");
-					System.out.println("EXCEPTION IN EXCEPTION MAILER");
-					System.out.println(ExceptionTools.toString(ex));
-				}
+			}
+			catch (@Nonnull final MessagingException ex) {
+				System.out.println("EXCEPTION IN EXCEPTION MAILER");
+				System.out.println("EXCEPTION IN EXCEPTION MAILER");
+				System.out.println("EXCEPTION IN EXCEPTION MAILER");
+				System.out.println("EXCEPTION IN EXCEPTION MAILER");
+				System.out.println("EXCEPTION IN EXCEPTION MAILER");
+				System.out.println(ExceptionTools.toString(ex));
 			}
 		}
 	}

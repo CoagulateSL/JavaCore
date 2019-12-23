@@ -38,7 +38,7 @@ public abstract class ExceptionTools {
 		p.append("***EXCEPTION***: ").append(e.getClass().getName()).append(" - ").append(e.getLocalizedMessage()).append("\n");
 		Throwable loop=e;
 		while (loop!=null) {
-			p.append("___exception___ - ").append(loop.getLocalizedMessage());
+			p.append("---exception---: ").append(loop.getClass().getSimpleName()).append(" - ").append(loop.getLocalizedMessage()).append("\n");
 			for (final StackTraceElement st: loop.getStackTrace()) {
 				p.append("___exception___: ").append(st.getClassName()).append(".").append(st.getMethodName()).append(":").append(st.getLineNumber()).append("\n");
 			}
