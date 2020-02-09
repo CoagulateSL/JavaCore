@@ -57,9 +57,8 @@ public abstract class DumpableState {
 		if (BasicHttpRequest.class.isAssignableFrom(o.getClass())) {
 			handled=true;
 			ret.append("<table border=1>");
-			@SuppressWarnings("unchecked")
 			final BasicHttpRequest req=(BasicHttpRequest) o;
-			ret.append("<tr><td valign=top colspan=4>"+req.getRequestLine()+"</td></td>");
+			ret.append("<tr><td valign=top colspan=4>").append(req.getRequestLine()).append("</td></td>");
 			for (final Header header:req.getAllHeaders()) {
 				ret.append("<tr><td valign=top>").append(toHTML(header.getName())).append("</td>");
 				ret.append("<td valign=top>").append(toHTML(header.getValue())).append("</td></tr>");
@@ -69,9 +68,8 @@ public abstract class DumpableState {
 		if (JSONObject.class.isAssignableFrom(o.getClass())) {
 			handled=true;
 			ret.append("<table border=1>");
-			@SuppressWarnings("unchecked")
 			final JSONObject json=(JSONObject) o;
-			Map<String,Object> map=json.toMap();
+			final Map<String,Object> map=json.toMap();
 			for (final Map.Entry<String,Object> entry: map.entrySet()) {
 				ret.append("<tr><td valign=top>").append(toHTML(entry.getKey())).append("</td>");
 				ret.append("<td valign=top>").append(toHTML(entry.getValue())).append("</td></tr>");
