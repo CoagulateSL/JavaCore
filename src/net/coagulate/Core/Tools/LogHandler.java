@@ -1,5 +1,8 @@
 package net.coagulate.Core.Tools;
 
+import net.coagulate.Core.Exceptions.SystemException;
+import net.coagulate.Core.Exceptions.UserException;
+
 import javax.annotation.Nonnull;
 import javax.mail.MessagingException;
 import java.util.*;
@@ -107,8 +110,17 @@ public class LogHandler extends Handler {
 			}
 		}
 		System.out.println(formatLevel(level)+"#"+postpad(thread+"",4)+" "+system+" - "+message+" (@"+classname+"."+method+")");
+
 		if ((level==null || level.intValue()>Level.FINE.intValue()) && record.getThrown()!=null) {
 			final Throwable thrown=record.getThrown();
+			// Stop here after the console print but before the mail print if this is a suppressed exception
+			if (UserException.class.isAssignableFrom(thrown.getClass())) {
+				if (((UserException)thrown).suppressed()) { return; }
+			}
+			if (SystemException.class.isAssignableFrom(thrown.getClass())) {
+				if (((SystemException)thrown).suppressed()) { return; }
+			}
+
 			//if (!thrown instanceof UserException) {
 			try {
 				if (alreadymailed.contains(thrown)) {
