@@ -15,4 +15,8 @@ public class UserInputStateException extends UserInputValidationException {
 	                               final Throwable cause) {
 		super(reason,cause);
 	}
+
+	public UserInputStateException(String message,
+	                               Throwable exception,
+	                               boolean suppress) {super(message,exception,suppress);}
 }
