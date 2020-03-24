@@ -17,6 +17,11 @@ public abstract class TableRow extends Table {
 
 	public TableRow(final int id) { this.id=id; }
 
+	protected TableRow() {
+		super();
+		id=-1;
+	}
+
 	/**
 	 * Thread safe putter into the factory.  Also the getter.
 	 * NOTE - this method returns an object.  this may not be the same as the object you are putting, if someone beat you to it.
