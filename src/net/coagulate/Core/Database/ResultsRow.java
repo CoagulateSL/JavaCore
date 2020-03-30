@@ -347,7 +347,7 @@ public class ResultsRow {
 	public byte[] getBytes() {
 		if (byteform.size()!=1) { throw new DBException("Column count !=1 - "+byteform.size()); }
 		for (final byte[] bytes: byteform.values()) { return bytes; }
-		return null;
+		return new byte[0];
 	}
 
 	@Nonnull
