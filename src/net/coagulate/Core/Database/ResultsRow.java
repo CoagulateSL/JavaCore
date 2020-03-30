@@ -264,7 +264,8 @@ public class ResultsRow {
 	 */
 	public float getFloat(@Nonnull final String column) {
 		final Float f=getFloatNullable(column);
-		if (f==null) { throw new DBUnexpectedNullValueException("Unexpected null value in column +"column); } return f;
+		if (f==null) { throw new DBUnexpectedNullValueException("Unexpected null value in column "+column); }
+		return f;
 	}
 
 	/**
@@ -323,7 +324,7 @@ public class ResultsRow {
 	 */
 	public long getLong(@Nonnull final String column) {
 		final Long f=getLongNullable(column);
-		if (f==null) { throw new DBUnexpectedNullValueException("Unexpected null value in column +"column); } return f;
+		if (f==null) { throw new DBUnexpectedNullValueException("Unexpected null value in column "+column); } return f;
 	}
 
 	/**
