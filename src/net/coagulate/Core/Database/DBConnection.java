@@ -192,12 +192,29 @@ public abstract class DBConnection {
 
 	// master query (dq - database query) - unpacks the resultset into a Results object containing Rows, and then closes everything out
 
+	/**
+	 * Executes a slow query
+	 *
+	 * @param parameterisedcommand Parameterised SQL command
+	 * @param params               SQL parameters
+	 *
+	 * @return Returns a results set, which may be empty
+	 */
 	@Nonnull
 	public Results dqSlow(@Nonnull final String parameterisedcommand,
 	                      final Object... params) {
 		return _dq(true,parameterisedcommand,params);
 	}
 
+	/**
+	 * Executes a query
+	 *
+	 * @param slowquery            Is this query known to be slow (don't warn about it)
+	 * @param parameterisedcommand Parameterised SQL command
+	 * @param params               SQL parameters
+	 *
+	 * @return Returns a results set, which may be empty
+	 */
 	@Nonnull
 	public Results _dq(final boolean slowquery,
 	                   @Nonnull final String parameterisedcommand,
@@ -284,7 +301,7 @@ public abstract class DBConnection {
 	}
 
 	/**
-	 * Call database with no results.
+	 * Call database with no results, retries on locking exception.
 	 * Used for update / delete queries.]
 	 * Handles all resource allocation and teardown.
 	 *
@@ -309,6 +326,12 @@ public abstract class DBConnection {
 
 	// database do, statement with no results
 
+	/**
+	 * Call database with no results, with no lock conflict handling.  Internal use only.
+	 *
+	 * @param parameterisedcommand SQL query
+	 * @param params               SQL arguments.
+	 */
 	public void _d(@Nonnull final String parameterisedcommand,
 	               final Object... params) {
 		if (logsql) {
@@ -354,10 +377,15 @@ public abstract class DBConnection {
 	}
 
 	/**
+	 * Query the database expecting one result.
+	 *
 	 * @param parameterisedcommand SQL command
 	 * @param params               SQL parameters
 	 *
 	 * @return The singular row result, assuming exactly one row was found
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
 	 */
 
 	@Nonnull
@@ -382,6 +410,9 @@ public abstract class DBConnection {
 	 * @param params Paramters to SQL
 	 *
 	 * @return The integer form of the only column of the only row returned.  Can be null only if the cell's contents are null.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
 	 */
 	@Nullable
 	public Integer dqi(@Nonnull final String sql,
@@ -390,6 +421,17 @@ public abstract class DBConnection {
 		return row.getIntNullable();
 	}
 
+	/**
+	 * Convenience method for getting a float.
+	 *
+	 * @param sql    SQL to query
+	 * @param params Paramters to SQL
+	 *
+	 * @return The float form of the only column of the only row returned.  Can be null only if the cell's contents are null.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	@Nullable
 	public Float dqf(@Nonnull final String sql,
 	                 final Object... params) {
@@ -397,6 +439,17 @@ public abstract class DBConnection {
 		return row.getFloat();
 	}
 
+	/**
+	 * Convenience method for getting a long.
+	 *
+	 * @param sql    SQL to query
+	 * @param params Paramters to SQL
+	 *
+	 * @return The long form of the only column of the only row returned.  Can be null only if the cell's contents are null.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	@Nullable
 	public Long dql(@Nonnull final String sql,
 	                final Object... params) {
@@ -405,10 +458,15 @@ public abstract class DBConnection {
 	}
 
 	/**
-	 * @param sql    SQL query
-	 * @param params SQL parameters
+	 * Convenience method for getting a string.
 	 *
-	 * @return A String of the one column of the one row queried.  Null if the string in the DB is null.
+	 * @param sql    SQL to query
+	 * @param params Paramters to SQL
+	 *
+	 * @return The string form of the only column of the only row returned.  Can be null only if the cell's contents are null.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
 	 */
 	@Nullable
 	public String dqs(@Nonnull final String sql,
@@ -417,6 +475,17 @@ public abstract class DBConnection {
 		return row.getStringNullable();
 	}
 
+	/**
+	 * Convenience method for getting a byte array.
+	 *
+	 * @param sql    SQL to query
+	 * @param params Paramters to SQL
+	 *
+	 * @return The byte array of the only column of the only row returned.  Can be null only if the cell's contents are null.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	@Nullable
 	public byte[] dqbyte(@Nonnull final String sql,
 	                     final Object... params) {
@@ -424,7 +493,17 @@ public abstract class DBConnection {
 		return row.getBytes();
 	}
 
-	@Nonnull
+	/**
+	 * Convenience method for getting a byte array.
+	 *
+	 * @param sql    SQL to query
+	 * @param params Paramters to SQL
+	 *
+	 * @return The byte array form of the only column of the only row returned.  Can not be null.
+	 *
+	 * @throws NoDataException      if there are no results OR the value in the cell is null
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	public byte[] dqbytenn(@Nonnull final String sql,
 	                       final Object... params) {
 		final byte[] b=dqbyte(sql,params);
@@ -432,6 +511,17 @@ public abstract class DBConnection {
 		return b;
 	}
 
+	/**
+	 * Convenience method for getting an integer.
+	 *
+	 * @param sql    SQL to query
+	 * @param params Paramters to SQL
+	 *
+	 * @return The integer form of the only column of the only row returned.  Can not be null.
+	 *
+	 * @throws NoDataException      if there are no results OR the value in the cell is null
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	public int dqinn(@Nonnull final String sql,
 	                 final Object... params) {
 		final Integer i=dqi(sql,params);
@@ -439,6 +529,17 @@ public abstract class DBConnection {
 		return i;
 	}
 
+	/**
+	 * Convenience method for getting a float.
+	 *
+	 * @param sql    SQL to query
+	 * @param params Paramters to SQL
+	 *
+	 * @return The float form of the only column of the only row returned.  Can not be null.
+	 *
+	 * @throws NoDataException      if there are no results OR the value in the cell is null
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	public float dqfnn(@Nonnull final String sql,
 	                   final Object... params) {
 		final Float f=dqf(sql,params);
@@ -446,6 +547,17 @@ public abstract class DBConnection {
 		return f;
 	}
 
+	/**
+	 * Convenience method for getting a long.
+	 *
+	 * @param sql    SQL to query
+	 * @param params Paramters to SQL
+	 *
+	 * @return The long form of the only column of the only row returned.  Can not be null.
+	 *
+	 * @throws NoDataException      if there are no results OR the value in the cell is null
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	public long dqlnn(@Nonnull final String sql,
 	                  final Object... params) {
 		final Long l=dql(sql,params);
@@ -453,6 +565,17 @@ public abstract class DBConnection {
 		return l;
 	}
 
+	/**
+	 * Convenience method for getting a string.
+	 *
+	 * @param sql    SQL to query
+	 * @param params Paramters to SQL
+	 *
+	 * @return The string form of the only column of the only row returned.  Can not be null.
+	 *
+	 * @throws NoDataException      if there are no results OR the value in the cell is null
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	@Nonnull
 	public String dqsnn(@Nonnull final String sql,
 	                    final Object... params) {
@@ -484,6 +607,5 @@ public abstract class DBConnection {
 			updatemax=um;
 		}
 	}
-
 
 }
