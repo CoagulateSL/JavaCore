@@ -35,9 +35,10 @@ public abstract class TableRow extends Table {
 	 *
 	 * @return DBObject that should be used, not necessarily the one that was stored
 	 */
-	protected static synchronized TableRow factoryPut(final String type,
+	@Nonnull
+	protected static synchronized TableRow factoryPut(@Nonnull final String type,
 	                                                  final int id,
-	                                                  final TableRow store) {
+	                                                  @Nonnull final TableRow store) {
 		if (id==0) {
 			throw new SystemBadValueException("ID zero is expressly prohibited, does not exist, and suggests a programming bug.");
 		}
@@ -55,92 +56,191 @@ public abstract class TableRow extends Table {
 		return factory.get(type).get(id);
 	}
 
+	/**
+	 * Defines the name of the ID (primary key) column for this table.
+	 *
+	 * @return The name of the ID column
+	 */
 	@Nonnull
 	public abstract String getIdColumn();
 
 	public int getId() { return id; }
 
+	/**
+	 * Convenience method for getting a string.
+	 *
+	 * @param column Name of the column to read
+	 *
+	 * @return The string form of the column.  Can be null only if the cell's contents are null.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	@Nullable
-	public String getStringNullable(final String column) {
+	public String getStringNullable(@Nonnull final String column) {
 		return dqs("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
 
+	/**
+	 * Convenience method for getting a string.
+	 *
+	 * @param column Name of the column to read
+	 *
+	 * @return The string form of the column.
+	 *
+	 * @throws NoDataException      if there are no results or the contents of the cell is null
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	@Nonnull
-	public String getString(final String column) {
-		final String ret=getStringNullable(column);
-		if (ret==null) {
-			throw new NoDataException("Null value for get string from "+getTableName()+" columne "+getIdColumn()+" id "+getId());
-		}
-		return ret;
+	public String getString(@Nonnull final String column) {
+		return dqsnn("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
 
+	/**
+	 * Convenience method for getting an integer.
+	 *
+	 * @param column Name of the column to read
+	 *
+	 * @return The integer form of the column.  Can be null only if the cell's contents are null.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	@Nullable
-	public Integer getIntNullable(final String column) {
+	public Integer getIntNullable(@Nonnull final String column) {
 		return dqi("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
 
-	public int getInt(final String column) {
-		final Integer i=getIntNullable(column);
-		if (i==null) {
-			throw new NoDataException("Null value for get integer from "+getTableName()+" columne "+getIdColumn()+" id "+getId());
-		}
-		return i;
+	/**
+	 * Convenience method for getting a string.
+	 *
+	 * @param column Name of the column to read
+	 *
+	 * @return The string form of the column.
+	 *
+	 * @throws NoDataException      if there are no results or the contents of the cell is null
+	 * @throws TooMuchDataException if there are multiple results
+	 */
+	public int getInt(@Nonnull final String column) {
+		return dqinn("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
 
+	/**
+	 * Convenience method for getting a float.
+	 *
+	 * @param column Name of the column to read
+	 *
+	 * @return The float form of the column.  Can be null only if the cell's contents are null.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	@Nullable
-	public Float getFloatNullable(final String column) {
+	public Float getFloatNullable(@Nonnull final String column) {
 		return dqf("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
 
-	public float getFloat(final String column) {
-		final Float ret=getFloatNullable(column);
-		if (ret==null) {
-			throw new NoDataException("Null value for get float from "+getTableName()+" columne "+getIdColumn()+" id "+getId());
-		}
-		return ret;
+	/**
+	 * Convenience method for getting a float.
+	 *
+	 * @param column Name of the column to read
+	 *
+	 * @return The float form of the column.
+	 *
+	 * @throws NoDataException      if there are no results or the contents of the cell is null
+	 * @throws TooMuchDataException if there are multiple results
+	 */
+	public float getFloat(@Nonnull final String column) {
+		return dqfnn("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
 
+	/**
+	 * Convenience method for getting a long.
+	 *
+	 * @param column Name of the column to read
+	 *
+	 * @return The long form of the column.  Can be null only if the cell's contents are null.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	@Nullable
-	public Long getLongNullable(final String column) {
+	public Long getLongNullable(@Nonnull final String column) {
 		return dql("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
 
-	public long getLong(final String column) {
-		final Long ret=getLongNullable(column);
-		if (ret==null) {
-			throw new NoDataException("Null value for get long from "+getTableName()+" columne "+getIdColumn()+" id "+getId());
-		}
-		return ret;
+	/**
+	 * Convenience method for getting a long.
+	 *
+	 * @param column Name of the column to read
+	 *
+	 * @return The long form of the column.
+	 *
+	 * @throws NoDataException      if there are no results or the contents of the cell is null
+	 * @throws TooMuchDataException if there are multiple results
+	 */
+	public long getLong(@Nonnull final String column) {
+		return dqlnn("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
 
-	public boolean getBool(final String columnname) {
-		final Integer val=getIntNullable(columnname);
+
+	/**
+	 * Convenience method for getting a boolean.
+	 *
+	 * @param column Name of the column to read
+	 *
+	 * @return The boolean form of the column.  0/null maps to false and 1 maps to true.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
+	 */
+	public boolean getBool(@Nonnull final String column) {
+		final Integer val=getIntNullable(column);
 		if (val==null || val==0) { return false; }
 		if (val==1) { return true; }
 		throw new DBException("Unexpected value "+val+" parsing DB boolean field selfmodify on attribute "+this);
 	}
 
-	public void set(final String columnname,
-	                final Boolean value) { set(columnname,(value?1:0)); }
-
-	// we use a factory style design to make sure that the same object is always returned
-	// this is where we store our factory data, indexed by Type (string), ID (int) and then the DBObject subclass
-
-	public void set(final String columnname,
-	                final String value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
-
-	public void set(final String columnname,
-	                final Integer value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
-
-	@Nullable
-	public byte[] getBytesNullable(final String columnname) {
-		return dqbyte("select "+columnname+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
-	}
-
+	/**
+	 * Convenience method for getting a byte array.
+	 *
+	 * @param column Name of the column to read
+	 *
+	 * @return The byte array form of the column.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
+	 */
 	@Nonnull
-	public byte[] getBytes(final String columnname) {
-		byte[] ret=dqbyte("select "+columnname+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
-		if (ret==null) { ret=new byte[0]; }
-		return ret;
+	public byte[] getBytes(@Nonnull final String column) {
+		return dqbytenn("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
+
+	/**
+	 * Set a column with a boolean value.
+	 *
+	 * @param columnname Name of the column to set
+	 * @param value      The boolean value to set
+	 */
+	public void set(@Nonnull final String columnname,
+	                @Nullable final Boolean value) { set(columnname,(value?1:0)); }
+
+	/**
+	 * Set a column with a string value.
+	 *
+	 * @param columnname The name of the column to set
+	 * @param value      The string value to store
+	 */
+	public void set(@Nonnull final String columnname,
+	                @Nullable final String value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
+
+	/**
+	 * Set a column with an integer value.
+	 *
+	 * @param columnname The name of the column to set
+	 * @param value      The integer value to store
+	 */
+	public void set(@Nonnull final String columnname,
+	                @Nullable final Integer value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
+
 }
