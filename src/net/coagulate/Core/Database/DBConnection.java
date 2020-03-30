@@ -435,7 +435,7 @@ public abstract class DBConnection {
 	public Float dqf(@Nonnull final String sql,
 	                 final Object... params) {
 		final ResultsRow row=dqone(sql,params);
-		return row.getFloat();
+		return row.getFloatNullable();
 	}
 
 	/**
@@ -453,7 +453,7 @@ public abstract class DBConnection {
 	public Long dql(@Nonnull final String sql,
 	                final Object... params) {
 		final ResultsRow row=dqone(sql,params);
-		return row.getLong();
+		return row.getLongNullable();
 	}
 
 	/**

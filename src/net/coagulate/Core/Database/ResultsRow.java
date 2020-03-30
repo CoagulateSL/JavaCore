@@ -18,7 +18,7 @@ public class ResultsRow {
 	private final Map<String,byte[]> byteform=new TreeMap<>();
 
 	/**
-	 * Construct the frow from a resultset.
+	 * Construct the row from a resultset.
 	 *
 	 * @param rs Resultset to read the row from
 	 */
@@ -35,49 +35,62 @@ public class ResultsRow {
 		}
 	}
 
-	public String getStringNullable(final String s) { return row.get(s); }
+	// -------------------------- STRING FUNCTIONS --------------------------
 
+	/**
+	 * Returns the string contents of the given column for the row.
+	 *
+	 * @param column The name of the column to query
+	 *
+	 * @return The contents of the column, possibly null
+	 *
+	 * @throws NoDataException If the column name doesn't exist
+	 */
 	@Nullable
-	public Integer getIntNullable(final String s) {
-		final String result=getStringNullable(s);
-		if (result==null) { return null; }
-		return Integer.parseInt(result);
+	public String getStringNullable(@Nonnull final String column) {
+		if (!row.containsKey(column)) { throw new NoDataException("No such column "+column); }
+		return row.get(column);
 	}
 
-	public int getInt() {
-		final Integer result=getIntNullable();
-		if (result==null) { throw new NoDataException("Got null value for integer default column"); }
-		return result;
+	/**
+	 * Returns the string contents of the only column in the row.
+	 *
+	 * @param column The name of the column to query
+	 *
+	 * @return The string content of the cell, never null.
+	 *
+	 * @throws NoDataException                If the column name doesn't exist
+	 * @throws DBUnexpectedNullValueException If there is a null value present
+	 */
+	@Nonnull
+	public String getString(@Nonnull final String column) {
+		final String s=getStringNullable(column);
+		if (s==null) { throw new DBUnexpectedNullValueException("Got null DB/string where not expected"); }
+		return s;
 	}
 
-	public int getInt(final String s) {
-		final Integer result=getIntNullable(s);
-		if (result==null) { throw new NoDataException("Got null value for integer column "+s); }
-		return result;
-	}
-
-	@Nullable
-	public Boolean getBool(final String s) {
-		if (getStringNullable(s)==null) { return null; }
-		if (getStringNullable(s).equals("1")) { return true; }
-		return false;
-	}
-
-	public boolean getBoolNoNull(final String s) {
-		final Boolean b=getBool(s);
-		if (b==null) { throw new NoDataException("Got null value for boolean column "+s); }
-		return b;
-	}
-
-	public float getFloat(final String s) { return Float.parseFloat(getStringNullable(s)); }
-
+	/**
+	 * Returns the string contents of the only column in the row.
+	 *
+	 * @return The string content of the cell, possibly null.
+	 *
+	 * @throws TooMuchDataException If there is more than one column in the results
+	 */
 	@Nullable
 	public String getStringNullable() {
-		if (row.size()!=1) { throw new DBException("Column count !=1 - "+row.size()); }
+		if (row.size()!=1) { throw new TooMuchDataException("Column count !=1 - "+row.size()); }
 		for (final String value: row.values()) { return value; }
 		return null;
 	}
 
+	/**
+	 * Returns the string contents of the only column in the row.
+	 *
+	 * @return The string content of the cell, never null.
+	 *
+	 * @throws TooMuchDataException           If there is more than one column in the results
+	 * @throws DBUnexpectedNullValueException If there is a null value present
+	 */
 	@Nonnull
 	public String getString() {
 		final String s=getStringNullable();
@@ -85,38 +98,266 @@ public class ResultsRow {
 		return s;
 	}
 
-	@Nonnull
-	public String getString(final String column) {
-		final String s=getStringNullable(column);
-		if (s==null) { throw new DBUnexpectedNullValueException("Got null DB/string where not expected"); }
-		return s;
-	}
+	// -------------------------- INTEGER FUNCTIONS --------------------------
 
+	/**
+	 * Returns the integer contents of the given column for the row.
+	 *
+	 * @param column The name of the column to query
+	 *
+	 * @return The contents of the column, possibly null
+	 *
+	 * @throws NoDataException If the column name doesn't exist
+	 */
 	@Nullable
-	public Boolean getBool() {
-		if (getStringNullable()==null) { return null; }
-		if (getStringNullable().equals("1")) { return true; }
-		return false;
+	public Integer getIntNullable(@Nonnull final String column) {
+		final String result=getStringNullable(column);
+		if (result==null) { return null; }
+		return Integer.parseInt(result);
 	}
 
+	/**
+	 * Returns the string contents of the only column in the row.
+	 *
+	 * @param column The name of the column to query
+	 *
+	 * @return The string content of the cell, never null.
+	 *
+	 * @throws NoDataException                If the column name doesn't exist
+	 * @throws DBUnexpectedNullValueException If there is a null value present
+	 */
+	@Nonnull
+	public int getInt(final String column) {
+		final Integer result=getIntNullable(column);
+		if (result==null) { throw new DBUnexpectedNullValueException("Got null value for integer column "+column); }
+		return result;
+	}
+
+	/**
+	 * Returns the integer contents of the only column in the row.
+	 *
+	 * @return The integer content of the cell, never null.
+	 *
+	 * @throws TooMuchDataException If there is more than one column in the results
+	 */
 	@Nullable
 	public Integer getIntNullable() {
 		if (getStringNullable()==null) { return null; }
 		return Integer.parseInt(getStringNullable());
 	}
 
-	@Nullable
-	public Long getLong() {
-		if (getStringNullable()==null) { return null; }
-		return Long.parseLong(getStringNullable());
+	/**
+	 * Returns the integer contents of the only column in the row.
+	 *
+	 * @return The integer content of the cell, never null.
+	 *
+	 * @throws TooMuchDataException           If there is more than one column in the results
+	 * @throws DBUnexpectedNullValueException If there is a null value present
+	 */
+	public int getInt() {
+		final Integer result=getIntNullable();
+		if (result==null) { throw new DBUnexpectedNullValueException("Got null value for integer default column"); }
+		return result;
 	}
 
+	// -------------------------- BOOLEAN FUNCTIONS --------------------------
+
+	/**
+	 * Returns the boolean contents of the given column for the row.
+	 *
+	 * @param column The name of the column to query
+	 *
+	 * @return The contents of the column, possibly null
+	 *
+	 * @throws NoDataException If the column name doesn't exist
+	 */
 	@Nullable
-	public Float getFloat() {
+	public Boolean getBoolNullable(@Nonnull final String column) {
+		if (getStringNullable(column)==null) { return null; }
+		if (getStringNullable(column).equals("1")) { return true; }
+		return false;
+	}
+
+	/**
+	 * Returns the boolean contents of the only column in the row.
+	 *
+	 * @return The boolean content of the cell, never null.
+	 *
+	 * @throws TooMuchDataException If there is more than one column in the results
+	 */
+	@Nullable
+	public Boolean getBoolNullable() {
+		if (getStringNullable()==null) { return null; }
+		if (getStringNullable().equals("1")) { return true; }
+		return false;
+	}
+
+	/**
+	 * Returns the boolean contents of the only column in the row.
+	 *
+	 * @param column The name of the column to query
+	 *
+	 * @return The boolean content of the cell, never null.
+	 *
+	 * @throws NoDataException                If the column name doesn't exist
+	 * @throws DBUnexpectedNullValueException If there is a null value present
+	 */
+	public boolean getBool(@Nonnull final String column) {
+		final Boolean b=getBoolNullable(column);
+		if (b==null) { throw new DBUnexpectedNullValueException("Got null value for boolean column "+column); }
+		return b;
+	}
+
+	/**
+	 * Returns the boolean contents of the only column in the row.
+	 *
+	 * @return The boolean content of the cell, never null.
+	 *
+	 * @throws TooMuchDataException           If there is more than one column in the results
+	 * @throws DBUnexpectedNullValueException If there is a null value present
+	 */
+	public boolean getBool() {
+		final Boolean b=getBoolNullable();
+		if (b==null) { throw new DBUnexpectedNullValueException("Got null value for boolean column"); }
+		return b;
+	}
+
+	// -------------------------- FLOAT FUNCTIONS --------------------------
+
+	/**
+	 * Returns the float contents of the given column for the row.
+	 *
+	 * @param column The name of the column to query
+	 *
+	 * @return The contents of the column, possibly null
+	 *
+	 * @throws NoDataException If the column name doesn't exist
+	 */
+	@Nullable
+	public Float getFloatNullable(@Nonnull final String column) {
+		if (getStringNullable(column)==null) { return null; }
+		return Float.parseFloat(getStringNullable(column));
+	}
+
+	/**
+	 * Returns the float contents of the only column in the row.
+	 *
+	 * @return The float content of the cell, never null.
+	 *
+	 * @throws TooMuchDataException If there is more than one column in the results
+	 */
+	@Nullable
+	public Float getFloatNullable() {
 		if (getStringNullable()==null) { return null; }
 		return Float.parseFloat(getStringNullable());
 	}
 
+	/**
+	 * Returns the float contents of the only column in the row.
+	 *
+	 * @param column The name of the column to query
+	 *
+	 * @return The float content of the cell, never null.
+	 *
+	 * @throws NoDataException                If the column name doesn't exist
+	 * @throws DBUnexpectedNullValueException If there is a null value present
+	 */
+	public float getFloat(@Nonnull final String column) {
+		final Float f=getFloatNullable(column);
+		if (f==null) { throw new DBUnexpectedNullValueException("Unexpected null value in column +"column); } return f;
+	}
+
+	/**
+	 * Returns the float contents of the only column in the row.
+	 *
+	 * @return The float content of the cell, never null.
+	 *
+	 * @throws TooMuchDataException           If there is more than one column in the results
+	 * @throws DBUnexpectedNullValueException If there is a null value present
+	 */
+	public float getFloat() {
+		final Float f=getFloatNullable();
+		if (f==null) { throw new DBUnexpectedNullValueException("Got null value for float column"); }
+		return f;
+	}
+
+	// -------------------------- LONG FUNCTIONS --------------------------
+
+	/**
+	 * Returns the long contents of the given column for the row.
+	 *
+	 * @param column The name of the column to query
+	 *
+	 * @return The contents of the column, possibly null
+	 *
+	 * @throws NoDataException If the column name doesn't exist
+	 */
+	@Nullable
+	public Long getLongNullable(@Nonnull final String column) {
+		if (getStringNullable(column)==null) { return null; }
+		return Long.parseLong(getStringNullable(column));
+	}
+
+	/**
+	 * Returns the long contents of the only column in the row.
+	 *
+	 * @return The long content of the cell, never null.
+	 *
+	 * @throws TooMuchDataException If there is more than one column in the results
+	 */
+	@Nullable
+	public Long getLongNullable() {
+		if (getStringNullable()==null) { return null; }
+		return Long.parseLong(getStringNullable());
+	}
+
+	/**
+	 * Returns the long contents of the only column in the row.
+	 *
+	 * @param column The name of the column to query
+	 *
+	 * @return The long content of the cell, never null.
+	 *
+	 * @throws NoDataException                If the column name doesn't exist
+	 * @throws DBUnexpectedNullValueException If there is a null value present
+	 */
+	public long getLong(@Nonnull final String column) {
+		final Long f=getLongNullable(column);
+		if (f==null) { throw new DBUnexpectedNullValueException("Unexpected null value in column +"column); } return f;
+	}
+
+	/**
+	 * Returns the long contents of the only column in the row.
+	 *
+	 * @return The long content of the cell, never null.
+	 *
+	 * @throws TooMuchDataException           If there is more than one column in the results
+	 * @throws DBUnexpectedNullValueException If there is a null value present
+	 */
+	public long getLong() {
+		final Long f=getLongNullable();
+		if (f==null) { throw new DBUnexpectedNullValueException("Got null value for long column"); }
+		return f;
+	}
+
+	// -------------------------- BYTE FUNCTIONS --------------------------
+
+	@Nonnull
+	public byte[] getBytes() {
+		if (byteform.size()!=1) { throw new DBException("Column count !=1 - "+byteform.size()); }
+		for (final byte[] bytes: byteform.values()) { return bytes; }
+		return null;
+	}
+
+	@Nonnull
+	public byte[] getBytes(@Nonnull final String s) { return byteform.get(s); }
+
+
+	/**
+	 * Gets a list of all the columns in this row
+	 *
+	 * @return Set of Strings of column names
+	 */
 	@Nonnull
 	public Set<String> keySet() { return row.keySet(); }
 
@@ -132,12 +373,4 @@ public class ResultsRow {
 		return output;
 	}
 
-	@Nullable
-	public byte[] getBytes() {
-		if (byteform.size()!=1) { throw new DBException("Column count !=1 - "+byteform.size()); }
-		for (final byte[] bytes: byteform.values()) { return bytes; }
-		return null;
-	}
-
-	public byte[] getBytes(final String s) { return byteform.get(s); }
 }
