@@ -19,9 +19,9 @@ public class UserInputLookupFailureException extends UserException {
 	}
 
 	public UserInputLookupFailureException(final String reason,
-	                                       boolean suppress) { super(reason,suppress); }
+	                                       final boolean suppress) { super(reason,suppress); }
 
 	public UserInputLookupFailureException(final String reason,
 	                                       final Throwable cause,
-	                                       boolean suppress) { super(reason,cause,suppress); }
+	                                       final boolean suppress) { super(reason,cause,suppress); }
 }

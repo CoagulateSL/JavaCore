@@ -17,14 +17,14 @@ public abstract class SystemException extends RuntimeException {
 	                       final Throwable cause) { super(reason,cause); }
 
 	public SystemException(final String reason,
-	                     boolean suppresslogging) {
+	                       final boolean suppresslogging) {
 		super(reason);
 		this.suppresslogging=suppresslogging;
 	}
 
 	public SystemException(final String reason,
-	                     final Throwable cause,
-	                     boolean suppresslogging) {
+	                       final Throwable cause,
+	                       final boolean suppresslogging) {
 		super(reason,cause);
 		this.suppresslogging=suppresslogging;
 	}

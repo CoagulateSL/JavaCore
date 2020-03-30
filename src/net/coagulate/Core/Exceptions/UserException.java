@@ -16,14 +16,14 @@ public abstract class UserException extends RuntimeException {
 	                     final Throwable cause) { super(reason,cause); }
 
 	public UserException(final String reason,
-	                     boolean suppresslogging) {
+	                     final boolean suppresslogging) {
 		super(reason);
 		this.suppresslogging=suppresslogging;
 	}
 
 	public UserException(final String reason,
 	                     final Throwable cause,
-	                     boolean suppresslogging) {
+	                     final boolean suppresslogging) {
 		super(reason,cause);
 		this.suppresslogging=suppresslogging;
 	}
