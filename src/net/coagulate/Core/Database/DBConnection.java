@@ -397,7 +397,7 @@ public abstract class DBConnection {
 		if (results.size()>1) {
 			throw new TooMuchDataException("Query "+results.getStatement()+" returned "+results.size()+" results and we expected one");
 		}
-		return results.iterator().next();
+		return results.first();
 	}
 
 	/**

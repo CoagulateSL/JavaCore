@@ -3,7 +3,6 @@ package net.coagulate.Core.Database;
 
 import javax.annotation.Nonnull;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,7 +25,7 @@ public class Results implements Iterable<ResultsRow> {
 	 */
 	public Results(@Nonnull final ResultSet rs) {
 		try {
-			final ResultSetMetaData rsmd=rs.getMetaData();
+			//final ResultSetMetaData rsmd=rs.getMetaData();
 			while (rs.next()) {
 				final ResultsRow r=new ResultsRow(rs);
 				data.add(r);
@@ -43,7 +42,19 @@ public class Results implements Iterable<ResultsRow> {
 	 * @return Iterator over the rows of the Results
 	 */
 	@Override
-	public @Nonnull Iterator<ResultsRow> iterator() { return data.iterator(); }
+	@Nonnull
+	public Iterator<ResultsRow> iterator() { return data.iterator(); }
+
+	/**
+	 * Gets the first row of the results set.
+	 *
+	 * @throws NoDataException if there isn't a first row
+	 */
+	@Nonnull
+	public ResultsRow first() {
+		if (size()<1) { throw new NoDataException("There are no rows"); }
+		return data.get(0);
+	}
 
 	/**
 	 * Size of results
@@ -72,6 +83,7 @@ public class Results implements Iterable<ResultsRow> {
 	 *
 	 * @return The statement set earlier by setStatement() or the blank string.
 	 */
+	@Nonnull
 	public String getStatement() { return statement; }
 
 	/**
@@ -79,5 +91,5 @@ public class Results implements Iterable<ResultsRow> {
 	 *
 	 * @param stmt SQL Statement
 	 */
-	public void setStatement(final String stmt) { statement=stmt; }
+	public void setStatement(@Nonnull final String stmt) { statement=stmt; }
 }
