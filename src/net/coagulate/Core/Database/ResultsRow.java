@@ -126,7 +126,6 @@ public class ResultsRow {
 	 * @throws NoDataException                If the column name doesn't exist
 	 * @throws DBUnexpectedNullValueException If there is a null value present
 	 */
-	@Nonnull
 	public int getInt(final String column) {
 		final Integer result=getIntNullable(column);
 		if (result==null) { throw new DBUnexpectedNullValueException("Got null value for integer column "+column); }
