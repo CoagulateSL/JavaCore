@@ -136,21 +136,6 @@ public abstract class Table {
 	                        final Object... params) { return getDatabase().dqs(sql,params); }
 
 	/**
-	 * Convenience method for getting a byte array.
-	 *
-	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
-	 *
-	 * @return The byte array of the only column of the only row returned.  Can be null only if the cell's contents are null.
-	 *
-	 * @throws NoDataException      if there are no results
-	 * @throws TooMuchDataException if there are multiple results
-	 */
-	@Nullable
-	public final byte[] dqbyte(@Nonnull final String sql,
-	                           final Object... params) { return getDatabase().dqbyte(sql,params); }
-
-	/**
 	 * Convenience method for getting an integer.
 	 *
 	 * @param sql    SQL to query
