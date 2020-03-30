@@ -387,7 +387,6 @@ public abstract class DBConnection {
 	 * @throws NoDataException      if there are no results
 	 * @throws TooMuchDataException if there are multiple results
 	 */
-
 	@Nonnull
 	public ResultsRow dqone(@Nonnull final String parameterisedcommand,
 	                        final Object... params) {
