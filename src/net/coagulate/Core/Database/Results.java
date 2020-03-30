@@ -1,8 +1,6 @@
 package net.coagulate.Core.Database;
 
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nonnull;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -45,7 +43,7 @@ public class Results implements Iterable<ResultsRow> {
 	 * @return Iterator over the rows of the Results
 	 */
 	@Override
-	public @NotNull Iterator<ResultsRow> iterator() { return data.iterator(); }
+	public @Nonnull Iterator<ResultsRow> iterator() { return data.iterator(); }
 
 	/**
 	 * Size of results
