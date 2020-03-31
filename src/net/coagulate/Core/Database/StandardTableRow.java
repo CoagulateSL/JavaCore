@@ -9,6 +9,7 @@ public abstract class StandardTableRow extends TableRow {
 
 	public StandardTableRow(final int id) { super(id); }
 
+	// ---------- INSTANCE ----------
 	@Nonnull
 	@Override
 	public String getIdColumn() { return "id"; }

@@ -26,6 +26,7 @@ public abstract class Passwords {
 	public static final int SALT_INDEX=3;
 	public static final int PBKDF2_INDEX=4;
 
+	// ---------- STATICS ----------
 	@Nonnull
 	public static String createHash(@Nonnull final String password) {
 		try {
@@ -36,6 +37,17 @@ public abstract class Passwords {
 		}
 	}
 
+	public static boolean verifyPassword(@Nonnull final String password,
+	                                     @Nonnull final String correctHash) {
+		try {
+			return verifyPassword(password.toCharArray(),correctHash);
+		}
+		catch (@Nonnull final CannotPerformOperationException|InvalidHashException ex) {
+			throw new AssertionError("Crypto error verifying password",ex);
+		}
+	}
+
+	// ----- Internal Statics -----
 	@Nonnull
 	private static String createHash(final char[] password) throws CannotPerformOperationException {
 		// Generate a random salt
@@ -49,16 +61,6 @@ public abstract class Passwords {
 
 		// format: algorithm:iterations:hashSize:salt:hash
 		return "sha1:"+PBKDF2_ITERATIONS+":"+hashSize+":"+toBase64(salt)+":"+toBase64(hash);
-	}
-
-	public static boolean verifyPassword(@Nonnull final String password,
-	                                     @Nonnull final String correctHash) {
-		try {
-			return verifyPassword(password.toCharArray(),correctHash);
-		}
-		catch (@Nonnull final CannotPerformOperationException|InvalidHashException ex) {
-			throw new AssertionError("Crypto error verifying password",ex);
-		}
 	}
 
 	private static boolean verifyPassword(final char[] password,

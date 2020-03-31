@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
  * @author Iain Price
  */
 public abstract class Table {
+	// ---------- INSTANCE ----------
 	@Nonnull
 	public abstract DBConnection getDatabase();
 
@@ -16,22 +17,6 @@ public abstract class Table {
 	public abstract String getTableName();
 
 	// helpful methods
-
-	/**
-	 * Internal database code that converts native types to SQL types.
-	 *
-	 * @param conn                 DB connection
-	 * @param parameterisedcommand SQL command
-	 * @param params               SQL parameters
-	 *
-	 * @return PreparedStatement as required
-	 *
-	 * @throws DBException If there is an error.
-	 */
-	@Nonnull
-	protected final PreparedStatement prepare(@Nonnull final Connection conn,
-	                                          final String parameterisedcommand,
-	                                          final Object... params) { return getDatabase().prepare(conn,parameterisedcommand,params); }
 
 	/**
 	 * Call database with results.
@@ -206,5 +191,23 @@ public abstract class Table {
 	@Nonnull
 	public final byte[] dqbytenn(@Nonnull final String sql,
 	                             final Object... params) { return getDatabase().dqbytenn(sql,params); }
+
+	// ----- Internal Instance -----
+
+	/**
+	 * Internal database code that converts native types to SQL types.
+	 *
+	 * @param conn                 DB connection
+	 * @param parameterisedcommand SQL command
+	 * @param params               SQL parameters
+	 *
+	 * @return PreparedStatement as required
+	 *
+	 * @throws DBException If there is an error.
+	 */
+	@Nonnull
+	protected final PreparedStatement prepare(@Nonnull final Connection conn,
+	                                          final String parameterisedcommand,
+	                                          final Object... params) { return getDatabase().prepare(conn,parameterisedcommand,params); }
 
 }

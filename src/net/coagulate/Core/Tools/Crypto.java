@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public abstract class Crypto {
 
+	// ---------- STATICS ----------
 	public static String SHA1(@Nonnull final String string) {
 		final MessageDigest md;
 		try {

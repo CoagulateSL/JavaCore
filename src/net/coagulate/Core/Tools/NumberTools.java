@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 public class NumberTools {
 	private static final boolean debug=false;
 
+	// ---------- STATICS ----------
 	@Nonnull
 	public static String fixdp(final float number,
 	                           final int dp) {

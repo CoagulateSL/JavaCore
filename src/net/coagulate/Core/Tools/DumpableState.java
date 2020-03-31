@@ -12,6 +12,7 @@ import java.util.Map;
 public abstract class DumpableState {
 
 
+	// ---------- INSTANCE ----------
 	@Nonnull
 	public String toHTML() {
 		final StringBuilder ret=new StringBuilder("<table>");
@@ -38,6 +39,7 @@ public abstract class DumpableState {
 		return ret.toString();
 	}
 
+	// ----- Internal Instance -----
 	@Nonnull
 	protected abstract String dumpAdditionalStateToHtml();
 
@@ -59,7 +61,7 @@ public abstract class DumpableState {
 			ret.append("<table border=1>");
 			final BasicHttpRequest req=(BasicHttpRequest) o;
 			ret.append("<tr><td valign=top colspan=4>").append(req.getRequestLine()).append("</td></td>");
-			for (final Header header:req.getAllHeaders()) {
+			for (final Header header: req.getAllHeaders()) {
 				ret.append("<tr><td valign=top>").append(toHTML(header.getName())).append("</td>");
 				ret.append("<td valign=top>").append(toHTML(header.getValue())).append("</td></tr>");
 			}
@@ -75,7 +77,7 @@ public abstract class DumpableState {
 				ret.append("<td valign=top>").append(toHTML(entry.getValue())).append("</td></tr>");
 			}
 			ret.append("</table>");
-		}		
+		}
 		if (Map.class.isAssignableFrom(o.getClass())) {
 			handled=true;
 			ret.append("<table border=1>");

@@ -30,16 +30,7 @@ public abstract class DB {
 
 	private static final Map<String,DBConnection> datasources=new HashMap<>();
 
-	static void register(@Nonnull final String sourcename,
-	                     @Nonnull final DBConnection connection) {
-		if (datasources.containsKey(sourcename)) {
-			Logger.getLogger(DB.class.getName()).warning("Re-registering DB connection "+sourcename);
-			final DBConnection outgoing=datasources.get(sourcename);
-			outgoing.shutdown();
-		}
-		datasources.put(sourcename,connection);
-	}
-
+	// ---------- STATICS ----------
 	@Nonnull
 	public static DBConnection get(@Nonnull final String datasourcename) {
 		if (!datasources.containsKey(datasourcename)) {
@@ -67,5 +58,16 @@ public abstract class DB {
 			if (!connection.test()) { return false; }
 		}
 		return true;
+	}
+
+	// ----- Internal Statics -----
+	static void register(@Nonnull final String sourcename,
+	                     @Nonnull final DBConnection connection) {
+		if (datasources.containsKey(sourcename)) {
+			Logger.getLogger(DB.class.getName()).warning("Re-registering DB connection "+sourcename);
+			final DBConnection outgoing=datasources.get(sourcename);
+			outgoing.shutdown();
+		}
+		datasources.put(sourcename,connection);
 	}
 }

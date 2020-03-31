@@ -37,6 +37,8 @@ public class ResultsRow {
 
 	// -------------------------- STRING FUNCTIONS --------------------------
 
+	// ---------- INSTANCE ----------
+
 	/**
 	 * Returns the string contents of the given column for the row.
 	 *
@@ -323,7 +325,8 @@ public class ResultsRow {
 	 */
 	public long getLong(@Nonnull final String column) {
 		final Long f=getLongNullable(column);
-		if (f==null) { throw new DBUnexpectedNullValueException("Unexpected null value in column "+column); } return f;
+		if (f==null) { throw new DBUnexpectedNullValueException("Unexpected null value in column "+column); }
+		return f;
 	}
 
 	/**

@@ -37,8 +37,10 @@ public abstract class DBConnection {
 		logger=Logger.getLogger(getClass().getName()+"."+sourcename);
 	}
 
+	// ---------- STATICS ----------
 	public static boolean sqlLogging() { return logsql; }
 
+	// ---------- INSTANCE ----------
 	@Nonnull
 	public DBStats getStats() {
 		if (!accumulatestats) { throw new IllegalStateException("Stats are disabled"); }
@@ -83,11 +85,6 @@ public abstract class DBConnection {
 	@Nonnull
 	public String getName() { return sourcename; }
 
-	/**
-	 * dont forget to call this during setup!
-	 */
-	protected void register() { DB.register(sourcename,this); }
-
 	public boolean test() {
 		try {
 			final int result=dqinn("select 1");
@@ -97,81 +94,6 @@ public abstract class DBConnection {
 		catch (@Nonnull final Exception e) { logger.log(SEVERE,"Database connectivity test failure",e); }
 		return false;
 	}
-
-	/**
-	 * Internal database code that converts native types to SQL types.
-	 *
-	 * @param conn                 DB connection
-	 * @param parameterisedcommand SQL command
-	 * @param params               SQL parameters
-	 *
-	 * @return PreparedStatement as required
-	 *
-	 * @throws DBException If there is an error.
-	 */
-	@Nonnull
-	protected PreparedStatement prepare(@Nonnull final Connection conn,
-	                                    final String parameterisedcommand,
-	                                    @Nonnull final Object... params) {
-		try {
-			final PreparedStatement ps=conn.prepareStatement(parameterisedcommand);
-			for (int i=1;i<=params.length;i++) {
-				final Object p=params[i-1];
-				boolean parsed=false;
-				if (p instanceof Integer) {
-					{
-						ps.setInt(i,(Integer) p);
-						parsed=true;
-					}
-				}
-				if (p instanceof byte[]) {
-					ps.setBytes(i,(byte[]) p);
-					parsed=true;
-				}
-				if (p instanceof Byte[]) {
-					final Byte[] in=(Byte[]) p;
-					final byte[] out=new byte[in.length];
-					for (int byteloop=0;byteloop<in.length;byteloop++) { out[byteloop]=in[byteloop]; }
-					ps.setBytes(i,out);
-					parsed=true;
-				}
-				if (p instanceof String) {
-					ps.setString(i,(String) p);
-					parsed=true;
-				}
-				if (p instanceof NullInteger) {
-					ps.setNull(i,Types.INTEGER);
-					parsed=true;
-				}
-				if (p instanceof Float) {
-					ps.setFloat(i,(Float) p);
-					parsed=true;
-				}
-				if (p instanceof Boolean) {
-					ps.setBoolean(i,(Boolean) p);
-					parsed=true;
-				}
-				if (p instanceof Long) {
-					ps.setLong(i,(Long) p);
-					parsed=true;
-				}
-				if (p==null) {
-					ps.setNull(i,Types.VARCHAR);
-					parsed=true;
-				}
-				if (!parsed) {
-					throw new DBException("Parameter "+i+" is not of a handled type ("+p.getClass().getName()+")");
-				}
-			}
-			return ps;
-		}
-		catch (@Nonnull final SQLException e) {
-			throw new DBException("Failed to prepare statement "+parameterisedcommand,e);
-		}
-	}
-
-	// some code I lifted from another project, and modified.  The "NullInteger" is a horrible hack, what am I doing :/
-	// not the only one to come up with the typed-null class tho :P
 
 	/**
 	 * Call database with results.
@@ -189,9 +111,6 @@ public abstract class DBConnection {
 		return _dq(false,parameterisedcommand,params);
 	}
 
-
-	// master query (dq - database query) - unpacks the resultset into a Results object containing Rows, and then closes everything out
-
 	/**
 	 * Executes a slow query
 	 *
@@ -205,6 +124,9 @@ public abstract class DBConnection {
 	                      final Object... params) {
 		return _dq(true,parameterisedcommand,params);
 	}
+
+	// some code I lifted from another project, and modified.  The "NullInteger" is a horrible hack, what am I doing :/
+	// not the only one to come up with the typed-null class tho :P
 
 	/**
 	 * Executes a query
@@ -279,6 +201,9 @@ public abstract class DBConnection {
 		}
 	}
 
+
+	// master query (dq - database query) - unpacks the resultset into a Results object containing Rows, and then closes everything out
+
 	@Nonnull
 	public String formatCaller() {
 		String caller=formatFrame(5,"Unknown");
@@ -323,8 +248,6 @@ public abstract class DBConnection {
 			}
 		}
 	}
-
-	// database do, statement with no results
 
 	/**
 	 * Call database with no results, with no lock conflict handling.  Internal use only.
@@ -399,6 +322,8 @@ public abstract class DBConnection {
 		}
 		return results.first();
 	}
+
+	// database do, statement with no results
 
 	/**
 	 * Convenience method for getting an integer.
@@ -583,6 +508,84 @@ public abstract class DBConnection {
 		return s;
 	}
 
+	// ----- Internal Instance -----
+
+	/**
+	 * dont forget to call this during setup!
+	 */
+	protected void register() { DB.register(sourcename,this); }
+
+	/**
+	 * Internal database code that converts native types to SQL types.
+	 *
+	 * @param conn                 DB connection
+	 * @param parameterisedcommand SQL command
+	 * @param params               SQL parameters
+	 *
+	 * @return PreparedStatement as required
+	 *
+	 * @throws DBException If there is an error.
+	 */
+	@Nonnull
+	protected PreparedStatement prepare(@Nonnull final Connection conn,
+	                                    final String parameterisedcommand,
+	                                    @Nonnull final Object... params) {
+		try {
+			final PreparedStatement ps=conn.prepareStatement(parameterisedcommand);
+			for (int i=1;i<=params.length;i++) {
+				final Object p=params[i-1];
+				boolean parsed=false;
+				if (p instanceof Integer) {
+					{
+						ps.setInt(i,(Integer) p);
+						parsed=true;
+					}
+				}
+				if (p instanceof byte[]) {
+					ps.setBytes(i,(byte[]) p);
+					parsed=true;
+				}
+				if (p instanceof Byte[]) {
+					final Byte[] in=(Byte[]) p;
+					final byte[] out=new byte[in.length];
+					for (int byteloop=0;byteloop<in.length;byteloop++) { out[byteloop]=in[byteloop]; }
+					ps.setBytes(i,out);
+					parsed=true;
+				}
+				if (p instanceof String) {
+					ps.setString(i,(String) p);
+					parsed=true;
+				}
+				if (p instanceof NullInteger) {
+					ps.setNull(i,Types.INTEGER);
+					parsed=true;
+				}
+				if (p instanceof Float) {
+					ps.setFloat(i,(Float) p);
+					parsed=true;
+				}
+				if (p instanceof Boolean) {
+					ps.setBoolean(i,(Boolean) p);
+					parsed=true;
+				}
+				if (p instanceof Long) {
+					ps.setLong(i,(Long) p);
+					parsed=true;
+				}
+				if (p==null) {
+					ps.setNull(i,Types.VARCHAR);
+					parsed=true;
+				}
+				if (!parsed) {
+					throw new DBException("Parameter "+i+" is not of a handled type ("+p.getClass().getName()+")");
+				}
+			}
+			return ps;
+		}
+		catch (@Nonnull final SQLException e) {
+			throw new DBException("Failed to prepare statement "+parameterisedcommand,e);
+		}
+	}
 
 	public static class DBStats {
 		public final int queries;

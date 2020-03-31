@@ -22,6 +22,8 @@ public abstract class TableRow extends Table {
 		id=-1;
 	}
 
+	// ----- Internal Statics -----
+
 	/**
 	 * Thread safe putter into the factory.  Also the getter.
 	 * NOTE - this method returns an object.  this may not be the same as the object you are putting, if someone beat you to it.
@@ -55,6 +57,8 @@ public abstract class TableRow extends Table {
 		// return, either the previous value, or the one we just put there
 		return factory.get(type).get(id);
 	}
+
+	// ---------- INSTANCE ----------
 
 	/**
 	 * Defines the name of the ID (primary key) column for this table.

@@ -66,6 +66,7 @@ public class MariaDBConnection extends DBConnection {
 
 	}
 
+	// ---------- INSTANCE ----------
 	public void shutdown() {
 		logger.config("Closing database connection");
 		try {

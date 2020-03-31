@@ -36,6 +36,8 @@ public class Results implements Iterable<ResultsRow> {
 		}
 	}
 
+	// ---------- INSTANCE ----------
+
 	/**
 	 * Iterator interface
 	 *

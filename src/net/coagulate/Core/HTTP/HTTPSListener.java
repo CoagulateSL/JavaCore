@@ -101,13 +101,7 @@ public class HTTPSListener {
 		}
 	}
 
-	@Nonnull
-	private Logger logger() {
-		if (logger!=null) { return logger; }
-		logger=Logger.getLogger(HTTPSListener.class.getCanonicalName()+"."+port);
-		return logger;
-	}
-
+	// ---------- INSTANCE ----------
 	public void shutdown() {
 		new ShutdownHook(this).start();
 	}
@@ -127,11 +121,20 @@ public class HTTPSListener {
 		}
 	}
 
+	// ----- Internal Instance -----
+	@Nonnull
+	private Logger logger() {
+		if (logger!=null) { return logger; }
+		logger=Logger.getLogger(HTTPSListener.class.getCanonicalName()+"."+port);
+		return logger;
+	}
+
 	private static class ShutdownHook extends Thread {
 		private final HTTPSListener target;
 
 		public ShutdownHook(final HTTPSListener target) { this.target=target; }
 
+		// ---------- INSTANCE ----------
 		@Override
 		public void run() {
 			target.blockingShutdown();

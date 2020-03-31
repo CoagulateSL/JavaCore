@@ -24,6 +24,7 @@ public class LogHandler extends Handler {
 		setLevel(Level.ALL);
 	}
 
+	// ---------- STATICS ----------
 	public static void initialise() {
 		LogManager.getLogManager().reset();
 		Logger.getLogger("").setLevel(Level.ALL);
@@ -43,15 +44,6 @@ public class LogHandler extends Handler {
 			ignored.printStackTrace();
 		}
 		return "";
-	}
-
-	static synchronized void considerExpiring(final String signature) {
-		if (suppressionclear.containsKey(signature)) {
-			if (suppressionclear.get(signature).before(new Date())) {
-				suppressionclear.remove(signature);
-				suppressioncount.remove(signature);
-			}
-		}
 	}
 
 	public static boolean suppress(final Throwable t) {
@@ -82,6 +74,17 @@ public class LogHandler extends Handler {
 		return -1;
 	}
 
+	// ----- Internal Statics -----
+	static synchronized void considerExpiring(final String signature) {
+		if (suppressionclear.containsKey(signature)) {
+			if (suppressionclear.get(signature).before(new Date())) {
+				suppressionclear.remove(signature);
+				suppressioncount.remove(signature);
+			}
+		}
+	}
+
+	// ---------- INSTANCE ----------
 	@Override
 	public void publish(@Nonnull final LogRecord record) {
 		final Object[] parameters=record.getParameters();
@@ -115,10 +118,10 @@ public class LogHandler extends Handler {
 			final Throwable thrown=record.getThrown();
 			// Stop here after the console print but before the mail print if this is a suppressed exception
 			if (UserException.class.isAssignableFrom(thrown.getClass())) {
-				if (((UserException)thrown).suppressed()) { return; }
+				if (((UserException) thrown).suppressed()) { return; }
 			}
 			if (SystemException.class.isAssignableFrom(thrown.getClass())) {
-				if (((SystemException)thrown).suppressed()) { return; }
+				if (((SystemException) thrown).suppressed()) { return; }
 			}
 
 			//if (!thrown instanceof UserException) {
@@ -132,9 +135,7 @@ public class LogHandler extends Handler {
 					}
 					else {
 						System.out.println(ExceptionTools.toString(thrown));
-						MailTools.mail(mailprefix+" {NoLog} "+thrown.getClass().getSimpleName()+" - "+message+" - "+thrown.getLocalizedMessage(),
-						               ExceptionTools.toHTML(thrown)
-						              );
+						MailTools.mail(mailprefix+" {NoLog} "+thrown.getClass().getSimpleName()+" - "+message+" - "+thrown.getLocalizedMessage(),ExceptionTools.toHTML(thrown));
 					}
 				}
 			}
@@ -155,6 +156,17 @@ public class LogHandler extends Handler {
 
 	@Override
 	public void close() {
+	}
+
+	// ----- Internal Instance -----
+	@Nonnull
+	String postpad(@Nonnull final String in,
+	               final int len) {
+		final StringBuilder pad=new StringBuilder(in);
+		while (pad.length()<len) {
+			pad.append(" ");
+		}
+		return pad.toString();
 	}
 
 	@Nonnull
@@ -181,15 +193,5 @@ public class LogHandler extends Handler {
 			return "WARN";
 		}
 		return "????";
-	}
-
-	@Nonnull
-	String postpad(@Nonnull final String in,
-	               final int len) {
-		final StringBuilder pad=new StringBuilder(in);
-		while (pad.length()<len) {
-			pad.append(" ");
-		}
-		return pad.toString();
 	}
 }

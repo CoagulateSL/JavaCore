@@ -31,6 +31,7 @@ public abstract class ClassTools {
 	private static Set<Class<? extends Object>> classmap;
 	private static int totalclasses;
 
+	// ---------- STATICS ----------
 	@Nonnull
 	public static Set<Class<? extends Object>> getAnnotatedClasses(final Class<? extends Annotation> annotation) {
 		final Set<Class<? extends Object>> classes=new HashSet<>();
@@ -115,6 +116,7 @@ public abstract class ClassTools {
 		return classes;
 	}
 
+	// ----- Internal Statics -----
 	private static void inspectFile(@Nonnull final File f,
 	                                @Nonnull final File base,
 	                                @Nonnull final Set<Class<? extends Object>> classes) throws IOException {

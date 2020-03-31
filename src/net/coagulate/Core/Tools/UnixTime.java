@@ -19,6 +19,8 @@ public abstract class UnixTime {
 	public static final int MONTH=4*WEEK;
 	public static final int YEAR=365*DAY;
 
+	// ---------- STATICS ----------
+
 	/**
 	 * Convert a specific date time into unixtime
 	 *
@@ -78,12 +80,6 @@ public abstract class UnixTime {
 	public static String fromUnixTime(@Nonnull final String date,
 	                                  final String timezone) {
 		return fromUnixTime(Integer.parseInt(date),timezone);
-	}
-
-	@Nonnull
-	private static String fromUnixTime(final int date,
-	                                   @Nonnull final DateFormat df) {
-		return df.format(new Date(((long) (date))*((long) 1000)));
 	}
 
 	/**
@@ -240,6 +236,13 @@ public abstract class UnixTime {
 	public static String durationRelativeToNow(final int unixtime,
 	                                           final boolean withseconds) {
 		return duration(relativeToNow(unixtime),withseconds);
+	}
+
+	// ----- Internal Statics -----
+	@Nonnull
+	private static String fromUnixTime(final int date,
+	                                   @Nonnull final DateFormat df) {
+		return df.format(new Date(((long) (date))*((long) 1000)));
 	}
 
 }

@@ -65,13 +65,7 @@ public class HTTPListener {
 		}
 	}
 
-	@Nonnull
-	private Logger logger() {
-		if (logger!=null) { return logger; }
-		logger=Logger.getLogger(HTTPListener.class.getCanonicalName()+"."+port);
-		return logger;
-	}
-
+	// ---------- INSTANCE ----------
 	public void shutdown() {
 		new ShutdownHook(this).start();
 	}
@@ -91,11 +85,20 @@ public class HTTPListener {
 		}
 	}
 
+	// ----- Internal Instance -----
+	@Nonnull
+	private Logger logger() {
+		if (logger!=null) { return logger; }
+		logger=Logger.getLogger(HTTPListener.class.getCanonicalName()+"."+port);
+		return logger;
+	}
+
 	private static class ShutdownHook extends Thread {
 		private final HTTPListener target;
 
 		public ShutdownHook(final HTTPListener target) { this.target=target; }
 
+		// ---------- INSTANCE ----------
 		@Override
 		public void run() {
 			target.blockingShutdown();

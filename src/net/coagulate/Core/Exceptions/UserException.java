@@ -27,6 +27,7 @@ public abstract class UserException extends RuntimeException {
 		super(reason,cause);
 		this.suppresslogging=suppresslogging;
 	}
-	
+
+	// ---------- INSTANCE ----------
 	public final boolean suppressed() { return suppresslogging; }
 }

@@ -15,6 +15,7 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 
 	public StandardLockableTableRow(final int id) {super(id);}
 
+	// ---------- INSTANCE ----------
 	public abstract int getNode();
 
 	@Nonnull

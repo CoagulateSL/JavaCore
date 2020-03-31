@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
  * @author Iain Price
  */
 public abstract class ExceptionTools {
+	// ---------- STATICS ----------
 	@Nonnull
 	public static String dumpException(@Nonnull final Throwable e) {
 		final StringBuilder p=new StringBuilder();

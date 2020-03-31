@@ -27,6 +27,7 @@ public abstract class MailTools {
 	@Nullable
 	public static String defaulttoaddress;
 
+	// ---------- STATICS ----------
 	public static void mail(final String server,
 	                        final String fromname,
 	                        final String fromaddress,

@@ -17,6 +17,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
  */
 public abstract class CertUtils {
 
+	// ---------- STATICS ----------
 	@Nonnull
 	public static RSAPrivateKey generatePrivateKeyFromDER(@Nonnull final byte[] keyBytes) throws InvalidKeySpecException, NoSuchAlgorithmException {
 		final PKCS8EncodedKeySpec spec=new PKCS8EncodedKeySpec(keyBytes);

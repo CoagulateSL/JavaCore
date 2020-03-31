@@ -29,5 +29,6 @@ public abstract class SystemException extends RuntimeException {
 		this.suppresslogging=suppresslogging;
 	}
 
+	// ---------- INSTANCE ----------
 	public final boolean suppressed() { return suppresslogging; }
 }

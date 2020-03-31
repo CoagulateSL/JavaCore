@@ -9,6 +9,7 @@ public abstract class Tokens {
 
 	private static final String tokenfont="0123456789abdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+	// ---------- STATICS ----------
 	@Nonnull
 	public static String generateToken() {
 		final StringBuilder token=new StringBuilder();
