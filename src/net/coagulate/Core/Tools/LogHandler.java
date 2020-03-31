@@ -135,7 +135,9 @@ public class LogHandler extends Handler {
 					}
 					else {
 						System.out.println(ExceptionTools.toString(thrown));
-						MailTools.mail(mailprefix+" {NoLog} "+thrown.getClass().getSimpleName()+" - "+message+" - "+thrown.getLocalizedMessage(),ExceptionTools.toHTML(thrown));
+						MailTools.mail(mailprefix+" {NoLog} "+thrown.getClass().getSimpleName()+" - "+message+" - "+thrown.getLocalizedMessage(),
+						               ExceptionTools.toHTML(thrown)
+						              );
 					}
 				}
 			}
