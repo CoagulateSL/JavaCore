@@ -223,7 +223,7 @@ public abstract class TableRow extends Table {
 	 * @param value      The boolean value to set
 	 */
 	public void set(@Nonnull final String columnname,
-	                @Nullable final Boolean value) { set(columnname,(value?1:0)); }
+	                @Nullable final Boolean value) { set(columnname,(value!=null && value?1:0)); }
 
 	/**
 	 * Set a column with a string value.

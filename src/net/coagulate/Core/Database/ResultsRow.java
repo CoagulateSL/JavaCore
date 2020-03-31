@@ -173,7 +173,7 @@ public class ResultsRow {
 	@Nullable
 	public Boolean getBoolNullable(@Nonnull final String column) {
 		if (getStringNullable(column)==null) { return null; }
-		if (getStringNullable(column).equals("1")) { return true; }
+		if (getString(column).equals("1")) { return true; }
 		return false;
 	}
 
@@ -235,7 +235,7 @@ public class ResultsRow {
 	@Nullable
 	public Float getFloatNullable(@Nonnull final String column) {
 		if (getStringNullable(column)==null) { return null; }
-		return Float.parseFloat(getStringNullable(column));
+		return Float.parseFloat(getString(column));
 	}
 
 	/**
@@ -295,7 +295,7 @@ public class ResultsRow {
 	@Nullable
 	public Long getLongNullable(@Nonnull final String column) {
 		if (getStringNullable(column)==null) { return null; }
-		return Long.parseLong(getStringNullable(column));
+		return Long.parseLong(getString(column));
 	}
 
 	/**
