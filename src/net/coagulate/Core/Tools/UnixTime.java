@@ -70,7 +70,7 @@ public abstract class UnixTime {
 
 	@Nonnull
 	public static String fromUnixTime(final int date,
-	                                  final String timezone) {
+	                                  @Nonnull final String timezone) {
 		final DateFormat df=DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
 		df.setTimeZone(TimeZone.getTimeZone(timezone));
 		return fromUnixTime(date,df);
