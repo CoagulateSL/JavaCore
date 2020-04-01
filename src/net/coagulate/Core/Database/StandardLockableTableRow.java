@@ -122,8 +122,7 @@ public abstract class StandardLockableTableRow extends StandardTableRow {
 		if (lockedserial!=serial) {
 			throw new SystemConsistencyException("Attempt to release lock with wrong serial ("+lockedserial+"!="+serial+")");
 		}
-		getDatabase().d("update "+getTableName()+" set lockedby=-1,lockeduntil=0,lockedserial=0 where "+getIdColumn()+"=? and lockedby=? and lockeduntil=? and "+
-				                "lockedserial=?",
+		getDatabase().d("update "+getTableName()+" set lockedby=-1,lockeduntil=0,lockedserial=0 where "+getIdColumn()+"=? and lockedby=? and lockeduntil=? and "+"lockedserial=?",
 		                getId(),
 		                lockedby,
 		                lockeduntil,
