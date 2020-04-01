@@ -6,7 +6,7 @@ import net.coagulate.Core.Exceptions.UserException;
  * User input fails to validate.  subclass me :)
  */
 
-public abstract class UserInputValidationException extends UserException {
+public class UserInputValidationException extends UserException {
 	private static final long serialVersionUID=1L;
 
 	public UserInputValidationException(final String reason) {
