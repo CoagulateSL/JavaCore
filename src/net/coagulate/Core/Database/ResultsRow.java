@@ -348,6 +348,8 @@ public class ResultsRow {
 	@Nonnull
 	public byte[] getBytes() {
 		if (byteform.size()!=1) { throw new DBException("Column count !=1 - "+byteform.size()); }
+		if (byteform.values()==null) { return new byte[0]; }
+		if (byteform.values().isEmpty()) { return new byte[0]; }
 		for (final byte[] bytes: byteform.values()) { return bytes; }
 		return new byte[0];
 	}
