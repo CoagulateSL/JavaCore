@@ -1,6 +1,7 @@
 package net.coagulate.Core.Tools;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,8 +70,9 @@ public abstract class UnixTime {
 	}
 
 	@Nonnull
-	public static String fromUnixTime(final int date,
+	public static String fromUnixTime(@Nullable final Integer date,
 	                                  @Nonnull final String timezone) {
+		if (date==null) { return "-"; }
 		final DateFormat df=DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
 		df.setTimeZone(TimeZone.getTimeZone(timezone));
 		return fromUnixTime(date,df);
