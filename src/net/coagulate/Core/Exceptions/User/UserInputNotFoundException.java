@@ -11,7 +11,8 @@ public class UserInputNotFoundException extends UserInputValidationException {
 		super(reason);
 	}
 
-	public UserInputNotFoundException(final String reason,final Throwable cause) {
+	public UserInputNotFoundException(final String reason,
+	                                  final Throwable cause) {
 		super(reason,cause);
 	}
 }

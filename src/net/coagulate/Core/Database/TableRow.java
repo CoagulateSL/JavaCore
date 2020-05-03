@@ -236,7 +236,9 @@ public abstract class TableRow extends Table {
 	 * @param value      The string value to store
 	 */
 	public void set(@Nonnull final String columnname,
-	                @Nullable final String value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
+	                @Nullable final String value) {
+		d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId());
+	}
 
 	/**
 	 * Set a column with an integer value.
@@ -245,6 +247,8 @@ public abstract class TableRow extends Table {
 	 * @param value      The integer value to store
 	 */
 	public void set(@Nonnull final String columnname,
-	                @Nullable final Integer value) { d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId()); }
+	                @Nullable final Integer value) {
+		d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId());
+	}
 
 }

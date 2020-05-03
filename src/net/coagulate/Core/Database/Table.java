@@ -208,6 +208,8 @@ public abstract class Table {
 	@Nonnull
 	protected final PreparedStatement prepare(@Nonnull final Connection conn,
 	                                          final String parameterisedcommand,
-	                                          final Object... params) { return getDatabase().prepare(conn,parameterisedcommand,params); }
+	                                          final Object... params) {
+		return getDatabase().prepare(conn,parameterisedcommand,params);
+	}
 
 }

@@ -81,8 +81,7 @@ public abstract class DumpableState {
 		if (Map.class.isAssignableFrom(o.getClass())) {
 			handled=true;
 			ret.append("<table border=1>");
-			@SuppressWarnings("unchecked")
-			final Map<Object,Object> map=(Map<Object,Object>) o;
+			@SuppressWarnings("unchecked") final Map<Object,Object> map=(Map<Object,Object>) o;
 			for (final Map.Entry<Object,Object> entry: map.entrySet()) {
 				ret.append("<tr><td valign=top>").append(toHTML(entry.getKey())).append("</td>");
 				ret.append("<td valign=top>").append(toHTML(entry.getValue())).append("</td></tr>");
