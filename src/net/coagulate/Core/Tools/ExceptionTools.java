@@ -16,6 +16,7 @@ public abstract class ExceptionTools {
 		p.append("<h3>").append(e.getClass().getName()).append(" - ").append(e.getLocalizedMessage()).append("</h3>");
 		for (final StackTraceElement st: e.getStackTrace()) {
 			p.append("<pre>");
+			if (!st.getClassName().startsWith("net.coagulate.")) { p.append("<del>"); }
 			p.append(" at ")
 			 .append(st.getClassName())
 			 .append(".")
@@ -25,6 +26,7 @@ public abstract class ExceptionTools {
 			 .append(":")
 			 .append(st.getLineNumber())
 			 .append(")");
+			if (!st.getClassName().startsWith("net.coagulate.")) { p.append("</del>"); }
 			p.append("</pre>");
 		}
 		return p.toString();
