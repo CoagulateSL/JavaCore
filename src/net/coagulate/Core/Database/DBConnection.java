@@ -235,28 +235,6 @@ public abstract class DBConnection {
 	 */
 	public void d(@Nonnull final String parameterisedcommand,
 	              final Object... params) {
-		int tries=3;
-		while (tries>0) {
-			try {
-				_d(parameterisedcommand,params);
-				return;
-			}
-			catch (@Nonnull final LockException e) {
-				tries--;
-				try { Thread.sleep((long) (50.0*Math.random())); } catch (@Nonnull final InterruptedException ee) {}
-				if (tries==0) { throw e; }
-			}
-		}
-	}
-
-	/**
-	 * Call database with no results, with no lock conflict handling.  Internal use only.
-	 *
-	 * @param parameterisedcommand SQL query
-	 * @param params               SQL arguments.
-	 */
-	public void _d(@Nonnull final String parameterisedcommand,
-	               final Object... params) {
 		if (logsql) {
 			if (sqllog.containsKey(parameterisedcommand)) {
 				sqllog.put(parameterisedcommand,sqllog.get(parameterisedcommand)+1);
@@ -289,9 +267,6 @@ public abstract class DBConnection {
 					if (updatemax<diff) { updatemax=diff; }
 				}
 			}
-		}
-		catch (@Nonnull final SQLTransactionRollbackException e) {
-			throw new LockException("Transaction conflicted and was rolled back",e);
 		}
 		catch (@Nonnull final SQLException e) {
 			throw new DBException("SQL error during command "+parameterisedcommand,e);
