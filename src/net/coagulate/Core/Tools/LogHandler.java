@@ -87,68 +87,79 @@ public class LogHandler extends Handler {
 	// ---------- INSTANCE ----------
 	@Override
 	public void publish(@Nonnull final LogRecord record) {
-		final Object[] parameters=record.getParameters();
-		final Level level=record.getLevel();
-		String system=record.getLoggerName();
-		String classname=record.getSourceClassName();
-		final String method=record.getSourceMethodName();
-		final int thread=record.getThreadID();
-		String message=record.getMessage();
-		final long when=record.getMillis();
-		if (!system.startsWith("net.coagulate.")) {
-			return;
-		}
-		system=system.replaceFirst("net\\.coagulate\\.","");
-		while (classname.contains(".")) {
-			classname=classname.substring(classname.indexOf(".")+1);
-		}
-		if (parameters!=null && parameters.length>0) {
-			for (int i=0;i<parameters.length;i++) {
-				final String replacewith=parameters[i].toString();
-				//if (replacewith.length()>100) {
-				//    System.out.println("WARNING: Large substitution");
-				//} else {
-				message=message.replaceAll("\\{"+i+"}",parameters[i].toString());
-				//}
+		try {
+			final Object[] parameters=record.getParameters();
+			final Level level=record.getLevel();
+			String system=record.getLoggerName();
+			String classname=record.getSourceClassName();
+			final String method=record.getSourceMethodName();
+			final int thread=record.getThreadID();
+			String message=record.getMessage();
+			final long when=record.getMillis();
+			if (system.equals("sun.net.www.protocol.http.HttpURLConnection") || system.equals("javax.management.mbeanserver") || system.equals("javax.activation")) {
+				// not our systems, or anything we care about most of the time.  thanks.
+				return;
 			}
-		}
-		System.out.println(formatLevel(level)+"#"+postpad(thread+"",4)+" "+system+" - "+message+" (@"+classname+"."+method+")");
-
-		if ((level==null || level.intValue()>Level.FINE.intValue()) && record.getThrown()!=null) {
-			final Throwable thrown=record.getThrown();
-			// Stop here after the console print but before the mail print if this is a suppressed exception
-			if (UserException.class.isAssignableFrom(thrown.getClass())) {
-				if (((UserException) thrown).suppressed()) { return; }
+			system=system.replaceFirst("net\\.coagulate\\.","");
+			while (classname.contains(".")) {
+				classname=classname.substring(classname.indexOf(".")+1);
 			}
-			if (SystemException.class.isAssignableFrom(thrown.getClass())) {
-				if (((SystemException) thrown).suppressed()) { return; }
-			}
-
-			//if (!thrown instanceof UserException) {
-			try {
-				if (alreadymailed.contains(thrown)) {
-					alreadymailed.remove(thrown);
+			if (parameters!=null && parameters.length>0) {
+				for (int i=0;i<parameters.length;i++) {
+					final String replacewith=parameters[i].toString();
+					//if (replacewith.length()>100) {
+					//    System.out.println("WARNING: Large substitution");
+					//} else {
+					message=message.replaceAll("\\{"+i+"}",parameters[i].toString());
+					//}
 				}
-				else {
-					if (suppress(thrown)) {
-						System.out.println("Exception Log Suppressed "+getCount(thrown)+"x"+getSignature(thrown));
+			}
+			System.out.println(formatLevel(level)+"#"+postpad(thread+"",4)+" "+system+" - "+message+" (@"+classname+"."+method+")");
+
+			if ((level==null || level.intValue()>Level.FINE.intValue()) && record.getThrown()!=null) {
+				final Throwable thrown=record.getThrown();
+				// Stop here after the console print but before the mail print if this is a suppressed exception
+				if (UserException.class.isAssignableFrom(thrown.getClass())) {
+					if (((UserException) thrown).suppressed()) { return; }
+				}
+				if (SystemException.class.isAssignableFrom(thrown.getClass())) {
+					if (((SystemException) thrown).suppressed()) { return; }
+				}
+
+				//if (!thrown instanceof UserException) {
+				try {
+					if (alreadymailed.contains(thrown)) {
+						alreadymailed.remove(thrown);
 					}
 					else {
-						System.out.println(ExceptionTools.toString(thrown));
-						MailTools.mail(mailprefix+" {NoLog} "+thrown.getClass().getSimpleName()+" - "+message+" - "+thrown.getLocalizedMessage(),
-						               ExceptionTools.toHTML(thrown)
-						              );
+						if (suppress(thrown)) {
+							System.out.println("Exception Log Suppressed "+getCount(thrown)+"x"+getSignature(thrown));
+						}
+						else {
+							System.out.println(ExceptionTools.toString(thrown));
+							MailTools.mail(mailprefix+" {NoLog} "+thrown.getClass().getSimpleName()+" - "+message+" - "+thrown.getLocalizedMessage(),
+							               ExceptionTools.toHTML(thrown)
+							              );
+						}
 					}
 				}
+				catch (@Nonnull final MessagingException ex) {
+					System.out.println("EXCEPTION IN EXCEPTION MAILER");
+					System.out.println("EXCEPTION IN EXCEPTION MAILER");
+					System.out.println("EXCEPTION IN EXCEPTION MAILER");
+					System.out.println("EXCEPTION IN EXCEPTION MAILER");
+					System.out.println("EXCEPTION IN EXCEPTION MAILER");
+					System.out.println(ExceptionTools.toString(ex));
+				}
 			}
-			catch (@Nonnull final MessagingException ex) {
-				System.out.println("EXCEPTION IN EXCEPTION MAILER");
-				System.out.println("EXCEPTION IN EXCEPTION MAILER");
-				System.out.println("EXCEPTION IN EXCEPTION MAILER");
-				System.out.println("EXCEPTION IN EXCEPTION MAILER");
-				System.out.println("EXCEPTION IN EXCEPTION MAILER");
-				System.out.println(ExceptionTools.toString(ex));
-			}
+		}
+		catch (Throwable t) {
+			System.out.println("PANIC!!!");
+			System.out.println("PANIC!!!");
+			System.out.println("PANIC!!!");
+			System.out.println("Exception in logger:"+t);
+			t.printStackTrace();
+
 		}
 	}
 
