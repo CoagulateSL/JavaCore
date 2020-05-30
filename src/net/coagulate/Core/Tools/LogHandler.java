@@ -153,7 +153,7 @@ public class LogHandler extends Handler {
 				}
 			}
 		}
-		catch (Throwable t) {
+		catch (final Throwable t) {
 			System.out.println("PANIC!!!");
 			System.out.println("PANIC!!!");
 			System.out.println("PANIC!!!");
