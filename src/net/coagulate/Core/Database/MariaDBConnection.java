@@ -26,7 +26,7 @@ public class MariaDBConnection extends DBConnection {
 	                         final String username,
 	                         final String password,
 	                         final String dbname) {
-		this(sourcename,"jdbc:mariadb://"+host+"/"+dbname+"?user="+username+"&password="+password+"&maxPoolSize=10&connectTimeout=5000");
+		this(sourcename,"jdbc:mariadb://"+host+"/"+dbname+"?user="+username+"&password="+password+"&minPoolSize=2&maxPoolSize=25&connectTimeout=5000");
 	}
 
 
