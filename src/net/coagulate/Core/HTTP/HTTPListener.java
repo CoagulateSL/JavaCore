@@ -35,7 +35,6 @@ public class HTTPListener {
 	private boolean hasshutdown;
 
 	public HTTPListener(final int port,
-	                    final String pemfile,
 	                    final HttpRequestHandlerMapper mapper) {
 		this.port=port;
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
