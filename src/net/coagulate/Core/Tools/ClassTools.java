@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.Manifest;
@@ -74,9 +75,10 @@ public abstract class ClassTools {
 	public static <T> Set<Class<? extends T>> getSubclasses(final @Nonnull Class<T> superclass) {
 		final Set<Class<? extends T>> classes= new HashSet<>();
 		for (final Class c:getClassmap()) {
-			if (superclass.isAssignableFrom(c))
-			{
-				classes.add((Class<? extends T>)c);
+			if (!Modifier.isAbstract(c.getModifiers())) {
+				if (superclass.isAssignableFrom(c)) {
+					classes.add((Class<? extends T>) c);
+				}
 			}
 		}
 		for (Class<? extends T> s:classes);
