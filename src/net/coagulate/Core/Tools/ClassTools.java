@@ -69,6 +69,19 @@ public abstract class ClassTools {
 		return constructors;
 	}
 
+	@Nonnull
+	@SuppressWarnings("unchecked")
+	public static <T> Set<Class<? extends T>> getSubclasses(final @Nonnull Class<T> superclass) {
+		final Set<Class<? extends T>> classes= new HashSet<>();
+		for (final Class c:getClassmap()) {
+			if (superclass.isAssignableFrom(c))
+			{
+				classes.add((Class<? extends T>)c);
+			}
+		}
+		for (Class<? extends T> s:classes);
+		return classes;
+	}
 
 	public static boolean initialised() { synchronized (initlock) { return initialised; } }
 
