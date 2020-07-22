@@ -11,10 +11,10 @@
     <version>1.00.00</version>
 
     <build>
-        <directory>${project.basedir}</directory>
-        <outputDirectory>${project.build.directory}/bin</outputDirectory>
+        <directory>${project.basedir}/bin</directory>
+        <outputDirectory>${project.basedir}/out</outputDirectory>
         <finalName>${project.artifactId}-${project.version}</finalName>
-        <testOutputDirectory>${project.build.directory}/test</testOutputDirectory>
+        <testOutputDirectory>${project.basedir}/test</testOutputDirectory>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
     </build>
     <dependencies>
