@@ -8,6 +8,8 @@ import javax.mail.MessagingException;
 import java.util.*;
 import java.util.logging.*;
 
+import static java.util.logging.Level.*;
+
 /**
  * @author Iain Price
  */
@@ -96,7 +98,7 @@ public class LogHandler extends Handler {
 			final int thread=record.getThreadID();
 			String message=record.getMessage();
 			final long when=record.getMillis();
-			if (system.equals("sun.net.www.protocol.http.HttpURLConnection") || system.equals("javax.management.mbeanserver") || system.equals("javax.activation")) {
+			if (!system.startsWith("net.coagulate") && (level==FINE || level==FINER || level==FINEST)) {
 				// not our systems, or anything we care about most of the time.  thanks.
 				return;
 			}
@@ -116,7 +118,7 @@ public class LogHandler extends Handler {
 			}
 			System.out.println(formatLevel(level)+"#"+postpad(thread+"",4)+" "+system+" - "+message+" (@"+classname+"."+method+")");
 
-			if ((level==null || level.intValue()>Level.FINE.intValue()) && record.getThrown()!=null) {
+			if ((level==null || level.intValue()> FINE.intValue()) && record.getThrown()!=null) {
 				final Throwable thrown=record.getThrown();
 				// Stop here after the console print but before the mail print if this is a suppressed exception
 				if (UserException.class.isAssignableFrom(thrown.getClass())) {
@@ -187,13 +189,13 @@ public class LogHandler extends Handler {
 		if (level==Level.CONFIG) {
 			return "conf";
 		}
-		if (level==Level.FINE) {
+		if (level== FINE) {
 			return "D   ";
 		}
-		if (level==Level.FINER) {
+		if (level== FINER) {
 			return "d   ";
 		}
-		if (level==Level.FINEST) {
+		if (level== FINEST) {
 			return "_ ";
 		}
 		if (level==Level.INFO) {
