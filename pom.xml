@@ -9,7 +9,13 @@
     <groupId>net.coagulate</groupId>
     <artifactId>JavaCore</artifactId>
     <version>1.0.0</version>
-
+    <distributionManagement>
+        <repository>
+            <id>javacore</id>
+            <name>GitHub IPrice/JavaCore Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/iprice/JavaCore</url>
+        </repository>
+    </distributionManagement>
     <build>
         <directory>${project.basedir}/bin</directory>
         <outputDirectory>${project.basedir}/out</outputDirectory>
