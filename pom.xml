@@ -6,14 +6,14 @@
 
 
 
-    <groupId>net.coagulate</groupId>
+    <groupId>net.coagulate.SL</groupId>
     <artifactId>JavaCore</artifactId>
     <version>1.0.0</version>
     <distributionManagement>
         <repository>
             <id>github</id>
-            <name>GitHub IPrice/JavaCore Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/iprice/JavaCore</url>
+            <name>GitHub CoagulateSL/JavaCore Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/CoagulateSL/JavaCore</url>
         </repository>
     </distributionManagement>
     <build>
