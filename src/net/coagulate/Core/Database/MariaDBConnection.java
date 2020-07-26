@@ -17,7 +17,7 @@ import static java.util.logging.Level.SEVERE;
  * @author Iain Price
  */
 public class MariaDBConnection extends DBConnection {
-	private static final boolean TABLECOUNT=true;
+	private static final boolean TABLECOUNT=false; // just kinda spammy at this point, was interesting when the world was new(er)
 	@Nullable
 	private MariaDbPoolDataSource pool;
 
@@ -35,7 +35,7 @@ public class MariaDBConnection extends DBConnection {
 		super(name);
 		try {
 			pool=new MariaDbPoolDataSource(jdbc);
-			if (!test()) { throw new SQLException("Failed to count(*) on table ping which should have one row only"); }
+			if (!test()) { throw new SQLException("Failed to select 1 from database"); }
 			// pointless stuff that slows us down =)
 			if (TABLECOUNT) {
 				final Results tables=dq("show tables");
