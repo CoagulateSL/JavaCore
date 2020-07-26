@@ -98,6 +98,7 @@ public class LogHandler extends Handler {
 			final int thread=record.getThreadID();
 			String message=record.getMessage();
 			final long when=record.getMillis();
+			if (!system.contains(".")) { System.out.println("***** UNDOTTED LOGGER SYSTEM DETECTED: "+system); }
 			if (!system.startsWith("net.coagulate") && (level==CONFIG || level==FINE || level==FINER || level==FINEST)) {
 				// not our systems, or anything we care about most of the time.  thanks.
 				return;
