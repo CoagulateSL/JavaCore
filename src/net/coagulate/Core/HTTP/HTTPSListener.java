@@ -40,8 +40,6 @@ public class HTTPSListener {
 	private Logger logger;
 	@Nullable
 	private HttpServer server;
-	@Nonnull
-	private String name="HTTPS";
 	private boolean hasshutdown;
 
 	public HTTPSListener(final int port,
@@ -87,7 +85,7 @@ public class HTTPSListener {
 			                                               .setHandlerMapper(mapper);
 			// NOTE HOW THE HANDLERS ARE A SINGLE INSTANCE.
 			// no instance level data storage.  USE HTTPCONTEXT (superceeded by "State")
-			name="HTTPS:"+port;
+			String name = "HTTPS:" + port;
 			//addHandlers(bootstrap);
 			server=bootstrap.create();
 			if (server==null) { throw new SystemInitialisationException("Server bootstrap was null?"); }
@@ -114,7 +112,7 @@ public class HTTPSListener {
 		if (server!=null) {
 			logger().log(CONFIG,"Stopping listener");
 			server.stop();
-			try { server.awaitTermination(15,TimeUnit.SECONDS); } catch (@Nonnull final InterruptedException e) {}
+			try { server.awaitTermination(15,TimeUnit.SECONDS); } catch (@Nonnull final InterruptedException ignored) {}
 			logger().log(CONFIG,"Shutting down remaining connections in 15 seconds");
 			server.shutdown(15,TimeUnit.SECONDS);
 			logger().log(CONFIG,"All connections have ended");

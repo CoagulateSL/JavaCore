@@ -69,7 +69,7 @@ public abstract class DBConnection {
 			final Integer c=entry.getValue();
 			final Long runfor=runtime.get(statement);
 			if (c==null || runfor==null || c==0) {
-				per.put(statement,0d); // explicitly a double.  even though it can be infered, and is.  "wah wah this is an int not a double"...  it's both! :P
+				per.put(statement,0d); // explicitly a double.  even though it can be inferred, and is.  "wah wah this is an int not a double"...  it's both! :P
 			}
 			else {
 				per.put(statement,((double) runfor)/((double) c)); /// :P
@@ -85,6 +85,7 @@ public abstract class DBConnection {
 	@Nonnull
 	public String getName() { return sourcename; }
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean test() {
 		try {
 			final int result=dqinn("select 1");
@@ -190,13 +191,13 @@ public abstract class DBConnection {
 		}
 		finally {
 			if (rs!=null) {
-				try {rs.close(); } catch (@Nonnull final SQLException e) {}
+				try {rs.close(); } catch (@Nonnull final SQLException ignored) {}
 			}
 			if (stm!=null) {
-				try {stm.close();} catch (@Nonnull final SQLException e) {}
+				try {stm.close();} catch (@Nonnull final SQLException ignored) {}
 			}
 			if (conn!=null) {
-				try { conn.close(); } catch (@Nonnull final SQLException e) {}
+				try { conn.close(); } catch (@Nonnull final SQLException ignored) {}
 			}
 		}
 	}
@@ -306,7 +307,7 @@ public abstract class DBConnection {
 	 * If you attempt to cast the null Integer to an int by auto(un)boxing, you'll throw runtime exceptions.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The integer form of the only column of the only row returned.  Can be null only if the cell's contents are null.
 	 *
@@ -324,7 +325,7 @@ public abstract class DBConnection {
 	 * Convenience method for getting a float.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The float form of the only column of the only row returned.  Can be null only if the cell's contents are null.
 	 *
@@ -342,7 +343,7 @@ public abstract class DBConnection {
 	 * Convenience method for getting a long.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The long form of the only column of the only row returned.  Can be null only if the cell's contents are null.
 	 *
@@ -360,7 +361,7 @@ public abstract class DBConnection {
 	 * Convenience method for getting a string.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The string form of the only column of the only row returned.  Can be null only if the cell's contents are null.
 	 *
@@ -378,7 +379,7 @@ public abstract class DBConnection {
 	 * Convenience method for getting a byte array.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The byte array of the only column of the only row returned.  Can be null only if the cell's contents are null.
 	 *
@@ -396,7 +397,7 @@ public abstract class DBConnection {
 	 * Convenience method for getting a byte array.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The byte array form of the only column of the only row returned.  Can not be null.
 	 *
@@ -414,7 +415,7 @@ public abstract class DBConnection {
 	 * Convenience method for getting an integer.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The integer form of the only column of the only row returned.  Can not be null.
 	 *
@@ -432,7 +433,7 @@ public abstract class DBConnection {
 	 * Convenience method for getting a float.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The float form of the only column of the only row returned.  Can not be null.
 	 *
@@ -450,7 +451,7 @@ public abstract class DBConnection {
 	 * Convenience method for getting a long.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The long form of the only column of the only row returned.  Can not be null.
 	 *
@@ -468,7 +469,7 @@ public abstract class DBConnection {
 	 * Convenience method for getting a string.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The string form of the only column of the only row returned.  Can not be null.
 	 *
@@ -486,7 +487,7 @@ public abstract class DBConnection {
 	// ----- Internal Instance -----
 
 	/**
-	 * dont forget to call this during setup!
+	 * don't forget to call this during setup!
 	 */
 	protected void register() { DB.register(sourcename,this); }
 

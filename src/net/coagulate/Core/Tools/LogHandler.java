@@ -41,9 +41,9 @@ public class LogHandler extends Handler {
 			final StackTraceElement ste=t.getStackTrace()[0];
 			return t.getClass().getSimpleName()+"@"+ste.getClassName()+"."+ste.getMethodName()+":"+ste.getFileName()+":"+ste.getLineNumber();
 		}
-		catch (final RuntimeException ignored) {
+		catch (final RuntimeException runtimeexception) {
 			System.out.println("Exception during GETSIGNATURE");
-			ignored.printStackTrace();
+			runtimeexception.printStackTrace();
 		}
 		return "";
 	}

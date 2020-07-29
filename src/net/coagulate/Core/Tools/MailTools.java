@@ -88,6 +88,11 @@ public abstract class MailTools {
 			MailTools.mail("Trace: "+subject,body.toString());
 		}
 		catch (@Nonnull final MessagingException ee) {
+			System.err.println("Failed to mail trace:");
+			System.err.println("Subject was: "+subject);
+			System.out.println("Intro was:"+intro);
+			System.out.println("logTrace exception was:");
+			ee.printStackTrace();
 		}
 	}
 

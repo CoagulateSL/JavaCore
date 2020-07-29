@@ -64,7 +64,7 @@ public abstract class Table {
 	 * If you attempt to cast the null Integer to an int by auto(un)boxing, you'll throw runtime exceptions.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The integer form of the only column of the only row returned.  Can be null only if the cell's contents are null.
 	 *
@@ -79,7 +79,7 @@ public abstract class Table {
 	 * Convenience method for getting a float.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The float form of the only column of the only row returned.  Can be null only if the cell's contents are null.
 	 *
@@ -94,7 +94,7 @@ public abstract class Table {
 	 * Convenience method for getting a long.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The long form of the only column of the only row returned.  Can be null only if the cell's contents are null.
 	 *
@@ -109,7 +109,7 @@ public abstract class Table {
 	 * Convenience method for getting a string.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The string form of the only column of the only row returned.  Can be null only if the cell's contents are null.
 	 *
@@ -124,7 +124,7 @@ public abstract class Table {
 	 * Convenience method for getting an integer.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The integer form of the only column of the only row returned.  Can not be null.
 	 *
@@ -138,7 +138,7 @@ public abstract class Table {
 	 * Convenience method for getting a float.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The float form of the only column of the only row returned.  Can not be null.
 	 *
@@ -152,7 +152,7 @@ public abstract class Table {
 	 * Convenience method for getting a long.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The long form of the only column of the only row returned.  Can not be null.
 	 *
@@ -166,7 +166,7 @@ public abstract class Table {
 	 * Convenience method for getting a string.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The string form of the only column of the only row returned.  Can not be null.
 	 *
@@ -181,7 +181,7 @@ public abstract class Table {
 	 * Convenience method for getting a byte array.
 	 *
 	 * @param sql    SQL to query
-	 * @param params Paramters to SQL
+	 * @param params Parameters to SQL
 	 *
 	 * @return The byte array form of the only column of the only row returned.  Can not be null.
 	 *

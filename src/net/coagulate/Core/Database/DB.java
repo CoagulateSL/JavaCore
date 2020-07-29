@@ -13,11 +13,11 @@ import java.util.logging.Logger;
  * Handles the database connection
  * Uses a database pool to create connections.
  * Takes incoming parameterised SQL queries for preparedStatement
- * Unmarshals results into hashmap, array of arrays, single value, whatever, lots of tedious DB support methods, "getInt(sql)" etc
+ * Unmarshalls results into hashmap, array of arrays, single value, whatever, lots of tedious DB support methods, "getInt(sql)" etc
  * Releases result-sets etc once unmarshalled.
  * <p>
  * NOTE: The database is asynchronously replicating, data should not be cached and used for updates for any extensive period of time.
- * be aware other threads may have modified the data in the mean time, ensure you accomodate or override the values as appropriate.
+ * be aware other threads may have modified the data in the mean time, ensure you accommodate or override the values as appropriate.
  *
  * @author Iain Price <gphud@predestined.net>
  */
@@ -34,7 +34,7 @@ public abstract class DB {
 	@Nonnull
 	public static DBConnection get(@Nonnull final String datasourcename) {
 		if (!datasources.containsKey(datasourcename)) {
-			throw new SystemLookupFailureException("Attempt to retrieve non-existant data source "+datasourcename);
+			throw new SystemLookupFailureException("Attempt to retrieve non-existent data source "+datasourcename);
 		}
 		return datasources.get(datasourcename);
 	}

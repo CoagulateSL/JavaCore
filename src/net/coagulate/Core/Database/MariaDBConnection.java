@@ -75,7 +75,7 @@ public class MariaDBConnection extends DBConnection {
 				pool=null;
 			}
 		}
-		catch (@Nonnull final NullPointerException e) {} // hmm
+		catch (@Nonnull final NullPointerException ignored) {} // hmm
 		catch (@Nonnull final Exception e) {
 			logger.log(CONFIG,"Error closing DB connection: "+e.getLocalizedMessage());
 		}

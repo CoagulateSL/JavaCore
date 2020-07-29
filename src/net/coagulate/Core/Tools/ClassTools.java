@@ -24,6 +24,7 @@ import static java.util.logging.Level.*;
 /**
  * @author Iain Price
  */
+@SuppressWarnings("TypeParameterExplicitlyExtendsObject")
 public abstract class ClassTools {
 	private static final boolean DEBUG=false;
 	private static final Object initlock=new Object();
@@ -36,7 +37,7 @@ public abstract class ClassTools {
 	@Nonnull
 	public static Set<Class<? extends Object>> getAnnotatedClasses(final Class<? extends Annotation> annotation) {
 		final Set<Class<? extends Object>> classes=new HashSet<>();
-		for (final Class<? extends Object> c: getClassmap()) {
+		for (final Class<? extends Object> c: getClassMap()) {
 			if (c.isAnnotationPresent(annotation)) { classes.add(c); }
 		}
 		return classes;
@@ -45,7 +46,7 @@ public abstract class ClassTools {
 	@Nonnull
 	public static Set<Method> getAnnotatedMethods(final Class<? extends Annotation> annotation) {
 		final Set<Method> methods=new HashSet<>();
-		for (final Class<? extends Object> c: getClassmap()) {
+		for (final Class<? extends Object> c: getClassMap()) {
 			for (final Method m: c.getMethods()) {
 				if (m.isAnnotationPresent(annotation)) { methods.add(m); }
 			}
@@ -57,14 +58,14 @@ public abstract class ClassTools {
 	@Nonnull
 	public static Set<Constructor<? extends Object>> getAnnotatedConstructors(final Class<? extends Annotation> annotation) {
 		final Set<Constructor<? extends Object>> constructors=new HashSet<>();
-		for (final Class<? extends Object> c: getClassmap()) {
+		for (final Class<? extends Object> c: getClassMap()) {
 			try {
 				final Constructor<? extends Object> cons=c.getConstructor();
 				if (cons.isAnnotationPresent(annotation)) { constructors.add(cons); }
 			}
 			catch (@Nonnull final NoSuchMethodException|SecurityException ex) {
 				// no such method - this is fine, many classes wont have a zero param constructor =)
-				// securityexception - this is also fine, we'll find protected classes or other things we're not supposed to instansiate, so we wont.
+				// securityexception - this is also fine, we'll find protected classes or other things we're not supposed to instantiate, so we wont.
 			}
 		}
 		return constructors;
@@ -74,14 +75,17 @@ public abstract class ClassTools {
 	@SuppressWarnings("unchecked")
 	public static <T> Set<Class<? extends T>> getSubclasses(final @Nonnull Class<T> superclass) {
 		final Set<Class<? extends T>> classes= new HashSet<>();
-		for (final Class c:getClassmap()) {
+		for (final Class<? extends Object> c: getClassMap()) {
 			if (!Modifier.isAbstract(c.getModifiers())) {
 				if (superclass.isAssignableFrom(c)) {
 					classes.add((Class<? extends T>) c);
 				}
 			}
 		}
-		for (Class<? extends T> s:classes);
+		for (Class<? extends T> s:classes) {
+			//noinspection ResultOfMethodCallIgnored
+			s.getName();
+		}
 		return classes;
 	}
 
@@ -92,7 +96,7 @@ public abstract class ClassTools {
 			synchronized (initlock) {
 				if (initialised) { return; }
 				Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG,"Commencing classpath scanning");
-				Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG,"Classpath scanner found "+getClassmap().size()+" classes, "+totalclasses+" scanned.");
+				Logger.getLogger(ClassTools.class.getCanonicalName()).log(CONFIG,"Classpath scanner found "+ getClassMap().size()+" classes, "+totalclasses+" scanned.");
 				initialised=true;
 			}
 		}
@@ -103,9 +107,9 @@ public abstract class ClassTools {
 
 	@Nonnull
 	public static Set<Class<? extends Object>> getClasses() {
-		if (initialised()) { return getClassmap(); }
+		if (initialised()) { return getClassMap(); }
 		initialise();
-		return getClassmap();
+		return getClassMap();
 	}
 
 	@Nonnull
@@ -191,14 +195,14 @@ public abstract class ClassTools {
 			if (DEBUG) { System.out.println("Drop "+classname+" due to prefix failure"); }
 			return;
 		}
-		// examine named class and instansiate if appropriate.
+		// examine named class and instantiate if appropriate.
 		try {
 			//System.out.println(classname);
 			final Class<? extends Object> c=Class.forName(classname);
 			classes.add(c);
 			if (DEBUG) { System.out.println("ADDED "+classname); }
 		}
-		catch (@Nonnull final Throwable e) { // note this is usually bad.  but we can get 'errors' here we dont care about
+		catch (@Nonnull final Throwable e) { // note this is usually bad.  but we can get 'errors' here we don't care about
 			if (DEBUG) { System.out.println("FAILED TO ADD "+classname+" because "+e); }
 			//Logger.getLogger(ClassTools.class.getCanonicalName()).log(INFO,"Failed to load class "+classname+" : "+e.getLocalizedMessage());
 			Logger.getLogger(ClassTools.class.getCanonicalName()).log(SEVERE,"Failed to load class "+classname,e);
@@ -242,7 +246,7 @@ public abstract class ClassTools {
 
 
 	@Nonnull
-	private static Set<Class<? extends Object>> getClassmap() {
+	private static Set<Class<? extends Object>> getClassMap() {
 		if (classmap==null) { classmap=enumerateClasses(); }
 		return classmap;
 	}

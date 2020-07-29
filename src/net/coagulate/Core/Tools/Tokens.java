@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class Tokens {
 
-	private static final String tokenfont="0123456789abdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private static final String tokenfont="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	// ---------- STATICS ----------
 	@Nonnull

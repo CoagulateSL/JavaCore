@@ -17,11 +17,11 @@ public class NumberTools {
 		if (debug) { System.out.println("whole:"+whole); }
 		final int decimal=Math.round((number-((float) whole))*((float) (Math.pow(10,dp))));
 		if (debug) { System.out.println("dec:"+decimal); }
-		final StringBuilder decstr=new StringBuilder(decimal+"");
-		if (debug) { System.out.println("decstr:"+decstr); }
-		while (decstr.length()<dp) { decstr.append("0"); }
-		if (debug) { System.out.println("decstr:"+decstr); }
-		final String out=whole+"."+decstr;
+		final StringBuilder decimalstring=new StringBuilder(decimal+"");
+		if (debug) { System.out.println("decimalstring:"+decimalstring); }
+		while (decimalstring.length()<dp) { decimalstring.append("0"); }
+		if (debug) { System.out.println("decimalstring:"+decimalstring); }
+		final String out=whole+"."+decimalstring;
 		if (debug) { System.out.println("OUT "+out); }
 		return out;
 	}

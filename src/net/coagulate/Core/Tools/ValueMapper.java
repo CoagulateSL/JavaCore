@@ -1,6 +1,5 @@
 package net.coagulate.Core.Tools;
 
-import net.coagulate.Core.Exceptions.System.SystemBadValueException;
 import net.coagulate.Core.Exceptions.User.UserInputValidationParseException;
 
 import javax.annotation.Nonnull;
