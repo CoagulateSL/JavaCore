@@ -9,7 +9,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
 /**
- * @author Iain Price
+ * @author Not actually me
  */
 public abstract class Passwords {
 
