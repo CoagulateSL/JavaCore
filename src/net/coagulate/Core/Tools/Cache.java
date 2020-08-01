@@ -96,6 +96,8 @@ public class Cache <T> {
         cache.remove(name);
     }
 
+    public void purgeAll() { cache.clear(); }
+
     private static class CacheElement<T> {
         @Nonnull
         public final T element;
