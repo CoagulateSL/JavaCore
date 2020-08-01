@@ -92,7 +92,7 @@ public class Cache <T> {
         return object;
     }
 
-    public void purge(T name) {
+    public void purge(String name) {
         cache.remove(name);
     }
 
