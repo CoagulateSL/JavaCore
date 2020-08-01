@@ -12,23 +12,29 @@ public class Cache <T> {
 
     private final static Map<String,Cache<?>> caches=new HashMap<>();
 
-    public static final <S> Cache<S> getCache(@Nonnull String name) {
+    public static <S> Cache<S> getCache(@Nonnull String name) {
         name=name.toLowerCase();
-        if (caches.containsKey(name)) { return (Cache<S>)caches.get(name); }
+        if (caches.containsKey(name)) {
+            //noinspection unchecked
+            return (Cache<S>)caches.get(name);
+        }
         return makeCache(name);
     }
 
     private static synchronized <S> Cache<S> makeCache(@Nonnull String name) {
         name=name.toLowerCase();
-        if (caches.containsKey(name)) { return (Cache<S>)caches.get(name); }
-        Cache<S> cache=new Cache<S>();
+        if (caches.containsKey(name)) {
+            //noinspection unchecked
+            return (Cache<S>)caches.get(name);
+        }
+        Cache<S> cache=new Cache<>();
         caches.put(name,cache);
         return cache;
     }
 
     public static void maintenance() {
         Collection<Cache<?>> cacheset=caches.values();
-        for (Cache cache:cacheset) {
+        for (Cache<?> cache:cacheset) {
             try { cache.maintenanceThis(); }
             catch (ConcurrentModificationException e) {
                 Logger.getLogger("CacheMaintenance").log(Level.FINE,"Cache maintenance died",e);
@@ -78,10 +84,10 @@ public class Cache <T> {
      * @return The object being cached (object)
      */
     @Nonnull
-    Object cachePut(@Nonnull final String key,
+    T cachePut(@Nonnull final String key,
                     @Nonnull final T object,
                     final int lifetimeseconds) {
-        final CacheElement ele=new CacheElement(object,getUnixTime()+lifetimeseconds);
+        final CacheElement<T> ele=new CacheElement<>(object,getUnixTime()+lifetimeseconds);
         cache.put(key,ele);
         return object;
     }
