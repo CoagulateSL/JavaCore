@@ -1,16 +1,16 @@
 package net.coagulate.Core.Database;
 
+import net.coagulate.Core.Exceptions.System.SystemImplementationException;
 import net.coagulate.Core.Exceptions.User.UserConfigurationException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.*;
+import java.util.*;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
-import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.*;
 
 /**
  * @author Iain Price
@@ -31,6 +31,10 @@ public abstract class DBConnection {
 	private int updates;
 	private long updatetime;
 	private long updatemax;
+
+	private static final String PACKAGEPREFIX="net.coagulate.Core.Database";
+	private final Set<String> permittedcallers=new HashSet<>();
+	public void permit(String prefix) { permittedcallers.add(prefix); }
 
 	protected DBConnection(final String sourcename) {
 		this.sourcename=sourcename;
@@ -85,7 +89,6 @@ public abstract class DBConnection {
 	@Nonnull
 	public String getName() { return sourcename; }
 
-	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean test() {
 		try {
 			final int result=dqinn("select 1");
@@ -142,6 +145,8 @@ public abstract class DBConnection {
 	public Results _dq(final boolean slowquery,
 	                   @Nonnull final String parameterisedcommand,
 	                   final Object... params) {
+		// permitted?
+		permitCheck();
 		if (logsql) {
 			if (sqllog.containsKey(parameterisedcommand)) {
 				sqllog.put(parameterisedcommand,sqllog.get(parameterisedcommand)+1);
@@ -236,6 +241,8 @@ public abstract class DBConnection {
 	 */
 	public void d(@Nonnull final String parameterisedcommand,
 	              final Object... params) {
+		// permitted?
+		permitCheck();
 		if (logsql) {
 			if (sqllog.containsKey(parameterisedcommand)) {
 				sqllog.put(parameterisedcommand,sqllog.get(parameterisedcommand)+1);
@@ -273,6 +280,26 @@ public abstract class DBConnection {
 			throw new DBException("SQL error during command "+parameterisedcommand,e);
 		}
 
+	}
+
+	// check the caller's path is in the permitted list, if such a thing is set up
+	private void permitCheck() {
+		if (permittedcallers.isEmpty()) { return; } // fast path
+		StackTraceElement[] caller = Thread.currentThread().getStackTrace();
+		for (int i=0;i<caller.length-1;i++) {
+			String classname=caller[i].getClassName();
+			if (!(classname.startsWith(PACKAGEPREFIX) || classname.startsWith("java.lang"))) {
+				for (String permitted:permittedcallers) {
+					if (classname.startsWith(permitted)) { return; }
+				}
+				// uhoh
+				Logger.getLogger("net.coagulate.Core.Database.DatabaseTracer").log(INFO,"Unauthorised calling path to database code",new SystemImplementationException("Unauthorised database access from class "+classname));
+				return;
+			}
+		}
+		System.err.println("FAILED CALLER TRACE:");
+		for (int i=0;i<caller.length-1;i++) { System.err.println(caller[i].getClassName()); }
+		Logger.getLogger("net.coagulate.Core.Database.DatabaseTracer").log(WARNING,"Failed to trace a caller properly?",new SystemImplementationException("Failed to trace caller"));
 	}
 
 	/**
