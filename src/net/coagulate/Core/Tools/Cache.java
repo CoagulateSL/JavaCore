@@ -63,7 +63,7 @@ public class Cache <T> {
      * @throws CacheMiss If there is no cached object by that key
      */
     @Nonnull
-    T cacheGet(@Nonnull final String key) throws CacheMiss {
+    public T get(@Nonnull final String key) throws CacheMiss {
         if (!cache.containsKey(key)) { throw new CacheMiss(); }
         final CacheElement<T> ele=cache.get(key);
         if (ele==null) { throw new CacheMiss(); }
@@ -84,7 +84,7 @@ public class Cache <T> {
      * @return The object being cached (object)
      */
     @Nonnull
-    T cachePut(@Nonnull final String key,
+    public T put(@Nonnull final String key,
                     @Nonnull final T object,
                     final int lifetimeseconds) {
         final CacheElement<T> ele=new CacheElement<>(object,getUnixTime()+lifetimeseconds);
@@ -104,7 +104,7 @@ public class Cache <T> {
         }
     }
 
-    protected static class CacheMiss extends Exception {
+    public static class CacheMiss extends Exception {
         private static final long serialVersionUID=1L;
     }
 }
