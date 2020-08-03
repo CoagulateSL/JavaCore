@@ -1,7 +1,6 @@
 package net.coagulate.Core.Tools;
 
 import javax.annotation.Nonnull;
-
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,7 +61,6 @@ public class Cache <T> {
      *
      * @throws CacheMiss If there is no cached object by that key
      */
-    @Nonnull
     public T get(@Nonnull final String key) throws CacheMiss {
         if (!cache.containsKey(key)) { throw new CacheMiss(); }
         final CacheElement<T> ele=cache.get(key);
@@ -85,7 +83,7 @@ public class Cache <T> {
      */
     @Nonnull
     public T put(@Nonnull final String key,
-                    @Nonnull final T object,
+                    final T object,
                     final int lifetimeseconds) {
         final CacheElement<T> ele=new CacheElement<>(object,getUnixTime()+lifetimeseconds);
         cache.put(key,ele);
