@@ -2,6 +2,7 @@ package net.coagulate.Core.Tools;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,7 +10,7 @@ import static net.coagulate.Core.Tools.UnixTime.getUnixTime;
 
 public class Cache <T> {
 
-    private final static Map<String,Cache<?>> caches=new HashMap<>();
+    private final static Map<String,Cache<?>> caches=new ConcurrentHashMap<>();
 
     public static <S> Cache<S> getCache(@Nonnull String name) {
         name=name.toLowerCase();
@@ -50,7 +51,7 @@ public class Cache <T> {
         for (String row:deleteset) { cache.remove(row); }
     }
 
-    private final Map<String,CacheElement<T>> cache=new TreeMap<>();
+    private final Map<String,CacheElement<T>> cache=new ConcurrentHashMap<>();
 
     /**
      * Get an object from the cache
