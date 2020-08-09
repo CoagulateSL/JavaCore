@@ -1,6 +1,6 @@
 package net.coagulate.Core.HTML;
 
-public abstract class SingleTag extends AttributeMapTag {
+public abstract class TagSingle extends TagContainer {
     @Override
     public boolean container() {
         return false;

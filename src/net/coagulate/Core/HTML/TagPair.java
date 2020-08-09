@@ -1,6 +1,6 @@
 package net.coagulate.Core.HTML;
 
-public abstract class PairTag extends AttributeMapTag {
+public abstract class TagPair extends TagContainer {
     @Override
     public boolean container() {
         return true;
