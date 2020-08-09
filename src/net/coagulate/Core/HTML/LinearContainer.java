@@ -9,10 +9,10 @@ public abstract class LinearContainer implements Container {
     private final List<Container> contents=new ArrayList<>();
 
     @Override
-    public String toHTML() {
+    public String toString() {
         StringBuilder result=new StringBuilder();
         for (Container content:contents) {
-            result.append(content.toHTML());
+            result.append(content.toString());
         }
         return result.toString();
     }

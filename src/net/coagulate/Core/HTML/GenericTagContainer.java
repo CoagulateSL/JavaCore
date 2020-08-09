@@ -12,8 +12,8 @@ public abstract class GenericTagContainer extends LinearContainer {
     public abstract boolean container();
     public abstract String tagAttributes();
     @Override
-    public String toHTML() {
-        if (container()) { return openTag()+super.toHTML()+closeTag(); }
+    public String toString() {
+        if (container()) { return openTag()+super.toString()+closeTag(); }
         return openTag();
     }
     private String openTag() {

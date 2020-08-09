@@ -4,7 +4,6 @@ import java.util.Map;
 
 public interface Container {
 
-    String toHTML();
     void load(Map<String,String> parameters);
-
+    // don't forget to overwrite toString
 }
