@@ -47,7 +47,7 @@ public abstract class ClassTools {
 	public static Set<Method> getAnnotatedMethods(final Class<? extends Annotation> annotation) {
 		final Set<Method> methods=new HashSet<>();
 		for (final Class<? extends Object> c: getClassMap()) {
-			for (final Method m: c.getMethods()) {
+			for (final Method m: c.getDeclaredMethods()) {
 				if (m.isAnnotationPresent(annotation)) { methods.add(m); }
 			}
 		}

@@ -4,6 +4,11 @@ import net.coagulate.Core.HTML.TagPair;
 
 public class TableData extends TagPair {
     public TableData(String data) { add(new PlainText(data)); }
+
+    public TableData() {
+        super();
+    }
+
     @Override
     public String tag() {
         return "td";

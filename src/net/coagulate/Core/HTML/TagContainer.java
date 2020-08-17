@@ -1,8 +1,14 @@
 package net.coagulate.Core.HTML;
 
 import net.coagulate.Core.Exceptions.System.SystemImplementationException;
+import net.coagulate.Core.HTML.Elements.PlainText;
 
 public abstract class TagContainer extends Container {
+
+    public TagContainer() { super(); }
+    public TagContainer(String textcontent) { super(); add(new PlainText(textcontent)); }
+
+    public TagContainer(Container container) { super(); add(container); }
 
     /** The HTML tag/element name
      *
@@ -33,4 +39,7 @@ public abstract class TagContainer extends Container {
         return super.add(content);
     }
 
+    public TagContainer size(int size) { replaceAttribute("size",size+""); return this; }
+
+    public TagContainer autofocus() { addAttribute("autofocus",null); return this; }
 }

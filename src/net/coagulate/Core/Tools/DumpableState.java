@@ -11,7 +11,6 @@ import java.util.Map;
 
 public abstract class DumpableState {
 
-
 	// ---------- INSTANCE ----------
 	@Nonnull
 	public String toHTML() {

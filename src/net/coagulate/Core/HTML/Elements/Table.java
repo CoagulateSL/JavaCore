@@ -1,5 +1,7 @@
 package net.coagulate.Core.HTML.Elements;
 
+import net.coagulate.Core.Exceptions.System.SystemImplementationException;
+import net.coagulate.Core.HTML.Container;
 import net.coagulate.Core.HTML.TagPair;
 
 public class Table extends TagPair {
@@ -21,7 +23,16 @@ public class Table extends TagPair {
 
     public TableRow row() {
         TableRow row=new TableRow();
-        add(row);
+        contents().add(row);
         return row;
+    }
+
+    @Override
+    public Container add(Container content) {
+        throw new SystemImplementationException("You can not add content directly to a table object (you need a row)");
+    }
+    @Override
+    public Container add(String content) {
+        throw new SystemImplementationException("You can not add content directly to a table object (you need a row)");
     }
 }
