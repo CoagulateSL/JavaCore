@@ -92,7 +92,9 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
         cleanup();
     }
 
-    protected void earlyInitialiseState(HttpRequest request, HttpContext context) {}
+    protected void earlyInitialiseState(HttpRequest request, HttpContext context) {
+        Page.cleanup();
+    }
 
     protected T getDefaultPage() {
         T m=lookupPageFromUri("/404");
