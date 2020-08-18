@@ -1,6 +1,7 @@
 package net.coagulate.Core.HTTP;
 
 import net.coagulate.Core.Exceptions.System.SystemImplementationException;
+import net.coagulate.Core.Exceptions.SystemException;
 import net.coagulate.Core.Exceptions.UserException;
 import net.coagulate.Core.HTML.Page;
 import net.coagulate.SL.SL;
@@ -14,6 +15,7 @@ import org.apache.http.protocol.HttpRequestHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -79,18 +81,37 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * @param response The HttpResponse
      */
     protected void _handle(HttpRequest request, HttpContext context, HttpResponse response) {
-        earlyInitialiseState(request,context);
-        processInputs(request,context);
-        loadSession();
-        T content = lookupPage(request);
-        if (content==null) { content=getDefaultPage(); }
-        if (checkAuthenticationNeeded(content)) {
-            content = authenticationPage();
+        try {
+            earlyInitialiseState(request, context);
+            processInputs(request, context);
+            loadSession();
+            T content = lookupPage(request);
+            if (content == null) {
+                content = getDefaultPage();
+            }
+            if (checkAuthenticationNeeded(content)) {
+                content = authenticationPage();
+            }
+            executePage(content);
+            processOutput(response, content);
         }
-        executePage(content);
-        processOutput(response,content);
-        cleanup();
+        catch (UserException ue) { renderUserError(request,context,response,ue); }
+        catch (SystemException se) { renderSystemError(request,context,response,se); }
+        catch (InvocationTargetException ite) {
+            Throwable content=ite.getCause();
+            if (UserException.class.isAssignableFrom(content.getClass())) { renderUserError(request,context,response, (UserException) content); }
+            if (SystemException.class.isAssignableFrom(content.getClass())) { renderSystemError(request,context,response, (SystemException) content); }
+            renderUnhandledError(request,context,response,content);
+        }
+        catch (Throwable t) { renderUnhandledError(request,context,response,t); }
+        finally { cleanup(); }
     }
+
+    protected abstract void renderUnhandledError(HttpRequest request, HttpContext context, HttpResponse response, Throwable t);
+
+    protected abstract void renderSystemError(HttpRequest request, HttpContext context, HttpResponse response, SystemException ite);
+
+    protected abstract void renderUserError(HttpRequest request, HttpContext context, HttpResponse response, UserException ite);
 
     protected void earlyInitialiseState(HttpRequest request, HttpContext context) {
         Page.cleanup();
@@ -326,7 +347,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      *
      * @param content The implementation to execute
      */
-    protected abstract void executePage(T content);
+    protected abstract void executePage(T content) throws InvocationTargetException;
 
     /**
      * Render the final output back into a HttpEntity
