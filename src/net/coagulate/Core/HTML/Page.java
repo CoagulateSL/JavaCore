@@ -35,7 +35,7 @@ public class Page {
         } catch (ConcurrentModificationException ignored) {}
     }
 
-    private final Container root=new Container();
+    private Container root=new Container();
 
     public Page add(Container content) { root.add(content); return this; }
     private PageTemplate template=new MinimalPageTemplate();
@@ -58,5 +58,9 @@ public class Page {
     @Nonnull public Map<String,String> getHeadersOut() { return headersOut; }
     @Nonnull public String render() {
         return template.getHeader()+root().toString()+template.getFooter();
+    }
+
+    public void resetRoot() {
+        root=new Container();
     }
 }
