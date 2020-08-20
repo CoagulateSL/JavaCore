@@ -1,5 +1,8 @@
 package net.coagulate.Core.Tools;
 
+import net.coagulate.Core.Exceptions.SystemException;
+import net.coagulate.Core.Exceptions.UserException;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -53,4 +56,24 @@ public abstract class ExceptionTools {
 	@Nonnull
 	public static String toHTML(@Nonnull final Throwable e) { return dumpException(e); }
 
+    public static String getPertinent(Throwable t) {
+		if (t==null) { return "Null exception"; }
+		StackTraceElement[] frames=t.getStackTrace();
+		if (frames.length==0) { return "[NoStackTrace] - "+t.getLocalizedMessage(); }
+		StackTraceElement frame=frames[0]; boolean islocal=false;
+		for (StackTraceElement stackTraceElement : frames) {
+			if (!islocal) {
+				if (stackTraceElement.getClassName().startsWith("net.coagulate.")) {
+					frame = stackTraceElement;
+					islocal = true;
+				}
+			}
+		}
+		String prefix="UNHANDLED";
+		if (UserException.class.isAssignableFrom(t.getClass())) { prefix="User"; }
+		if (SystemException.class.isAssignableFrom(t.getClass())) { prefix="ERROR"; }
+		return prefix+"["+
+				frame.getClassName().replaceFirst("net.coagulate.","")+
+				"."+frame.getMethodName()+":"+frame.getLineNumber()+"] - "+t.getClass().getSimpleName()+" - "+t.getLocalizedMessage();
+    }
 }
