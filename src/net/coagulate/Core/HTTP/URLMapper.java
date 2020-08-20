@@ -99,9 +99,10 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
         catch (SystemException se) { renderSystemError(request,context,response,se); }
         catch (InvocationTargetException ite) {
             Throwable content=ite.getCause();
-            if (UserException.class.isAssignableFrom(content.getClass())) { renderUserError(request,context,response, (UserException) content); }
-            if (SystemException.class.isAssignableFrom(content.getClass())) { renderSystemError(request,context,response, (SystemException) content); }
-            renderUnhandledError(request,context,response,content);
+            boolean handled=false;
+            if (UserException.class.isAssignableFrom(content.getClass())) { renderUserError(request,context,response, (UserException) content); handled=true; }
+            if (SystemException.class.isAssignableFrom(content.getClass())) { renderSystemError(request,context,response, (SystemException) content); handled=true; }
+            if (!handled) { renderUnhandledError(request,context,response,content); }
         }
         catch (Throwable t) { renderUnhandledError(request,context,response,t); }
         finally { cleanup(); }
