@@ -119,9 +119,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
     }
 
     protected T getDefaultPage() {
-        T m=lookupPageFromUri("/404");
-        if (m==null) { throw new SystemImplementationException("404 page does not exist"); }
-        return m;
+        return lookupPageFromUri("/404");
     }
 
     /**
