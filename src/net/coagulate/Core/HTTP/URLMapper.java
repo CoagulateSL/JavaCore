@@ -4,7 +4,6 @@ import net.coagulate.Core.Exceptions.System.SystemImplementationException;
 import net.coagulate.Core.Exceptions.SystemException;
 import net.coagulate.Core.Exceptions.UserException;
 import net.coagulate.Core.HTML.Page;
-import net.coagulate.SL.SL;
 import org.apache.http.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
@@ -207,7 +206,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
             for (final String component : header.getValue().split(";")) {
                 final String[] kv = component.split("=");
                 if (kv.length != 2) {
-                    SL.log().log(Level.WARNING, "Unusual cookie element to parse in line " + header.getValue() + " piece " + component);
+                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "Unusual cookie element to parse in line " + header.getValue() + " piece " + component);
                 } else {
                     //System.out.println(kv[0]+"="+kv[1]);
                     cookies.put(kv[0].trim(), kv[1].trim());
@@ -358,7 +357,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
         try {
             stringOutput = Page.page().render();
         } catch (@Nonnull final UserException ue) {
-            SL.log().log(WARNING, "PageHandlerCaught", ue);
+            Logger.getLogger(getClass().getName()).log(WARNING, "PageHandlerCaught", ue);
             stringOutput = "<p>Exception: " + ue.getLocalizedMessage() + "</p>";
         }
         response.setEntity(new StringEntity(stringOutput, getContentType()));
