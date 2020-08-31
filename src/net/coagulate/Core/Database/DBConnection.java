@@ -6,8 +6,8 @@ import net.coagulate.Core.Exceptions.User.UserConfigurationException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.*;
-import java.util.*;
 import java.util.Date;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.*;
@@ -293,7 +293,10 @@ public abstract class DBConnection {
 					if (classname.startsWith(permitted)) { return; }
 				}
 				// uhoh
-				Logger.getLogger("net.coagulate.Core.Database.DatabaseTracer").log(INFO,"Unauthorised calling path to database code",new SystemImplementationException("Unauthorised database access from class "+classname));
+				//System.err.println("DB TRACING FAILURE");
+				//System.err.println("Was tracing stack element "+classname);
+				//for (String permitted:permittedcallers) { System.err.println("Permitted:"+permitted); }
+				Logger.getLogger("net.coagulate.Core.Database.DatabaseTracer").log(INFO,"Unauthorised calling path to database '"+getName()+"' code",new SystemImplementationException("Unauthorised database access from class "+classname));
 				return;
 			}
 		}
