@@ -42,7 +42,7 @@ public class MariaDBConnection extends DBConnection {
 				final Map<String,Integer> notempty=new TreeMap<>();
 				for (final ResultsRow r: tables) {
 					final String tablename=r.getStringNullable();
-					final int rows=dqinn("select count(*) from "+tablename);
+					final int rows= dqiNotNull("select count(*) from "+tablename);
 					if (rows>0) {
 						notempty.put(tablename,rows);
 					}

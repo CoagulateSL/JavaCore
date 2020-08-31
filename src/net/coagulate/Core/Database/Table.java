@@ -56,7 +56,7 @@ public abstract class Table {
 	 */
 	@Nonnull
 	public final ResultsRow dqone(@Nonnull final String parameterisedcommand,
-	                              final Object... params) { return getDatabase().dqone(parameterisedcommand,params); }
+	                              final Object... params) { return getDatabase().dqOne(parameterisedcommand,params); }
 
 	/**
 	 * Convenience method for getting an integer.
@@ -132,7 +132,7 @@ public abstract class Table {
 	 * @throws TooMuchDataException if there are multiple results
 	 */
 	public final int dqinn(@Nonnull final String sql,
-	                       final Object... params) { return getDatabase().dqinn(sql,params); }
+	                       final Object... params) { return getDatabase().dqiNotNull(sql,params); }
 
 	/**
 	 * Convenience method for getting a float.
@@ -146,7 +146,7 @@ public abstract class Table {
 	 * @throws TooMuchDataException if there are multiple results
 	 */
 	public final float dqfnn(@Nonnull final String sql,
-	                         final Object... params) { return getDatabase().dqfnn(sql,params); }
+	                         final Object... params) { return getDatabase().dqfNotNull(sql,params); }
 
 	/**
 	 * Convenience method for getting a long.
@@ -160,7 +160,7 @@ public abstract class Table {
 	 * @throws TooMuchDataException if there are multiple results
 	 */
 	public final long dqlnn(@Nonnull final String sql,
-	                        final Object... params) { return getDatabase().dqlnn(sql,params); }
+	                        final Object... params) { return getDatabase().dqlNotNull(sql,params); }
 
 	/**
 	 * Convenience method for getting a string.
@@ -175,7 +175,7 @@ public abstract class Table {
 	 */
 	@Nonnull
 	public final String dqsnn(@Nonnull final String sql,
-	                          final Object... params) { return getDatabase().dqsnn(sql,params); }
+	                          final Object... params) { return getDatabase().dqsNotNull(sql,params); }
 
 	/**
 	 * Convenience method for getting a byte array.
@@ -190,7 +190,7 @@ public abstract class Table {
 	 */
 	@Nonnull
 	public final byte[] dqbytenn(@Nonnull final String sql,
-	                             final Object... params) { return getDatabase().dqbytenn(sql,params); }
+	                             final Object... params) { return getDatabase().dqByteNotNull(sql,params); }
 
 	// ----- Internal Instance -----
 

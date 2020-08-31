@@ -17,46 +17,46 @@ import static java.util.logging.Level.*;
  */
 public abstract class DBConnection {
 
-	static final boolean logsql=true;
-	private static final boolean accumulatestats=true;
-	final Map<String,Integer> sqllog=new HashMap<>();
-	final Map<String,Long> sqllogsum=new HashMap<>();
+	static final boolean logSql =true;
+	private static final boolean accumulateStats =true;
+	final Map<String,Integer> sqlLog =new HashMap<>();
+	final Map<String,Long> sqlLogSum =new HashMap<>();
 	final Logger logger;
-	private final Object querylock=new Object();
-	private final Object updatelock=new Object();
-	private final String sourcename;
+	private final Object queryLock =new Object();
+	private final Object updateLock =new Object();
+	private final String sourceName;
 	private int queries;
-	private long querytime;
-	private long querymax;
+	private long queryTime;
+	private long queryMax;
 	private int updates;
-	private long updatetime;
-	private long updatemax;
+	private long updateTime;
+	private long updateMax;
 
-	private static final String PACKAGEPREFIX="net.coagulate.Core.Database";
-	private final Set<String> permittedcallers=new HashSet<>();
-	public void permit(String prefix) { permittedcallers.add(prefix); }
+	private static final String PACKAGE_PREFIX ="net.coagulate.Core.Database";
+	private final Set<String> permittedCallers =new HashSet<>();
+	public void permit(String prefix) { permittedCallers.add(prefix); }
 
-	protected DBConnection(final String sourcename) {
-		this.sourcename=sourcename;
-		logger=Logger.getLogger(getClass().getName()+"."+sourcename);
+	protected DBConnection(final String sourceName) {
+		this.sourceName = sourceName;
+		logger=Logger.getLogger(getClass().getName()+"."+ sourceName);
 	}
 
 	// ---------- STATICS ----------
-	public static boolean sqlLogging() { return logsql; }
+	public static boolean sqlLogging() { return logSql; }
 
 	// ---------- INSTANCE ----------
 	@Nonnull
 	public DBStats getStats() {
-		if (!accumulatestats) { throw new IllegalStateException("Stats are disabled"); }
-		synchronized (querylock) {
-			synchronized (updatelock) {
-				final DBStats stats=new DBStats(queries,querytime,querymax,updates,updatetime,updatemax);
+		if (!accumulateStats) { throw new IllegalStateException("Stats are disabled"); }
+		synchronized (queryLock) {
+			synchronized (updateLock) {
+				final DBStats stats=new DBStats(queries, queryTime, queryMax,updates, updateTime, updateMax);
 				queries=0;
-				querytime=0;
-				querymax=0;
+				queryTime =0;
+				queryMax =0;
 				updates=0;
-				updatetime=0;
-				updatemax=0;
+				updateTime =0;
+				updateMax =0;
 				return stats;
 			}
 		}
@@ -65,18 +65,18 @@ public abstract class DBConnection {
 	public void getSqlLogs(@Nonnull final Map<String,Integer> count,
 	                       @Nonnull final Map<String,Long> runtime,
 	                       @Nonnull final Map<String,Double> per) {
-		if (!logsql) { throw new UserConfigurationException("SQL Auditing is not enabled"); }
-		count.putAll(sqllog);
-		runtime.putAll(sqllogsum);
-		for (final Map.Entry<String,Integer> entry: sqllog.entrySet()) {
+		if (!logSql) { throw new UserConfigurationException("SQL Auditing is not enabled"); }
+		count.putAll(sqlLog);
+		runtime.putAll(sqlLogSum);
+		for (final Map.Entry<String,Integer> entry: sqlLog.entrySet()) {
 			final String statement=entry.getKey();
 			final Integer c=entry.getValue();
-			final Long runfor=runtime.get(statement);
-			if (c==null || runfor==null || c==0) {
+			final Long runFor=runtime.get(statement);
+			if (c==null || runFor==null || c==0) {
 				per.put(statement,0d); // explicitly a double.  even though it can be inferred, and is.  "wah wah this is an int not a double"...  it's both! :P
 			}
 			else {
-				per.put(statement,((double) runfor)/((double) c)); /// :P
+				per.put(statement,((double) runFor)/((double) c)); /// :P
 			}
 		}
 	}
@@ -87,11 +87,11 @@ public abstract class DBConnection {
 	public abstract Connection getConnection();
 
 	@Nonnull
-	public String getName() { return sourcename; }
+	public String getName() { return sourceName; }
 
 	public boolean test() {
 		try {
-			final int result=dqinn("select 1");
+			final int result= dqiNotNull("select 1");
 			if (result!=1) { throw new DBException("Select 1 returned not 1?? ("+result+")"); }
 			return true;
 		}
@@ -104,29 +104,29 @@ public abstract class DBConnection {
 	 * Automatically handles resource allocation and release, unmarshalls results into a Results object (see that class).
 	 * These are not "views" on the database and do not support normal database view commands, this is a simple "get data from database" call.
 	 *
-	 * @param parameterisedcommand SQL to query
+	 * @param parameterisedCommand SQL to query
 	 * @param params               SQL parameters
 	 *
 	 * @return Results (Set of Rows)
 	 */
 	@Nonnull
-	public Results dq(@Nonnull final String parameterisedcommand,
+	public Results dq(@Nonnull final String parameterisedCommand,
 	                  final Object... params) {
-		return _dq(false,parameterisedcommand,params);
+		return _dq(false,parameterisedCommand,params);
 	}
 
 	/**
 	 * Executes a slow query
 	 *
-	 * @param parameterisedcommand Parameterised SQL command
+	 * @param parameterisedCommand Parameterised SQL command
 	 * @param params               SQL parameters
 	 *
 	 * @return Returns a results set, which may be empty
 	 */
 	@Nonnull
-	public Results dqSlow(@Nonnull final String parameterisedcommand,
+	public Results dqSlow(@Nonnull final String parameterisedCommand,
 	                      final Object... params) {
-		return _dq(true,parameterisedcommand,params);
+		return _dq(true,parameterisedCommand,params);
 	}
 
 	// some code I lifted from another project, and modified.  The "NullInteger" is a horrible hack, what am I doing :/
@@ -135,24 +135,24 @@ public abstract class DBConnection {
 	/**
 	 * Executes a query
 	 *
-	 * @param slowquery            Is this query known to be slow (don't warn about it)
-	 * @param parameterisedcommand Parameterised SQL command
+	 * @param slowQuery            Is this query known to be slow (don't warn about it)
+	 * @param parameterisedCommand Parameterised SQL command
 	 * @param params               SQL parameters
 	 *
 	 * @return Returns a results set, which may be empty
 	 */
 	@Nonnull
-	public Results _dq(final boolean slowquery,
-	                   @Nonnull final String parameterisedcommand,
+	public Results _dq(final boolean slowQuery,
+	                   @Nonnull final String parameterisedCommand,
 	                   final Object... params) {
 		// permitted?
 		permitCheck();
-		if (logsql) {
-			if (sqllog.containsKey(parameterisedcommand)) {
-				sqllog.put(parameterisedcommand,sqllog.get(parameterisedcommand)+1);
+		if (logSql) {
+			if (sqlLog.containsKey(parameterisedCommand)) {
+				sqlLog.put(parameterisedCommand, sqlLog.get(parameterisedCommand)+1);
 			}
 			else {
-				sqllog.put(parameterisedcommand,1);
+				sqlLog.put(parameterisedCommand,1);
 			}
 		}
 		Connection conn=null;
@@ -160,30 +160,30 @@ public abstract class DBConnection {
 		ResultSet rs=null;
 		try {
 			conn=getConnection();
-			stm=prepare(conn,parameterisedcommand,params);
+			stm=prepare(conn,parameterisedCommand,params);
 			final long start=new Date().getTime();
 			rs=stm.executeQuery();
 			final long end=new Date().getTime();
 			final long diff=end-start;
 			// slow query mode turns off debug warnings about it being a slow query =)
-			if (!slowquery && (DB.sqldebug_queries || (diff) >= DB.SLOWQUERYTHRESHOLD_QUERY)) {
+			if (!slowQuery && (DB.sqldebug_queries || (diff) >= DB.SLOWQUERYTHRESHOLD_QUERY)) {
 				logger.config("SQL ["+formatCaller()+"]:"+(diff)+"ms "+stm);
 			}
-			if (logsql) {
-				if (sqllogsum.containsKey(parameterisedcommand)) {
-					sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(diff));
+			if (logSql) {
+				if (sqlLogSum.containsKey(parameterisedCommand)) {
+					sqlLogSum.put(parameterisedCommand, sqlLogSum.get(parameterisedCommand)+(diff));
 				}
 				else {
-					sqllogsum.put(parameterisedcommand,diff);
+					sqlLogSum.put(parameterisedCommand,diff);
 				}
 			}
-			if (!slowquery) {
-				// these just horribly skew the average/sd etc... but they're still logged in the logsql above so smiley face
-				if (accumulatestats) {
-					synchronized (querylock) {
+			if (!slowQuery) {
+				// these just horribly skew the average/sd etc... but they're still logged in the logSql above so smiley face
+				if (accumulateStats) {
+					synchronized (queryLock) {
 						queries++;
-						querytime+=(diff);
-						if (querymax<diff) { querymax=diff; }
+						queryTime +=(diff);
+						if (queryMax <diff) { queryMax =diff; }
 					}
 				}
 			}
@@ -192,7 +192,7 @@ public abstract class DBConnection {
 			return results;
 		}
 		catch (@Nonnull final SQLException e) {
-			throw new DBException("SQL Exception executing query "+parameterisedcommand,e);
+			throw new DBException("SQL Exception executing query "+parameterisedCommand,e);
 		}
 		finally {
 			if (rs!=null) {
@@ -208,7 +208,7 @@ public abstract class DBConnection {
 	}
 
 
-	// master query (dq - database query) - unpacks the resultset into a Results object containing Rows, and then closes everything out
+	// master query (dq - database query) - unpacks the resultSet into a Results object containing Rows, and then closes everything out
 
 	@Nonnull
 	public String formatCaller() {
@@ -219,10 +219,10 @@ public abstract class DBConnection {
 	}
 
 	@Nonnull
-	public String formatFrame(final int framenumber,
+	public String formatFrame(final int frameNumber,
 	                          @Nonnull final String def) {
-		if (Thread.currentThread().getStackTrace().length>framenumber) {
-			final StackTraceElement element=Thread.currentThread().getStackTrace()[framenumber];
+		if (Thread.currentThread().getStackTrace().length>frameNumber) {
+			final StackTraceElement element=Thread.currentThread().getStackTrace()[frameNumber];
 			String caller=element.getClassName()+"."+element.getMethodName();
 			if (element.getLineNumber() >= 0) { caller=caller+":"+element.getLineNumber(); }
 			caller=caller.replaceAll("net.coagulate.","");
@@ -234,24 +234,24 @@ public abstract class DBConnection {
 	/**
 	 * Call database with no results, retries on locking exception.
 	 * Used for update / delete queries.]
-	 * Handles all resource allocation and teardown.
+	 * Handles all resource allocation and tear down.
 	 *
-	 * @param parameterisedcommand SQL query
+	 * @param parameterisedCommand SQL query
 	 * @param params               SQL arguments.
 	 */
-	public void d(@Nonnull final String parameterisedcommand,
+	public void d(@Nonnull final String parameterisedCommand,
 	              final Object... params) {
 		// permitted?
 		permitCheck();
-		if (logsql) {
-			if (sqllog.containsKey(parameterisedcommand)) {
-				sqllog.put(parameterisedcommand,sqllog.get(parameterisedcommand)+1);
+		if (logSql) {
+			if (sqlLog.containsKey(parameterisedCommand)) {
+				sqlLog.put(parameterisedCommand, sqlLog.get(parameterisedCommand)+1);
 			}
 			else {
-				sqllog.put(parameterisedcommand,1);
+				sqlLog.put(parameterisedCommand,1);
 			}
 		}
-		try (final Connection conn=getConnection();final PreparedStatement stm=prepare(conn,parameterisedcommand,params)) {
+		try (final Connection conn=getConnection();final PreparedStatement stm=prepare(conn,parameterisedCommand,params)) {
 			final long start=new Date().getTime();
 			stm.execute();
 			conn.commit();
@@ -260,43 +260,43 @@ public abstract class DBConnection {
 			if (DB.sqldebug_commands || (diff) >= DB.SLOWQUERYTHRESHOLD_UPDATE) {
 				logger.finer("SQL "+(diff)+"ms ["+formatCaller()+"]:"+stm);
 			}
-			if (logsql) {
-				if (sqllogsum.containsKey(parameterisedcommand)) {
-					sqllogsum.put(parameterisedcommand,sqllogsum.get(parameterisedcommand)+(diff));
+			if (logSql) {
+				if (sqlLogSum.containsKey(parameterisedCommand)) {
+					sqlLogSum.put(parameterisedCommand, sqlLogSum.get(parameterisedCommand)+(diff));
 				}
 				else {
-					sqllogsum.put(parameterisedcommand,diff);
+					sqlLogSum.put(parameterisedCommand,diff);
 				}
 			}
-			if (accumulatestats) {
-				synchronized (updatelock) {
+			if (accumulateStats) {
+				synchronized (updateLock) {
 					updates++;
-					updatetime+=(diff);
-					if (updatemax<diff) { updatemax=diff; }
+					updateTime +=(diff);
+					if (updateMax <diff) { updateMax =diff; }
 				}
 			}
 		}
 		catch (@Nonnull final SQLException e) {
-			throw new DBException("SQL error during command "+parameterisedcommand,e);
+			throw new DBException("SQL error during command "+parameterisedCommand,e);
 		}
 
 	}
 
 	// check the caller's path is in the permitted list, if such a thing is set up
 	private void permitCheck() {
-		if (permittedcallers.isEmpty()) { return; } // fast path
+		if (permittedCallers.isEmpty()) { return; } // fast path
 		StackTraceElement[] caller = Thread.currentThread().getStackTrace();
 		for (int i=0;i<caller.length-1;i++) {
-			String classname=caller[i].getClassName();
-			if (!(classname.startsWith(PACKAGEPREFIX) || classname.startsWith("java.lang"))) {
-				for (String permitted:permittedcallers) {
-					if (classname.startsWith(permitted)) { return; }
+			String className=caller[i].getClassName();
+			if (!(className.startsWith(PACKAGE_PREFIX) || className.startsWith("java.lang"))) {
+				for (String permitted: permittedCallers) {
+					if (className.startsWith(permitted)) { return; }
 				}
-				// uhoh
+				// uh oh
 				//System.err.println("DB TRACING FAILURE");
-				//System.err.println("Was tracing stack element "+classname);
-				//for (String permitted:permittedcallers) { System.err.println("Permitted:"+permitted); }
-				Logger.getLogger("net.coagulate.Core.Database.DatabaseTracer").log(INFO,"Unauthorised calling path to database '"+getName()+"' code",new SystemImplementationException("Unauthorised database access from class "+classname));
+				//System.err.println("Was tracing stack element "+className);
+				//for (String permitted:permittedCallers) { System.err.println("Permitted:"+permitted); }
+				Logger.getLogger("net.coagulate.Core.Database.DatabaseTracer").log(INFO,"Unauthorised calling path to database '"+getName()+"' code",new SystemImplementationException("Unauthorised database access from class "+className));
 				return;
 			}
 		}
@@ -308,7 +308,7 @@ public abstract class DBConnection {
 	/**
 	 * Query the database expecting one result.
 	 *
-	 * @param parameterisedcommand SQL command
+	 * @param parameterisedCommand SQL command
 	 * @param params               SQL parameters
 	 *
 	 * @return The singular row result, assuming exactly one row was found
@@ -317,9 +317,9 @@ public abstract class DBConnection {
 	 * @throws TooMuchDataException if there are multiple results
 	 */
 	@Nonnull
-	public ResultsRow dqone(@Nonnull final String parameterisedcommand,
-	                        final Object... params) {
-		final Results results=dq(parameterisedcommand,params);
+	public ResultsRow dqOne(@Nonnull final String parameterisedCommand,
+							final Object... params) {
+		final Results results=dq(parameterisedCommand,params);
 		if (results.size()==0) {
 			throw new NoDataException("Query "+results.getStatement()+" returned zero results was set");
 		}
@@ -347,7 +347,7 @@ public abstract class DBConnection {
 	@Nullable
 	public Integer dqi(@Nonnull final String sql,
 	                   final Object... params) {
-		final ResultsRow row=dqone(sql,params);
+		final ResultsRow row= dqOne(sql,params);
 		return row.getIntNullable();
 	}
 
@@ -365,7 +365,7 @@ public abstract class DBConnection {
 	@Nullable
 	public Float dqf(@Nonnull final String sql,
 	                 final Object... params) {
-		final ResultsRow row=dqone(sql,params);
+		final ResultsRow row= dqOne(sql,params);
 		return row.getFloatNullable();
 	}
 
@@ -383,7 +383,7 @@ public abstract class DBConnection {
 	@Nullable
 	public Long dql(@Nonnull final String sql,
 	                final Object... params) {
-		final ResultsRow row=dqone(sql,params);
+		final ResultsRow row= dqOne(sql,params);
 		return row.getLongNullable();
 	}
 
@@ -401,7 +401,7 @@ public abstract class DBConnection {
 	@Nullable
 	public String dqs(@Nonnull final String sql,
 	                  final Object... params) {
-		final ResultsRow row=dqone(sql,params);
+		final ResultsRow row= dqOne(sql,params);
 		return row.getStringNullable();
 	}
 
@@ -417,9 +417,9 @@ public abstract class DBConnection {
 	 * @throws TooMuchDataException if there are multiple results
 	 */
 	@Nullable
-	public byte[] dqbyte(@Nonnull final String sql,
-	                     final Object... params) {
-		final ResultsRow row=dqone(sql,params);
+	public byte[] dqByte(@Nonnull final String sql,
+						 final Object... params) {
+		final ResultsRow row= dqOne(sql,params);
 		return row.getBytes();
 	}
 
@@ -434,9 +434,9 @@ public abstract class DBConnection {
 	 * @throws NoDataException      if there are no results OR the value in the cell is null
 	 * @throws TooMuchDataException if there are multiple results
 	 */
-	public byte[] dqbytenn(@Nonnull final String sql,
-	                       final Object... params) {
-		final byte[] b=dqbyte(sql,params);
+	public byte[] dqByteNotNull(@Nonnull final String sql,
+								final Object... params) {
+		final byte[] b= dqByte(sql,params);
 		if (b==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return b;
 	}
@@ -452,8 +452,8 @@ public abstract class DBConnection {
 	 * @throws NoDataException      if there are no results OR the value in the cell is null
 	 * @throws TooMuchDataException if there are multiple results
 	 */
-	public int dqinn(@Nonnull final String sql,
-	                 final Object... params) {
+	public int dqiNotNull(@Nonnull final String sql,
+						  final Object... params) {
 		final Integer i=dqi(sql,params);
 		if (i==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return i;
@@ -470,8 +470,8 @@ public abstract class DBConnection {
 	 * @throws NoDataException      if there are no results OR the value in the cell is null
 	 * @throws TooMuchDataException if there are multiple results
 	 */
-	public float dqfnn(@Nonnull final String sql,
-	                   final Object... params) {
+	public float dqfNotNull(@Nonnull final String sql,
+							final Object... params) {
 		final Float f=dqf(sql,params);
 		if (f==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return f;
@@ -488,8 +488,8 @@ public abstract class DBConnection {
 	 * @throws NoDataException      if there are no results OR the value in the cell is null
 	 * @throws TooMuchDataException if there are multiple results
 	 */
-	public long dqlnn(@Nonnull final String sql,
-	                  final Object... params) {
+	public long dqlNotNull(@Nonnull final String sql,
+						   final Object... params) {
 		final Long l=dql(sql,params);
 		if (l==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return l;
@@ -507,8 +507,8 @@ public abstract class DBConnection {
 	 * @throws TooMuchDataException if there are multiple results
 	 */
 	@Nonnull
-	public String dqsnn(@Nonnull final String sql,
-	                    final Object... params) {
+	public String dqsNotNull(@Nonnull final String sql,
+							 final Object... params) {
 		final String s=dqs(sql,params);
 		if (s==null) { throw new NoDataException("DB field unexpectedly contained null in "+sql); }
 		return s;
@@ -519,13 +519,13 @@ public abstract class DBConnection {
 	/**
 	 * don't forget to call this during setup!
 	 */
-	protected void register() { DB.register(sourcename,this); }
+	protected void register() { DB.register(sourceName,this); }
 
 	/**
 	 * Internal database code that converts native types to SQL types.
 	 *
 	 * @param conn                 DB connection
-	 * @param parameterisedcommand SQL command
+	 * @param parameterisedCommand SQL command
 	 * @param params               SQL parameters
 	 *
 	 * @return PreparedStatement as required
@@ -534,10 +534,10 @@ public abstract class DBConnection {
 	 */
 	@Nonnull
 	protected PreparedStatement prepare(@Nonnull final Connection conn,
-	                                    final String parameterisedcommand,
+	                                    final String parameterisedCommand,
 	                                    @Nonnull final Object... params) {
 		try {
-			final PreparedStatement ps=conn.prepareStatement(parameterisedcommand);
+			final PreparedStatement ps=conn.prepareStatement(parameterisedCommand);
 			for (int i=1;i<=params.length;i++) {
 				final Object p=params[i-1];
 				boolean parsed=false;
@@ -554,7 +554,7 @@ public abstract class DBConnection {
 				if (p instanceof Byte[]) {
 					final Byte[] in=(Byte[]) p;
 					final byte[] out=new byte[in.length];
-					for (int byteloop=0;byteloop<in.length;byteloop++) { out[byteloop]=in[byteloop]; }
+					for (int byteLoop=0;byteLoop<in.length;byteLoop++) { out[byteLoop]=in[byteLoop]; }
 					ps.setBytes(i,out);
 					parsed=true;
 				}
@@ -589,17 +589,17 @@ public abstract class DBConnection {
 			return ps;
 		}
 		catch (@Nonnull final SQLException e) {
-			throw new DBException("Failed to prepare statement "+parameterisedcommand,e);
+			throw new DBException("Failed to prepare statement "+parameterisedCommand,e);
 		}
 	}
 
 	public static class DBStats {
 		public final int queries;
-		public final long querytotal;
-		public final long querymax;
+		public final long queryTotal;
+		public final long queryMax;
 		public final int updates;
-		public final long updatetotal;
-		public final long updatemax;
+		public final long updateTotal;
+		public final long updateMax;
 
 		public DBStats(final int q,
 		               final long qt,
@@ -608,11 +608,11 @@ public abstract class DBConnection {
 		               final long ut,
 		               final long um) {
 			queries=q;
-			querytotal=qt;
-			querymax=qm;
+			queryTotal =qt;
+			queryMax =qm;
 			updates=u;
-			updatetotal=ut;
-			updatemax=um;
+			updateTotal =ut;
+			updateMax =um;
 		}
 	}
 
