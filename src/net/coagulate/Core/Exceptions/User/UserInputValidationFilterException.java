@@ -15,4 +15,8 @@ public class UserInputValidationFilterException extends UserInputValidationExcep
 	                                          final Throwable cause) {
 		super(reason,cause);
 	}
+
+    public UserInputValidationFilterException(String reason, boolean suppress) {
+        super(reason,suppress);
+    }
 }
