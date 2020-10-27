@@ -21,4 +21,8 @@ public abstract class UserInputValidationException extends UserException {
 	public UserInputValidationException(final String message,
 	                                    final Throwable exception,
 	                                    final boolean suppress) {super(message,exception,suppress);}
+
+    public UserInputValidationException(String reason, boolean suppress) {
+        super(reason,suppress);
+    }
 }
