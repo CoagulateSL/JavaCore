@@ -158,7 +158,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
                 }
             }
         } catch (URISyntaxException e) {
-            logger.log(WARNING, "Failed to process URI from the request", e);
+            logger.log(WARNING, "Failed to process URI from the request: "+ e.getLocalizedMessage());
         }
     }
 
