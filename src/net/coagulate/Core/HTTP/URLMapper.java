@@ -4,6 +4,7 @@ import net.coagulate.Core.Exceptions.System.SystemImplementationException;
 import net.coagulate.Core.Exceptions.SystemException;
 import net.coagulate.Core.Exceptions.UserException;
 import net.coagulate.Core.HTML.Page;
+import net.coagulate.SL.Config;
 import org.apache.http.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
@@ -15,13 +16,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,7 +50,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
     private static final boolean DEBUG_MAPPING = false;
 
     @Override
-    public void handle(HttpRequest request, HttpResponse response, HttpContext context) {
+    public final void handle(HttpRequest request, HttpResponse response, HttpContext context) {
         // a "generally extendable" pipeline for handling a HTTP Request
         // wrapped in a exception handler.  don't leak exceptions! bad subclasses!
         try {
@@ -79,10 +78,14 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * @param context HttpContext
      * @param response The HttpResponse
      */
-    protected void _handle(HttpRequest request, HttpContext context, HttpResponse response) {
+    protected final void _handle(HttpRequest request, HttpContext context, HttpResponse response) {
+        int inputSize=-1;
+        int outputSize=-1;
+        Date startTime=new Date();
+        Thread.currentThread().setName("Handler for "+request.getRequestLine().getUri());
         try {
             earlyInitialiseState(request, context);
-            processInputs(request, context);
+            inputSize=processInputs(request, context);
             loadSession();
             T content = lookupPage(request);
             if (content == null) {
@@ -91,8 +94,13 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
             if (checkAuthenticationNeeded(content)) {
                 content = authenticationPage();
             }
+            if (content instanceof Method) {
+                Thread.currentThread().setName("Invoking "+((Method)content).getDeclaringClass().getCanonicalName()+"."+((Method)content).getName());
+            } else {
+                Thread.currentThread().setName("Invoking " + content.getClass().getName());
+            }
             executePage(content);
-            processOutput(response, content);
+            outputSize=processOutput(response, content);
         }
         catch (UserException ue) { renderUserError(request,context,response,ue); }
         catch (SystemException se) { renderSystemError(request,context,response,se); }
@@ -104,7 +112,11 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
             if (!handled) { renderUnhandledError(request,context,response,content); }
         }
         catch (Throwable t) { renderUnhandledError(request,context,response,t); }
-        finally { cleanup(); }
+        finally {
+            cleanup();
+            if (Config.logRequests()) { System.out.println("ReqLog:"+request.getRequestLine().getUri()+" - "+Thread.currentThread().getName()+" - "+inputSize+"b/"+outputSize+"b "+((new Date().getTime())-(startTime.getTime()))+"ms"); }
+            Thread.currentThread().setName("Idle connection handler for "+getClass().getSimpleName());
+        }
     }
 
     protected abstract void renderUnhandledError(HttpRequest request, HttpContext context, HttpResponse response, Throwable t);
@@ -131,13 +143,14 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      *  @param request The HttpRequest
      * @param context HttpContext
      */
-    protected void processInputs(HttpRequest request, HttpContext context) {
+    protected int processInputs(HttpRequest request, HttpContext context) {
         final Map<String, String> parameters = new TreeMap<>();
         processUri(request, parameters);
-        processPostData(request, parameters);
+        int inputSize=processPostData(request, parameters);
         final Map<String, String> cookies = new TreeMap<>();
         processCookies(request, cookies);
         initialiseState(request,context,parameters,cookies);
+        return inputSize;
     }
 
     // ====================== INPUT =================
@@ -169,11 +182,14 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      *  @param request    The source HttpRequest
      * @param parameters The parameter map to update
      */
-    protected void processPostData(HttpRequest request, Map<String, String> parameters) {
+    protected int processPostData(HttpRequest request, Map<String, String> parameters) {
         if (request instanceof HttpEntityEnclosingRequest) {
             final HttpEntityEnclosingRequest r = (HttpEntityEnclosingRequest) request;
+            int inputSize=(int)r.getEntity().getContentLength();
             processPostEntity(r.getEntity(), parameters);
+            return inputSize;
         }
+        return 0;
     }
 
     /**
@@ -352,7 +368,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      *
      * @param response The HttpResponse object to direct output to
      */
-    protected void processOutput(HttpResponse response, T content) {
+    protected int processOutput(HttpResponse response, T content) {
         String stringOutput;
         try {
             stringOutput = Page.page().render();
@@ -365,6 +381,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
             response.addHeader(entry.getKey(), entry.getValue());
         }
         response.setStatusCode(Page.page().responseCode());
+        return stringOutput.length();
     }
 
     protected ContentType getContentType() {
