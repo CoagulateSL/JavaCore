@@ -95,7 +95,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
                 content = authenticationPage();
             }
             if (content instanceof Method) {
-                Thread.currentThread().setName("Invoking "+((Method)content).getDeclaringClass().getCanonicalName()+"."+((Method)content).getName());
+                Thread.currentThread().setName("Invoking "+(((Method)content).getDeclaringClass().getCanonicalName()+"."+((Method)content).getName()).replaceFirst("net.coagulate.",""));
             } else {
                 Thread.currentThread().setName("Invoking " + content.getClass().getName());
             }
