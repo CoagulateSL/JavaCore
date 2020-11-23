@@ -114,7 +114,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
         catch (Throwable t) { renderUnhandledError(request,context,response,t); }
         finally {
             cleanup();
-            if (Config.logRequests()) { System.out.println("ReqLog:"+request.getRequestLine().getUri()+" - "+Thread.currentThread().getName()+" - "+inputSize+"b/"+outputSize+"b "+((new Date().getTime())-(startTime.getTime()))+"ms"); }
+            if (Config.logRequests()) { System.out.println("ReqLog:'"+request.getRequestLine().getUri()+"','"+Thread.currentThread().getName()+"',"+inputSize+","+outputSize+","+((new Date().getTime())-(startTime.getTime()))); }
             Thread.currentThread().setName("Idle connection handler for "+getClass().getSimpleName());
         }
     }
