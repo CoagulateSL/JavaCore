@@ -38,7 +38,7 @@ public class HTTPListener {
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
 		try {
 			// start creating a server, on the port.  disable keepalive.  probably can get rid of that.
-			final SocketConfig reuse=SocketConfig.custom().setBacklogSize(100).setSoTimeout(15000).setTcpNoDelay(true).setSoReuseAddress(true).build();
+			final SocketConfig reuse=SocketConfig.custom().setBacklogSize(100).setSoTimeout(60000).setTcpNoDelay(true).setSoReuseAddress(true).build();
 
 			final ServerBootstrap bootstrap=ServerBootstrap.bootstrap()
 			                                               .setListenerPort(port)
