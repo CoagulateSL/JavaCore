@@ -11,8 +11,16 @@ public class UserInputDuplicateValueException extends UserInputValidationExcepti
 		super(reason);
 	}
 
+	public UserInputDuplicateValueException(String message, Throwable exception, boolean suppress) {
+		super(message, exception, suppress);
+	}
+
+	public UserInputDuplicateValueException(String reason, boolean suppress) {
+		super(reason, suppress);
+	}
+
 	public UserInputDuplicateValueException(final String reason,
-	                                        final Throwable cause) {
+											final Throwable cause) {
 		super(reason,cause);
 	}
 }
