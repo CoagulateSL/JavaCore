@@ -14,7 +14,15 @@ public abstract class SystemException extends RuntimeException {
 	public SystemException(final String reason) { super(reason); }
 
 	public SystemException(final String reason,
-	                       final Throwable cause) { super(reason,cause); }
+	                       final Throwable cause) {
+		super(reason,cause);
+		if (UserException.class.isAssignableFrom(cause.getClass())) {
+			suppresslogging=((UserException)cause).suppressed();
+		}
+		if (SystemException.class.isAssignableFrom(cause.getClass())) {
+			suppresslogging=((SystemException)cause).suppressed();
+		}
+	}
 
 	public SystemException(final String reason,
 	                       final boolean suppresslogging) {
