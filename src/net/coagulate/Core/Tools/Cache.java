@@ -84,8 +84,8 @@ public class Cache <T> {
      */
     @Nonnull
     public T put(@Nonnull final String key,
-                    final T object,
-                    final int lifetimeseconds) {
+                 @Nonnull final T object,
+                 final int lifetimeseconds) {
         final CacheElement<T> ele=new CacheElement<>(object,getUnixTime()+lifetimeseconds);
         cache.put(key,ele);
         return object;
