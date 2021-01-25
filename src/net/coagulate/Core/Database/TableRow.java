@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 /**
  * @author Iain Price
@@ -33,14 +34,14 @@ public abstract class TableRow extends Table {
 	 *
 	 * @param type  Class name for object type
 	 * @param id    ID number
-	 * @param store DBObject or subclass to store
+	 * @param supplier Function that will generate the object if necessary
 	 *
 	 * @return DBObject that should be used, not necessarily the one that was stored
 	 */
 	@Nonnull
 	protected static synchronized TableRow factoryPut(@Nonnull final String type,
-	                                                  final int id,
-	                                                  @Nonnull final TableRow store) {
+													  final int id,
+													  @Nonnull final Function<Integer,TableRow> supplier) {
 		if (id==0) {
 			throw new SystemBadValueException("ID zero is expressly prohibited, does not exist, and suggests a programming bug.");
 		}
@@ -52,7 +53,7 @@ public abstract class TableRow extends Table {
 		// does this ID exist already
 		if (!factory.get(type).containsKey(id)) {
 			// no - store it
-			factory.get(type).put(id,store);
+			factory.get(type).put(id,supplier.apply(id));
 		}
 		// return, either the previous value, or the one we just put there
 		return factory.get(type).get(id);
