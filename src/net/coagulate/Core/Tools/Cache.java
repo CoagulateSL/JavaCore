@@ -48,14 +48,14 @@ public class Cache <T> {
 
     private void maintenanceThis() {
         int now=UnixTime.getUnixTime();
-        Set<String> deleteSet=new HashSet<>();
-        for (Map.Entry<String,CacheElement<T>> row:cache.entrySet()) {
+        Set<Object> deleteSet=new HashSet<>();
+        for (Map.Entry<Object,CacheElement<T>> row:cache.entrySet()) {
             if (now>row.getValue().expires) { deleteSet.add(row.getKey()); }
         }
-        for (String row:deleteSet) { cache.remove(row); }
+        for (Object row:deleteSet) { cache.remove(row); }
     }
 
-    private final Map<String,CacheElement<T>> cache=new ConcurrentHashMap<>();
+    private final Map<Object,CacheElement<T>> cache=new ConcurrentHashMap<>();
 
     private int cacheHit=0;
     private int cacheMiss=0;
@@ -68,7 +68,7 @@ public class Cache <T> {
      *
      * @return Object from the cache
      */
-    public T get(@Nonnull final String key, Supplier<T> supplier) {
+    public T get(@Nonnull final Object key, Supplier<T> supplier) {
         int now=UnixTime.getUnixTime();
         if (cache.containsKey(key)) {
             if (cache.get(key).expires<now) { cache.remove(key); }
@@ -81,7 +81,7 @@ public class Cache <T> {
         return cached.element;
     }
 
-    public void purge(String name) {
+    public void purge(Object name) {
         cache.remove(name);
     }
 
