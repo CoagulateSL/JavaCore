@@ -12,7 +12,7 @@ public class Cache <T> {
     private final static Map<String,Cache<?>> caches=new ConcurrentHashMap<>();
     private final int expiration;
 
-    public Cache(int expiration) {
+    private Cache(int expiration) {
         this.expiration=expiration;
     }
 
