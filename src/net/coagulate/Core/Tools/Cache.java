@@ -87,6 +87,10 @@ public class Cache <T> {
 
     public void purgeAll() { cache.clear(); }
 
+    public void set(Object key, T value) {
+        cache.put(key,new CacheElement<>(value,expiration));
+    }
+
     private static class CacheElement<T> {
         @Nonnull
         public final T element;
