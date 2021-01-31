@@ -46,6 +46,31 @@ public class Cache <T> {
         }
     }
 
+    public static List<CacheStats> getStats() {
+        List<CacheStats> stats=new ArrayList<>();
+        Set<String> cacheNames=new TreeSet<>(caches.keySet());
+        for (String cacheName:cacheNames) {
+            Cache<?> cache=caches.get(cacheName);
+            if (cache!=null) {
+                stats.add(new CacheStats(cacheName, cache.cache.size(),cache.cacheHit,cache.cacheMiss));
+            }
+        }
+        return stats;
+    }
+    public static class CacheStats {
+        public final String cacheName;
+        public final int size;
+        public final int cacheHit;
+        public final int cacheMiss;
+
+        public CacheStats(String cacheName, int size, int cacheHit, int cacheMiss) {
+            this.cacheName=cacheName;
+            this.size=size;
+            this.cacheHit=cacheHit;
+            this.cacheMiss=cacheMiss;
+        }
+    }
+
     private void maintenanceThis() {
         int now=UnixTime.getUnixTime();
         Set<Object> deleteSet=new HashSet<>();
