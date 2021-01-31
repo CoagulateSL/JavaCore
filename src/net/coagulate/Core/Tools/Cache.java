@@ -1,6 +1,7 @@
 package net.coagulate.Core.Tools;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -118,11 +119,11 @@ public class Cache <T> {
     }
 
     private static class CacheElement<T> {
-        @Nonnull
+        @Nullable
         public final T element;
         public final int expires;
 
-        public CacheElement(@Nonnull final T element,
+        public CacheElement(@Nullable final T element,
                             final int expires) {
             this.element=element;
             this.expires=expires;
