@@ -76,6 +76,7 @@ public class Cache <T> {
         CacheElement<T> cached=cache.getOrDefault(key,null);
         if (cached==null) {
             cached=new CacheElement<>(supplier.get(),UnixTime.getUnixTime()+expiration);
+            cache.put(key,cached);
             cacheMiss++;
         } else { cacheHit++; }
         return cached.element;
