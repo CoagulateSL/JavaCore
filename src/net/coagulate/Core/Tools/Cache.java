@@ -88,12 +88,12 @@ public class Cache <T> {
     /**
      * Get an object from the cache
      *
+     * @param key Cache key
      * @param supplier Functional Supplier for the value, if not cached
      *
-     * @param key Cache key
      * @return Object from the cache
      */
-    public T get(Supplier<T> supplier, @Nonnull final Object key) {
+    public T get(@Nonnull final Object key, Supplier<T> supplier) {
         int now=UnixTime.getUnixTime();
         if (cache.containsKey(key)) {
             if (cache.get(key).expires<now) { cache.remove(key); }
