@@ -61,10 +61,10 @@ public class Cache <T> {
     public static class CacheStats {
         public final String cacheName;
         public final int size;
-        public final int cacheHit;
-        public final int cacheMiss;
+        public final long cacheHit;
+        public final long cacheMiss;
 
-        public CacheStats(String cacheName, int size, int cacheHit, int cacheMiss) {
+        public CacheStats(String cacheName, int size, long cacheHit, long cacheMiss) {
             this.cacheName=cacheName;
             this.size=size;
             this.cacheHit=cacheHit;
@@ -83,8 +83,8 @@ public class Cache <T> {
 
     private final Map<Object,CacheElement<T>> cache=new ConcurrentHashMap<>();
 
-    private int cacheHit=0;
-    private int cacheMiss=0;
+    private long cacheHit=0;
+    private long cacheMiss=0;
 
     /**
      * Get an object from the cache
