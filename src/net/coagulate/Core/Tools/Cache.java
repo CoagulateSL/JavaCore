@@ -58,11 +58,29 @@ public class Cache <T> {
         }
         return stats;
     }
+    public static List<CacheStats> getSummarisedStats() {
+        List<CacheStats> stats = getStats();
+        Map<String,CacheStats> statMap=new HashMap<>();
+        for (CacheStats stat:stats) {
+            String name=stat.cacheName;
+            String[] parts=name.split("/");
+            if (parts.length>2) { name=parts[0]+"/"+parts[1]; }
+            if (!statMap.containsKey(name)) { statMap.put(name,new CacheStats(name,0,0,0)); }
+            CacheStats newStat=statMap.get(name);
+            newStat.cacheHit+=stat.cacheHit;
+            newStat.cacheMiss+=stat.cacheMiss;
+            newStat.size+=stat.size;
+        }
+        Set<String> sorted=new TreeSet<>(statMap.keySet());
+        List<CacheStats> ret=new ArrayList<>();
+        for (String addName:sorted) { ret.add(statMap.get(addName)); }
+        return ret;
+    }
     public static class CacheStats {
         public final String cacheName;
-        public final int size;
-        public final long cacheHit;
-        public final long cacheMiss;
+        public int size;
+        public long cacheHit;
+        public long cacheMiss;
 
         public CacheStats(String cacheName, int size, long cacheHit, long cacheMiss) {
             this.cacheName=cacheName;
