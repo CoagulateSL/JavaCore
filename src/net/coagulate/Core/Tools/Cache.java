@@ -114,10 +114,11 @@ public class Cache <T> {
      */
     public T get(@Nonnull final Object key, Supplier<T> supplier) {
         int now=UnixTime.getUnixTime();
-        if (cache.containsKey(key)) {
-            if (cache.get(key).expires<now) { cache.remove(key); }
-        }
         CacheElement<T> cached=cache.getOrDefault(key,null);
+        if (cached!=null) {
+            if (cached.expires<now) { cache.remove(key); }
+        }
+        cached=cache.getOrDefault(key,null);
         if (cached==null) {
             cached=new CacheElement<>(supplier.get(),UnixTime.getUnixTime()+expiration);
             cache.put(key,cached);
