@@ -116,9 +116,8 @@ public class Cache <T> {
         int now=UnixTime.getUnixTime();
         CacheElement<T> cached=cache.getOrDefault(key,null);
         if (cached!=null) {
-            if (cached.expires<now) { cache.remove(key); }
+            if (cached.expires<now) { cache.remove(key); cached=null; }
         }
-        cached=cache.getOrDefault(key,null);
         if (cached==null) {
             cached=new CacheElement<>(supplier.get(),UnixTime.getUnixTime()+expiration);
             cache.put(key,cached);
