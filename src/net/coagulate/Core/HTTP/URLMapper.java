@@ -389,7 +389,8 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
     }
 
     protected ContentType getContentType() {
-        return ContentType.TEXT_HTML;
+        //System.out.println("Page content type is "+Page.page().contentType());
+        return Page.page().contentType()==null?ContentType.TEXT_HTML:Page.page().contentType();
     }
 
     protected abstract void cleanup();

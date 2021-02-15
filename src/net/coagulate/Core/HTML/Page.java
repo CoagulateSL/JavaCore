@@ -1,6 +1,7 @@
 package net.coagulate.Core.HTML;
 
 import org.apache.http.HttpStatus;
+import org.apache.http.entity.ContentType;
 
 import javax.annotation.Nonnull;
 import java.util.ConcurrentModificationException;
@@ -63,4 +64,8 @@ public class Page {
     public void resetRoot() {
         root=new Container();
     }
+
+    ContentType contentType=null;
+    public ContentType contentType() { return contentType; }
+    public void contentType(@Nonnull ContentType contentType) { this.contentType=contentType; }
 }
