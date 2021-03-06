@@ -15,4 +15,12 @@ public class UserInputInvalidChoiceException extends UserInputValidationExceptio
 	                                       final Throwable cause) {
 		super(reason,cause);
 	}
+
+	public UserInputInvalidChoiceException(String message, Throwable exception, boolean suppress) {
+		super(message, exception, suppress);
+	}
+
+	public UserInputInvalidChoiceException(String reason, boolean suppress) {
+		super(reason, suppress);
+	}
 }
