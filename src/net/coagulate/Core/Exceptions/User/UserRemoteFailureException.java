@@ -17,4 +17,12 @@ public class UserRemoteFailureException extends UserException {
 	                                  final Throwable cause) {
 		super(reason,cause);
 	}
+
+	public UserRemoteFailureException(String reason, boolean suppresslogging) {
+		super(reason, suppresslogging);
+	}
+
+	public UserRemoteFailureException(String reason, Throwable cause, boolean suppresslogging) {
+		super(reason, cause, suppresslogging);
+	}
 }
