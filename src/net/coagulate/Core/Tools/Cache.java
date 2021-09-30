@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 public class Cache <T> {
 
     private final static Map<String,Cache<?>> caches=new ConcurrentHashMap<>();
@@ -17,19 +16,19 @@ public class Cache <T> {
         this.expiration=expiration;
     }
 
+    @SuppressWarnings("unchecked")
     public static <S> Cache<S> getCache(@Nonnull String name,int expiration) {
         name=name.toLowerCase();
         if (caches.containsKey(name)) {
-            //noinspection unchecked
             return (Cache<S>)caches.get(name);
         }
         return makeCache(name,expiration);
     }
 
+    @SuppressWarnings("unchecked")
     private static synchronized <S> Cache<S> makeCache(@Nonnull String name,int expiration) {
         name=name.toLowerCase();
         if (caches.containsKey(name)) {
-            //noinspection unchecked
             return (Cache<S>)caches.get(name);
         }
         Cache<S> cache=new Cache<>(expiration);
