@@ -46,7 +46,8 @@ public abstract class ExceptionTools {
 		while (loop!=null) {
 			p.append("Exception: ").append(loop.getClass().getSimpleName()).append(" - ").append(loop.getLocalizedMessage()).append("\n");
 			for (final StackTraceElement st: loop.getStackTrace()) {
-				p.append(" at ").append(st.getClassName()).append(".").append(st.getMethodName()).append(":").append(st.getLineNumber()).append("\n");
+				p.append(" at ").append(st.getClassName()).append(".").append(st.getMethodName()).
+					append("(").append(st.getFileName()).append(":").append(st.getLineNumber()).append(")").append("\n");
 			}
 			loop=loop.getCause();
 		}
