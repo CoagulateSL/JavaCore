@@ -4,7 +4,6 @@ import net.coagulate.Core.Exceptions.System.SystemImplementationException;
 import net.coagulate.Core.Exceptions.SystemException;
 import net.coagulate.Core.Exceptions.UserException;
 import net.coagulate.Core.HTML.Page;
-import net.coagulate.SL.Config;
 import org.apache.http.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
@@ -48,6 +47,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
     private static final boolean DEBUG_PARAMS = false;
     private final Logger logger;
     private static final boolean DEBUG_MAPPING = false;
+    public static final boolean LOGREQUESTS = false;
 
     @Override
     public final void handle(HttpRequest request, HttpResponse response, HttpContext context) {
@@ -118,7 +118,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
         catch (Throwable t) { renderUnhandledError(request,context,response,t); }
         finally {
             cleanup();
-            if (Config.logRequests()) { System.out.println("ReqLog:'"+request.getRequestLine().getUri()+"','"+Thread.currentThread().getName()+"',"+inputSize+","+outputSize+","+((new Date().getTime())-(startTime.getTime()))); }
+            if (LOGREQUESTS) { System.out.println("ReqLog:'"+request.getRequestLine().getUri()+"','"+Thread.currentThread().getName()+"',"+inputSize+","+outputSize+","+((new Date().getTime())-(startTime.getTime()))); }
             Thread.currentThread().setName("Idle connection handler for "+getClass().getSimpleName());
         }
     }
