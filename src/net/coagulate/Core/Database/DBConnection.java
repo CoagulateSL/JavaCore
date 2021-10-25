@@ -147,7 +147,7 @@ public abstract class DBConnection {
 	                   final Object... params) {
 		// permitted?
 		permitCheck();
-		if (logSql) {
+		if (logSql && !slowQuery) {
 			if (sqlLog.containsKey(parameterisedCommand)) {
 				sqlLog.put(parameterisedCommand, sqlLog.get(parameterisedCommand)+1);
 			}
@@ -169,7 +169,7 @@ public abstract class DBConnection {
 			if (!slowQuery && (DB.sqldebug_queries || (diff) >= DB.SLOWQUERYTHRESHOLD_QUERY)) {
 				logger.config("SQL ["+formatCaller()+"]:"+(diff)+"ms "+stm);
 			}
-			if (logSql) {
+			if (logSql && !slowQuery) {
 				if (sqlLogSum.containsKey(parameterisedCommand)) {
 					sqlLogSum.put(parameterisedCommand, sqlLogSum.get(parameterisedCommand)+(diff));
 				}
