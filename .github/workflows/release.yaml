@@ -23,12 +23,7 @@ jobs:
       - name: Build with Maven
         env: 
           PACKAGE_READ: ${{ secrets.PACKAGE_READ }}
-        run: mvn --batch-mode --update-snapshots verify -s $GITHUB_WORKSPACE/settings.xml
-      - run: mkdir staging && cp bin/*.jar staging
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Package
-          path: staging        
+        run: mvn --batch-mode --update-snapshots verify -s $GITHUB_WORKSPACE/settings.xml 
       - name: Publish to GitHub Packages Apache Maven
         run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
         env:
