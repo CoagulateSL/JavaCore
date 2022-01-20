@@ -21,6 +21,7 @@ jobs:
         run: |
           sed 's/VERSIONNUMBERGOESHERE/${{github.ref_name}}/' <pom.xml >pom.xml2 ; mv pom.xml2 pom.xml
           BUILDINFO=`ls -1 src/net/coagulate/Core/BuildInfo/*.java`
+          CLASSNAME=`echo $BUILDINFO|sed 's/.*\/\([^\/]*\).java/\1/;'`
           MAJOR=`echo ${{github.ref_name}}|sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\1/'`
           MINOR=`echo ${{github.ref_name}}|sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\2/'`
           BUGFIX=`echo ${{github.ref_name}}|sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\3/'`
@@ -28,7 +29,7 @@ jobs:
           echo Write version $MAJOR $MINOR $BUGFIX date $BUILDDATE sha $GITHUB_SHA to file $BUILDINFO
           echo 'package net.coagulate.Core.BuildInfo;' >$BUILDINFO
           echo 'import java.util.Date;'  >>$BUILDINFO
-          echo 'public class GPHUDBuildInfo {'  >>$BUILDINFO
+          echo 'public class '$CLASSNAME' {'  >>$BUILDINFO
           echo '	public static final int MAJORVERSION='$MAJOR';'  >>$BUILDINFO
           echo '	public static final int MINORVERSION='$MINOR';'  >>$BUILDINFO
           echo '	public static final int BUGFIXVERSION='$BUGFIX';'  >>$BUILDINFO
