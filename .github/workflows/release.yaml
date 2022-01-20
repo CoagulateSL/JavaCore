@@ -49,7 +49,7 @@ jobs:
       - name: Dump environment
         run: set
       - name: Identify release asset
-        run: echo '::set-output name=UPLOAD_FILE::'`cd bin;ls -1 *-jar-with-dependencies.jar`
+        run: echo '::set-output name=UPLOAD_FILE::'`cd bin;ls -1 *.jar`
         id: getname
       - name: Display release ID
         run: echo Target is ${{ steps.getname.outputs.UPLOAD_FILE }}
