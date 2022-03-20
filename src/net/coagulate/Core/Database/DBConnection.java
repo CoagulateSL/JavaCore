@@ -90,13 +90,14 @@ public abstract class DBConnection {
 	public String getName() { return sourceName; }
 
 	public boolean test() {
-		try {
+		return true;
+		/*try {
 			final int result= dqiNotNull("select 1");
 			if (result!=1) { throw new DBException("Select 1 returned not 1?? ("+result+")"); }
 			return true;
 		}
 		catch (@Nonnull final Exception e) { logger.log(SEVERE,"Database connectivity test failure",e); }
-		return false;
+		return false;*/
 	}
 
 	/**
@@ -142,7 +143,7 @@ public abstract class DBConnection {
 	 * @return Returns a results set, which may be empty
 	 */
 	@Nonnull
-	public Results _dq(final boolean slowQuery,
+	private Results _dq(final boolean slowQuery,
 	                   @Nonnull final String parameterisedCommand,
 	                   final Object... params) {
 		// permitted?
@@ -254,7 +255,6 @@ public abstract class DBConnection {
 		try (final Connection conn=getConnection();final PreparedStatement stm=prepare(conn,parameterisedCommand,params)) {
 			final long start=new Date().getTime();
 			stm.execute();
-			conn.commit();
 			final long end=new Date().getTime();
 			final long diff=end-start;
 			if (DB.sqldebug_commands || (diff) >= DB.SLOWQUERYTHRESHOLD_UPDATE) {
