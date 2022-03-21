@@ -12,14 +12,11 @@ public class MySqlDBConnection extends DBConnection {
 
     private final BasicDataSource dataSource=new BasicDataSource();
 
-    public MySqlDBConnection(String sourceName) {
-        super(sourceName);
-    }
-
     public MySqlDBConnection(String sourceName, String jdbc) {
         super(sourceName);
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl(jdbc);
+        register();
     }
 
     @Override
