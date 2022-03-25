@@ -7,9 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-public class Cache <T> {
+public class Cache <U,T> {
 
-    private final static Map<String,Cache<?>> caches=new ConcurrentHashMap<>();
+    private final static Map<String,Cache<?,?>> caches=new ConcurrentHashMap<>();
     private final int expiration;
 
     private Cache(int expiration) {
@@ -17,28 +17,28 @@ public class Cache <T> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <S> Cache<S> getCache(@Nonnull String name,int expiration) {
+    public static <R,S> Cache<R,S> getCache(@Nonnull String name,int expiration) {
         name=name.toLowerCase();
         if (caches.containsKey(name)) {
-            return (Cache<S>)caches.get(name);
+            return (Cache<R,S>)caches.get(name);
         }
         return makeCache(name,expiration);
     }
 
     @SuppressWarnings("unchecked")
-    private static synchronized <S> Cache<S> makeCache(@Nonnull String name,int expiration) {
+    private static synchronized <R,S> Cache<R,S> makeCache(@Nonnull String name,int expiration) {
         name=name.toLowerCase();
         if (caches.containsKey(name)) {
-            return (Cache<S>)caches.get(name);
+            return (Cache<R,S>)caches.get(name);
         }
-        Cache<S> cache=new Cache<>(expiration);
+        Cache<R,S> cache=new Cache<>(expiration);
         caches.put(name,cache);
         return cache;
     }
 
     public static void maintenance() {
-        Collection<Cache<?>> cacheSet=caches.values();
-        for (Cache<?> cache:cacheSet) {
+        Collection<Cache<?,?>> cacheSet=caches.values();
+        for (Cache<?,?> cache:cacheSet) {
             try { cache.maintenanceThis(); }
             catch (ConcurrentModificationException e) {
                 Logger.getLogger("CacheMaintenance").log(Level.FINE,"Cache maintenance died",e);
@@ -50,7 +50,7 @@ public class Cache <T> {
         List<CacheStats> stats=new ArrayList<>();
         Set<String> cacheNames=new TreeSet<>(caches.keySet());
         for (String cacheName:cacheNames) {
-            Cache<?> cache=caches.get(cacheName);
+            Cache<?,?> cache=caches.get(cacheName);
             if (cache!=null) {
                 stats.add(new CacheStats(cacheName, cache.cache.size(),cache.cacheHit,cache.cacheMiss));
             }
@@ -91,14 +91,14 @@ public class Cache <T> {
 
     private void maintenanceThis() {
         int now=UnixTime.getUnixTime();
-        Set<Object> deleteSet=new HashSet<>();
-        for (Map.Entry<Object,CacheElement<T>> row:cache.entrySet()) {
+        Set<U> deleteSet=new HashSet<>();
+        for (Map.Entry<U,CacheElement<T>> row:cache.entrySet()) {
             if (now>row.getValue().expires) { deleteSet.add(row.getKey()); }
         }
-        for (Object row:deleteSet) { cache.remove(row); }
+        for (U row:deleteSet) { cache.remove(row); }
     }
 
-    private final Map<Object,CacheElement<T>> cache=new ConcurrentHashMap<>();
+    private final Map<U,CacheElement<T>> cache=new ConcurrentHashMap<>();
 
     private long cacheHit=0;
     private long cacheMiss=0;
@@ -109,9 +109,9 @@ public class Cache <T> {
      * @param key Cache key
      * @param supplier Functional Supplier for the value, if not cached
      *
-     * @return Object from the cache
+     * @return T from the cache
      */
-    public T get(@Nonnull final Object key, Supplier<T> supplier) {
+    public T get(@Nonnull final U key, Supplier<T> supplier) {
         int now=UnixTime.getUnixTime();
         CacheElement<T> cached=cache.getOrDefault(key,null);
         if (cached!=null) {
@@ -125,13 +125,13 @@ public class Cache <T> {
         return cached.element;
     }
 
-    public void purge(Object name) {
+    public void purge(U name) {
         cache.remove(name);
     }
 
     public void purgeAll() { cache.clear(); }
 
-    public void set(Object key, T value) {
+    public void set(U key, T value) {
         cache.put(key,new CacheElement<>(value,expiration));
     }
 
