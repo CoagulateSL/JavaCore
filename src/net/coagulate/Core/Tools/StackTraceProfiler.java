@@ -3,7 +3,7 @@ package net.coagulate.Core.Tools;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StackTraceProfiler {
+public class StackTraceProfiler extends Thread {
     private static final Map<String,Map<String, Map<Integer,Integer>>> profiled=new HashMap<>();
 
     public static void profile() {
@@ -14,7 +14,16 @@ public class StackTraceProfiler {
         }
     }
 
+    @Override
+    public void run() {
+        while (true) {
+            try {Thread.sleep(1000);profile();}
+            catch (Exception ignore) {}
+        }
+    }
+
     private static void record(String className, String methodName, int lineNumber) {
+        if (!className.startsWith("net.coagulate")) { return; }
         if (!profiled.containsKey(className)) { profiled.put(className, new HashMap<>()); }
         Map<String,Map<Integer,Integer>> classProfile=profiled.get(className);
         if (!classProfile.containsKey(methodName)) { classProfile.put(methodName, new HashMap<>()); }
