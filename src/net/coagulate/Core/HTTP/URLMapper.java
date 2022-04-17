@@ -239,11 +239,11 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
         for (final Header header : request.getHeaders("Cookie")) {
             for (final String component : header.getValue().split(";")) {
                 final String[] kv = component.split("=");
-                if (kv.length != 2) {
-                    Logger.getLogger(getClass().getName()).log(WARNING, "Unusual cookie element to parse in line " + header.getValue() + " piece " + component);
-                } else {
+                if (kv.length == 2) {
                     //System.out.println(kv[0]+"="+kv[1]);
                     cookies.put(kv[0].trim(), kv[1].trim());
+                } else {
+                    Logger.getLogger(getClass().getName()).log(WARNING, "Unusual cookie element to parse in line " + header.getValue() + " piece " + component);
                 }
             }
         }
@@ -342,10 +342,10 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
         }
         if (DEBUG_MAPPING) {
             System.out.println("Matched prefix "+matchedPrefix+" for url "+line);
-            if (matchedHandler != null) {
-                System.out.println("Prefix match " + matchedHandler.getClass().getCanonicalName());
-            } else {
+            if (matchedHandler == null) {
                 System.out.println("Prefix match returned null match, this is now a 404");
+            } else {
+                System.out.println("Prefix match " + matchedHandler.getClass().getCanonicalName());
             }
         }
         if (matchedHandler == null) {

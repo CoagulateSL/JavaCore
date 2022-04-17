@@ -35,10 +35,10 @@ public class StackTraceProfiler extends Thread {
             classProfile.put(methodName, new HashMap<>());
         }
         final Map<Integer, Integer> methodProfile = classProfile.get(methodName);
-        if (!methodProfile.containsKey(lineNumber)) {
-            methodProfile.put(lineNumber, 1);
-        } else {
+        if (methodProfile.containsKey(lineNumber)) {
             methodProfile.put(lineNumber, methodProfile.get(lineNumber) + 1);
+        } else {
+            methodProfile.put(lineNumber, 1);
         }
     }
 
