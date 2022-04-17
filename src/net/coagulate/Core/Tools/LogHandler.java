@@ -22,13 +22,13 @@ public class LogHandler extends Handler {
 	public static String mailprefix="[UNKNOWN]";
 
 	public LogHandler() {
-		setLevel(Level.ALL);
+		setLevel(ALL);
 	}
 
 	// ---------- STATICS ----------
 	public static void initialise() {
 		LogManager.getLogManager().reset();
-		Logger.getLogger("").setLevel(Level.ALL);
+		Logger.getLogger("").setLevel(ALL);
 		Logger.getLogger("").addHandler(new LogHandler());
 	}
 
@@ -188,25 +188,25 @@ public class LogHandler extends Handler {
 
 	@Nonnull
 	private String formatLevel(final Level level) {
-		if (level==Level.CONFIG) {
+		if (level == CONFIG) {
 			return "conf";
 		}
-		if (level== FINE) {
+		if (level == FINE) {
 			return "D   ";
 		}
 		if (level== FINER) {
 			return "d   ";
 		}
-		if (level== FINEST) {
+		if (level == FINEST) {
 			return "_ ";
 		}
-		if (level==Level.INFO) {
+		if (level == INFO) {
 			return "Info";
 		}
-		if (level==Level.SEVERE) {
+		if (level == SEVERE) {
 			return "XXXX";
 		}
-		if (level==Level.WARNING) {
+		if (level == WARNING) {
 			return "WARN";
 		}
 		return "????";

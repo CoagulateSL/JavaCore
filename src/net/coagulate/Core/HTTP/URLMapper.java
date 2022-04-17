@@ -225,7 +225,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
                 }
             }
         } catch (final IOException e) {
-            logger.log(Level.WARNING, "Failed to URLDecode posted entity", e);
+            logger.log(WARNING, "Failed to URLDecode posted entity", e);
         }
     }
 
@@ -240,7 +240,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
             for (final String component : header.getValue().split(";")) {
                 final String[] kv = component.split("=");
                 if (kv.length != 2) {
-                    Logger.getLogger(getClass().getName()).log(Level.WARNING, "Unusual cookie element to parse in line " + header.getValue() + " piece " + component);
+                    Logger.getLogger(getClass().getName()).log(WARNING, "Unusual cookie element to parse in line " + header.getValue() + " piece " + component);
                 } else {
                     //System.out.println(kv[0]+"="+kv[1]);
                     cookies.put(kv[0].trim(), kv[1].trim());
