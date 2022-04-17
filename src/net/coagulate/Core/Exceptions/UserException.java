@@ -7,8 +7,8 @@ package net.coagulate.Core.Exceptions;
  * @author Iain Price
  */
 public abstract class UserException extends RuntimeException {
-	private static final long serialVersionUID=1L;
-	private boolean suppresslogging=false;
+	private static final long serialVersionUID = 1L;
+	private boolean suppresslogging;
 
 	public UserException(final String reason) { super(reason); }
 

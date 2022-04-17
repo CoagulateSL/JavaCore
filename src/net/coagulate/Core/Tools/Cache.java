@@ -109,10 +109,10 @@ public class Cache <U,T> {
         }
     }
 
-    private final Map<U,CacheElement<T>> cache=new ConcurrentHashMap<>();
+    private final Map<U, CacheElement<T>> cache = new ConcurrentHashMap<>();
 
-    private long cacheHit=0;
-    private long cacheMiss=0;
+    private long cacheHit;
+    private long cacheMiss;
 
     /**
      * Get an object from the cache

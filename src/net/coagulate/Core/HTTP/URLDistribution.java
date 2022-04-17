@@ -14,15 +14,15 @@ import java.util.logging.Logger;
  */
 public final class URLDistribution implements HttpRequestHandlerMapper {
 
-	public static final boolean DEBUG_LOOKUP=false;
-	private static Logger logger=null;
-	final Map<String, URLMapper<?>> prefixes=new HashMap<>();
+	public static final boolean DEBUG_LOOKUP = false;
+    private static Logger logger;
+    final Map<String, URLMapper<?>> prefixes = new HashMap<>();
 	private static Logger logger() { if (logger==null) { logger = Logger.getLogger(URLDistribution.class.getCanonicalName()); } return logger; }
 	private URLDistribution() {
 
 	}
 
-	private static URLDistribution singleton=null;
+    private static URLDistribution singleton;
 	public static synchronized URLDistribution getPageMapper() {
 		if (singleton==null) { singleton=new URLDistribution(); }
 		return singleton;

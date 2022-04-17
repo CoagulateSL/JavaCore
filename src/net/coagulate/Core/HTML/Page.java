@@ -91,7 +91,7 @@ public class Page {
         root=new Container();
     }
 
-    ContentType contentType=null;
+    ContentType contentType;
 
     public ContentType contentType() {
         return contentType;
