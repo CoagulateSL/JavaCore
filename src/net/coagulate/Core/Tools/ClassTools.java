@@ -73,8 +73,8 @@ public abstract class ClassTools {
 
 	@Nonnull
 	@SuppressWarnings("unchecked")
-	public static <T> Set<Class<? extends T>> getSubclasses(final @Nonnull Class<T> superclass) {
-		final Set<Class<? extends T>> classes= new HashSet<>();
+	public static <T> Set<Class<? extends T>> getSubclasses(@Nonnull final Class<T> superclass) {
+		final Set<Class<? extends T>> classes = new HashSet<>();
 		for (final Class<? extends Object> c : getClassMap()) {
 			if (!Modifier.isAbstract(c.getModifiers())) {
 				if (superclass.isAssignableFrom(c)) {

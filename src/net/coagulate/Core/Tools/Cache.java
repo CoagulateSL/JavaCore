@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 public class Cache <U,T> {
 
-    private final static Map<String,Cache<?,?>> caches=new ConcurrentHashMap<>();
+    private static final Map<String, Cache<?, ?>> caches = new ConcurrentHashMap<>();
     private final int expiration;
 
     private Cache(final int expiration) {
