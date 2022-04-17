@@ -41,8 +41,10 @@ public class Page {
     public Page add(Container content) { root.add(content); return this; }
     private PageTemplate template=new MinimalPageTemplate();
     public Page template(PageTemplate template) { this.template=template; return this; }
-    private boolean requiresauthentication=true;
-    private Page unauthenticated() { requiresauthentication=false; return this; }
+
+    private Page unauthenticated() {
+        boolean requiresauthentication = false;
+        return this; }
     private Map<String,String> parameters=new HashMap<>();
     private Page load(Map<String,String> parameters) { this.parameters=parameters; return this; }
     public String toString() {
