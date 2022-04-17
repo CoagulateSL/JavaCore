@@ -37,7 +37,7 @@ public class LogHandler extends Handler {
 
 	@Nonnull
 	public static String getSignature(final Throwable t) {
-		StackTraceElement[] stacktrace = t.getStackTrace();
+		final StackTraceElement[] stacktrace = t.getStackTrace();
 		if (stacktrace.length==0) { return "NO-STACK-TRACE??"; }
 		try {
 			final StackTraceElement ste=stacktrace[0];

@@ -12,79 +12,127 @@ import java.util.Map;
 public class Container {
 
     private final List<Container> contents=new ArrayList<>();
-    protected final List<Container> contents() { return contents; }
+
+    protected final List<Container> contents() {
+        return contents;
+    }
+
     @Override
     public String toString() {
-        StringBuilder result=new StringBuilder();
-        for (Container content:contents()) {
+        final StringBuilder result = new StringBuilder();
+        for (final Container content : contents()) {
             result.append(content.toString());
         }
         return result.toString();
     }
 
-    public void load(Map<String, String> parameters) {
-        for (Container content:contents()) { content.load(parameters); }
+    public void load(final Map<String, String> parameters) {
+        for (final Container content : contents()) {
+            content.load(parameters);
+        }
     }
 
-    public Container add(Container content) { contents().add(content); return this; }
-    public Container add(String text) { contents.add(new PlainText(text)); return this; }
+    public Container add(final Container content) {
+        contents().add(content);
+        return this;
+    }
+
+    public Container add(final String text) {
+        contents.add(new PlainText(text));
+        return this;
+    }
 
     // not everything uses attributes but it makes life so much easier to have it 'general' for cascading etc
-    private final Map<String,String> attributes=new HashMap<>();
+    private final Map<String, String> attributes = new HashMap<>();
 
     public String tagAttributes() {
-        StringBuilder attributelist=new StringBuilder();
-        boolean addedanything=false;
-        for(Map.Entry<String,String> tag:attributes.entrySet()) {
-            if (addedanything) { attributelist.append(" "); }
+        final StringBuilder attributelist = new StringBuilder();
+        boolean addedanything = false;
+        for (final Map.Entry<String, String> tag : attributes.entrySet()) {
+            if (addedanything) {
+                attributelist.append(" ");
+            }
             attributelist.append(tag.getKey());
-            if (tag.getValue()!=null) {
+            if (tag.getValue() != null) {
                 attributelist.append("=\"");
                 attributelist.append(tag.getValue());
                 attributelist.append("\"");
             }
-            addedanything=true;
+            addedanything = true;
         }
         return attributelist.toString();
     }
-    protected void addAttribute(@Nonnull String name, String value) {
-        if (attributes.containsKey(name)) { value=attributes.get(name)+" "+value; }
-        attributes.put(name,value);
-    }
-    public void replaceAttribute(@Nonnull String name, String value) {
-        attributes.put(name,value);
+
+    protected void addAttribute(@Nonnull final String name, String value) {
+        if (attributes.containsKey(name)) {
+            value = attributes.get(name) + " " + value;
+        }
+        attributes.put(name, value);
     }
 
-    public void styleCascade(String s) {
-        for (Container content:contents()) {
-            addAttribute("style",s);
+    public void replaceAttribute(@Nonnull final String name, final String value) {
+        attributes.put(name, value);
+    }
+
+    public void styleCascade(final String s) {
+        for (final Container content : contents()) {
+            addAttribute("style", s);
             content.styleCascade(s);
         }
     }
 
-    public void alignment(String alignment) {
-        replaceAttribute("align",alignment);
+    public void alignment(final String alignment) {
+        replaceAttribute("align", alignment);
     }
 
-    public Form form() { Form f=new Form(); add(f); return f; }
+    public Form form() {
+        final Form f = new Form();
+        add(f);
+        return f;
+    }
 
-    public Table table() { Table t=new Table(); add(t); return t; }
+    public Table table() {
+        final Table t = new Table();
+        add(t);
+        return t;
+    }
+
     // don't forget to overwrite toString
-    public Container p(String paragraph) { add(new Paragraph().add(new PlainText(paragraph))); return this; }
-    public Paragraph p() { Paragraph p=new Paragraph(); add(p); return p; }
+    public Container p(final String paragraph) {
+        add(new Paragraph().add(new PlainText(paragraph)));
+        return this;
+    }
 
-    public Anchor a() { Anchor a=new Anchor(); add(a); return a; }
-    public Container a(String url, String label) { add(new Anchor(url,label)); return this; }
+    public Paragraph p() {
+        final Paragraph p = new Paragraph();
+        add(p);
+        return p;
+    }
 
-    public Container hr() { add(new HorizontalRule()); return this; }
+    public Anchor a() {
+        final Anchor a = new Anchor();
+        add(a);
+        return a;
+    }
 
-    /** Find an element by "name" tag
+    public Container a(final String url, final String label) {
+        add(new Anchor(url, label));
+        return this;
+    }
+
+    public Container hr() {
+        add(new HorizontalRule());
+        return this;
+    }
+
+    /**
+     * Find an element by "name" tag
      *
      * @param name Name to search
      * @return The container with that name, or null if not found
      */
     @Nullable
-    public Container findByName(String name) {
+    public Container findByName(final String name) {
         // is it us?
         if (attributes.containsKey("name")) {
             if (attributes.get("name").equalsIgnoreCase(name)) {
@@ -92,47 +140,73 @@ public class Container {
             }
         }
         // no? ask our children
-        for (Container content:contents()) {
-            Container match=content.findByName(name);
-            if (match!=null) { return match; }
+        for (final Container content : contents()) {
+            final Container match = content.findByName(name);
+            if (match != null) {
+                return match;
+            }
         }
         // not in this part of the tree then
         return null;
     }
+
     @Nonnull
-    public String getAttribute(String key,@Nonnull String defaultvalue) {
-        String result=getAttribute(key);
-        if (result==null) { return defaultvalue; }
+    public String getAttribute(final String key, @Nonnull final String defaultvalue) {
+        final String result = getAttribute(key);
+        if (result == null) {
+            return defaultvalue;
+        }
         return result;
     }
 
     @Nullable
-    public String getAttribute(String key) {
-        if (attributes.containsKey(key)) { return attributes.get(key); }
+    public String getAttribute(final String key) {
+        if (attributes.containsKey(key)) {
+            return attributes.get(key);
+        }
         return null;
     }
 
-    public Container header1(String header) { add(new Header1(header)); return this; }
-    public Container header2(String header) { add(new Header2(header)); return this; }
-    public Container header3(String header) { add(new Header3(header)); return this; }
-    public Container header4(String header) { add(new Header4(header)); return this; }
-    public Container header5(String header) { add(new Header5(header)); return this; }
+    public Container header1(final String header) {
+        add(new Header1(header));
+        return this;
+    }
 
-    public Container align(String alignment) {
-        last().replaceAttribute("align",alignment);
+    public Container header2(final String header) {
+        add(new Header2(header));
+        return this;
+    }
+
+    public Container header3(final String header) {
+        add(new Header3(header));
+        return this;
+    }
+
+    public Container header4(final String header) {
+        add(new Header4(header));
+        return this;
+    }
+
+    public Container header5(final String header) {
+        add(new Header5(header));
+        return this;
+    }
+
+    public Container align(final String alignment) {
+        last().replaceAttribute("align", alignment);
         return this;
     }
 
     private Container last() {
-        return contents.get(contents.size()-1);
+        return contents.get(contents.size() - 1);
     }
 
-    public Container submit(String name) {
+    public Container submit(final String name) {
         add(new ButtonSubmit(name));
         return this;
     }
 
-    public Container p(Container content) {
+    public Container p(final Container content) {
         add(new Paragraph(content));
         return this;
     }

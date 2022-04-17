@@ -11,13 +11,13 @@ public class UserAccessDeniedException extends UserInputValidationException {
 		super(reason);
 	}
 
-	public UserAccessDeniedException(String message, Throwable exception, boolean suppress) {
-		super(message, exception, suppress);
-	}
+	public UserAccessDeniedException(final String message, final Throwable exception, final boolean suppress) {
+        super(message, exception, suppress);
+    }
 
-	public UserAccessDeniedException(String reason, boolean suppress) {
-		super(reason, suppress);
-	}
+    public UserAccessDeniedException(final String reason, final boolean suppress) {
+        super(reason, suppress);
+    }
 
 	public UserAccessDeniedException(final String reason,
 									 final Throwable cause) {

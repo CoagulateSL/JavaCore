@@ -10,7 +10,8 @@ import java.util.Date;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static java.util.logging.Level.*;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 
 /**
  * @author Iain Price
@@ -34,7 +35,10 @@ public abstract class DBConnection {
 
 	private static final String PACKAGE_PREFIX ="net.coagulate.Core.Database";
 	private final Set<String> permittedCallers =new HashSet<>();
-	public void permit(String prefix) { permittedCallers.add(prefix); }
+
+	public void permit(final String prefix) {
+		permittedCallers.add(prefix);
+	}
 
 	protected DBConnection(final String sourceName) {
 		this.sourceName = sourceName;
@@ -285,12 +289,14 @@ public abstract class DBConnection {
 	// check the caller's path is in the permitted list, if such a thing is set up
 	private void permitCheck() {
 		if (permittedCallers.isEmpty()) { return; } // fast path
-		StackTraceElement[] caller = Thread.currentThread().getStackTrace();
+		final StackTraceElement[] caller = Thread.currentThread().getStackTrace();
 		for (int i=0;i<caller.length-1;i++) {
-			String className=caller[i].getClassName();
+			final String className = caller[i].getClassName();
 			if (!(className.startsWith(PACKAGE_PREFIX) || className.startsWith("java.lang"))) {
-				for (String permitted: permittedCallers) {
-					if (className.startsWith(permitted)) { return; }
+				for (final String permitted : permittedCallers) {
+					if (className.startsWith(permitted)) {
+						return;
+					}
 				}
 				// uh oh
 				//System.err.println("DB TRACING FAILURE");

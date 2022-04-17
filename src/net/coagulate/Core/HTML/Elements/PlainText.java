@@ -7,9 +7,16 @@ import java.util.Map;
 public class PlainText extends Container {
 
     @Override
-    public void load(Map<String, String> parameters) {}
+    public void load(final Map<String, String> parameters) {
+    }
 
     private final String text;
-    public PlainText(String text) { this.text=text; }
-    public String toString() { return text; }
+
+    public PlainText(final String text) {
+        this.text = text;
+    }
+
+    public String toString() {
+        return text;
+    }
 }

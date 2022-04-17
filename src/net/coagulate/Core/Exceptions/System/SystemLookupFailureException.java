@@ -13,13 +13,13 @@ public class SystemLookupFailureException extends SystemException {
 		super(reason);
 	}
 
-	public SystemLookupFailureException(String reason, boolean suppresslogging) {
-		super(reason, suppresslogging);
-	}
+	public SystemLookupFailureException(final String reason, final boolean suppresslogging) {
+        super(reason, suppresslogging);
+    }
 
-	public SystemLookupFailureException(String reason, Throwable cause, boolean suppresslogging) {
-		super(reason, cause, suppresslogging);
-	}
+    public SystemLookupFailureException(final String reason, final Throwable cause, final boolean suppresslogging) {
+        super(reason, cause, suppresslogging);
+    }
 
 	public SystemLookupFailureException(final String reason,
 										final Throwable cause) {

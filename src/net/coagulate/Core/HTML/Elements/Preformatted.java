@@ -3,7 +3,7 @@ package net.coagulate.Core.HTML.Elements;
 import net.coagulate.Core.HTML.TagPair;
 
 public class Preformatted extends TagPair {
-    public Preformatted(String input) {
+    public Preformatted(final String input) {
         super(input);
     }
 

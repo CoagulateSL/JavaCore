@@ -4,7 +4,7 @@ import net.coagulate.Core.HTML.Container;
 import net.coagulate.Core.HTML.TagSingle;
 
 public class Input extends TagSingle {
-    public Input(Container container) {
+    public Input(final Container container) {
         super(container);
     }
 
@@ -12,8 +12,8 @@ public class Input extends TagSingle {
         super();
     }
 
-    public Input(String type) {
-        replaceAttribute("type",type);
+    public Input(final String type) {
+        replaceAttribute("type", type);
     }
 
     @Override

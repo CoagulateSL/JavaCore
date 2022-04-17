@@ -22,7 +22,7 @@ public abstract class UserInputValidationException extends UserException {
 	                                    final Throwable exception,
 	                                    final boolean suppress) {super(message,exception,suppress);}
 
-    public UserInputValidationException(String reason, boolean suppress) {
-        super(reason,suppress);
+    public UserInputValidationException(final String reason, final boolean suppress) {
+        super(reason, suppress);
     }
 }

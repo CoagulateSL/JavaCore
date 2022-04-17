@@ -18,11 +18,11 @@ public class UserConfigurationException extends UserException {
 		super(reason,cause);
 	}
 
-	public UserConfigurationException(String reason, boolean suppresslogging) {
-		super(reason, suppresslogging);
-	}
+	public UserConfigurationException(final String reason, final boolean suppresslogging) {
+        super(reason, suppresslogging);
+    }
 
-	public UserConfigurationException(String reason, Throwable cause, boolean suppresslogging) {
-		super(reason, cause, suppresslogging);
-	}
+    public UserConfigurationException(final String reason, final Throwable cause, final boolean suppresslogging) {
+        super(reason, cause, suppresslogging);
+    }
 }

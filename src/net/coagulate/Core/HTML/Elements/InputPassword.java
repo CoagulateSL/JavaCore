@@ -1,8 +1,8 @@
 package net.coagulate.Core.HTML.Elements;
 
 public class InputPassword extends Input {
-    public InputPassword(String name) {
+    public InputPassword(final String name) {
         super("password");
-        replaceAttribute("name",name);
+        replaceAttribute("name", name);
     }
 }

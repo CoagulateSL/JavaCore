@@ -22,17 +22,18 @@ public class Table extends TagPair {
     }
 
     public TableRow row() {
-        TableRow row=new TableRow();
+        final TableRow row = new TableRow();
         contents().add(row);
         return row;
     }
 
     @Override
-    public Container add(Container content) {
+    public Container add(final Container content) {
         throw new SystemImplementationException("You can not add content directly to a table object (you need a row)");
     }
+
     @Override
-    public Container add(String content) {
+    public Container add(final String content) {
         throw new SystemImplementationException("You can not add content directly to a table object (you need a row)");
     }
 }

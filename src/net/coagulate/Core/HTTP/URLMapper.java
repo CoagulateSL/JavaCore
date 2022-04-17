@@ -50,12 +50,12 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
     public static final boolean LOGREQUESTS = false;
 
     @Override
-    public final void handle(HttpRequest request, HttpResponse response, HttpContext context) {
+    public final void handle(final HttpRequest request, final HttpResponse response, final HttpContext context) {
         // a "generally extendable" pipeline for handling a HTTP Request
         // wrapped in a exception handler.  don't leak exceptions! bad subclasses!
         try {
             _handle(request, context, response);
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             logger.log(SEVERE, "Exception escaped page handler", e);
             throw new SystemImplementationException("Exception escaped page handlers", e);
         }
@@ -78,14 +78,14 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * @param context HttpContext
      * @param response The HttpResponse
      */
-    protected final void _handle(HttpRequest request, HttpContext context, HttpResponse response) {
-        int inputSize=-1;
-        int outputSize=-1;
-        Date startTime=new Date();
-        Thread.currentThread().setName("Handler for "+request.getRequestLine().getUri());
+    protected final void _handle(final HttpRequest request, final HttpContext context, final HttpResponse response) {
+        int inputSize = -1;
+        int outputSize = -1;
+        final Date startTime = new Date();
+        Thread.currentThread().setName("Handler for " + request.getRequestLine().getUri());
         try {
             earlyInitialiseState(request, context);
-            inputSize=processInputs(request, context);
+            inputSize = processInputs(request, context);
             loadSession();
             T content = lookupPage(request);
             if (content == null) {
@@ -97,29 +97,40 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
             if (content instanceof Method) {
                 Thread.currentThread().setName("Invoking "+(((Method)content).getDeclaringClass().getCanonicalName()+"."+((Method)content).getName()).replaceFirst("net.coagulate.",""));
             } else {
-                if (content==null) {
+                if (content == null) {
                     Thread.currentThread().setName("Invoking null");
                 } else {
                     Thread.currentThread().setName("Invoking " + content.getClass().getName());
                 }
             }
             executePage(content);
-            outputSize=processOutput(response, content);
-        }
-        catch (UserException ue) { renderUserError(request,context,response,ue); }
-        catch (SystemException se) { renderSystemError(request,context,response,se); }
-        catch (InvocationTargetException ite) {
-            Throwable content=ite.getCause();
-            boolean handled=false;
-            if (UserException.class.isAssignableFrom(content.getClass())) { renderUserError(request,context,response, (UserException) content); handled=true; }
-            if (SystemException.class.isAssignableFrom(content.getClass())) { renderSystemError(request,context,response, (SystemException) content); handled=true; }
-            if (!handled) { renderUnhandledError(request,context,response,content); }
-        }
-        catch (Throwable t) { renderUnhandledError(request,context,response,t); }
-        finally {
+            outputSize = processOutput(response, content);
+        } catch (final UserException ue) {
+            renderUserError(request, context, response, ue);
+        } catch (final SystemException se) {
+            renderSystemError(request, context, response, se);
+        } catch (final InvocationTargetException ite) {
+            final Throwable content = ite.getCause();
+            boolean handled = false;
+            if (UserException.class.isAssignableFrom(content.getClass())) {
+                renderUserError(request, context, response, (UserException) content);
+                handled = true;
+            }
+            if (SystemException.class.isAssignableFrom(content.getClass())) {
+                renderSystemError(request, context, response, (SystemException) content);
+                handled = true;
+            }
+            if (!handled) {
+                renderUnhandledError(request, context, response, content);
+            }
+        } catch (final Throwable t) {
+            renderUnhandledError(request, context, response, t);
+        } finally {
             cleanup();
-            if (LOGREQUESTS) { System.out.println("ReqLog:'"+request.getRequestLine().getUri()+"','"+Thread.currentThread().getName()+"',"+inputSize+","+outputSize+","+((new Date().getTime())-(startTime.getTime()))); }
-            Thread.currentThread().setName("Idle connection handler for "+getClass().getSimpleName());
+            if (LOGREQUESTS) {
+                System.out.println("ReqLog:'" + request.getRequestLine().getUri() + "','" + Thread.currentThread().getName() + "'," + inputSize + "," + outputSize + "," + ((new Date().getTime()) - (startTime.getTime())));
+            }
+            Thread.currentThread().setName("Idle connection handler for " + getClass().getSimpleName());
         }
     }
 
@@ -129,7 +140,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 
     protected abstract void renderUserError(HttpRequest request, HttpContext context, HttpResponse response, UserException ite);
 
-    protected void earlyInitialiseState(HttpRequest request, HttpContext context) {
+    protected void earlyInitialiseState(final HttpRequest request, final HttpContext context) {
         Page.cleanup();
     }
 
@@ -144,16 +155,17 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * Process URI Encoded data in the URI
      * Process whatever is Post-ed, if appropriate
      * Load cookies
-     *  @param request The HttpRequest
+     *
+     * @param request The HttpRequest
      * @param context HttpContext
      */
-    protected int processInputs(HttpRequest request, HttpContext context) {
+    protected int processInputs(final HttpRequest request, final HttpContext context) {
         final Map<String, String> parameters = new TreeMap<>();
         processUri(request, parameters);
-        int inputSize=processPostData(request, parameters);
+        final int inputSize = processPostData(request, parameters);
         final Map<String, String> cookies = new TreeMap<>();
         processCookies(request, cookies);
-        initialiseState(request,context,parameters,cookies);
+        initialiseState(request, context, parameters, cookies);
         return inputSize;
     }
 
@@ -165,7 +177,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * @param request    The source HttpRequest
      * @param parameters The parameter map to update
      */
-    protected void processUri(HttpRequest request, Map<String, String> parameters) {
+    protected void processUri(final HttpRequest request, final Map<String, String> parameters) {
         try {
             final List<NameValuePair> uriParams = URLEncodedUtils.parse(new URI(request.getRequestLine().getUri()), StandardCharsets.UTF_8);
             for (final NameValuePair up : uriParams) {
@@ -174,8 +186,8 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
                     System.out.println("Imported URI parameter '" + up.getName() + "'='" + up.getValue() + "'");
                 }
             }
-        } catch (URISyntaxException e) {
-            logger.log(WARNING, "Failed to process URI from the request: "+ e.getLocalizedMessage());
+        } catch (final URISyntaxException e) {
+            logger.log(WARNING, "Failed to process URI from the request: " + e.getLocalizedMessage());
         }
     }
 
@@ -183,13 +195,14 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * Process entity (post) data, might be JSON, or www-form etc etc
      * <p>
      * The default implementation assumes a form-post of www-uri-encoded data.
-     *  @param request    The source HttpRequest
+     *
+     * @param request    The source HttpRequest
      * @param parameters The parameter map to update
      */
-    protected int processPostData(HttpRequest request, Map<String, String> parameters) {
+    protected int processPostData(final HttpRequest request, final Map<String, String> parameters) {
         if (request instanceof HttpEntityEnclosingRequest) {
             final HttpEntityEnclosingRequest r = (HttpEntityEnclosingRequest) request;
-            int inputSize=(int)r.getEntity().getContentLength();
+            final int inputSize = (int) r.getEntity().getContentLength();
             processPostEntity(r.getEntity(), parameters);
             return inputSize;
         }
@@ -198,10 +211,11 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 
     /**
      * Process the extracted posted entity, if one exists
-     *  @param entity     The HttpEntity
+     *
+     * @param entity     The HttpEntity
      * @param parameters The parameters map to update
      */
-    protected void processPostEntity(HttpEntity entity, Map<String, String> parameters) {
+    protected void processPostEntity(final HttpEntity entity, final Map<String, String> parameters) {
         try {
             final List<NameValuePair> map = URLEncodedUtils.parse(entity);
             for (final NameValuePair kv : map) {
@@ -210,7 +224,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
                     System.out.println("Imported POST parameter '" + kv.getName() + "'='" + kv.getValue() + "'");
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.log(Level.WARNING, "Failed to URLDecode posted entity", e);
         }
     }
@@ -221,7 +235,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * @param request HttpRequest
      * @param cookies Map to load cookies in to.
      */
-    protected void processCookies(HttpRequest request, Map<String, String> cookies) {
+    protected void processCookies(final HttpRequest request, final Map<String, String> cookies) {
         for (final Header header : request.getHeaders("Cookie")) {
             for (final String component : header.getValue().split(";")) {
                 final String[] kv = component.split("=");
@@ -262,10 +276,10 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * @param url    The URL
      * @param target The target implementer
      */
-    public void exact(String url, T target) {
+    public void exact(String url, final T target) {
         url = url.toLowerCase();
         if (exact.containsKey(url)) {
-            throw new SystemImplementationException("Duplicate exact url registered:" + url +" between "+target+" and "+exact.get(url));
+            throw new SystemImplementationException("Duplicate exact url registered:" + url + " between " + target + " and " + exact.get(url));
         }
         exact.put(url, target);
     }
@@ -276,10 +290,10 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * @param url    The URL prefix
      * @param target The target implementer
      */
-    public void prefix(String url, T target) {
+    public void prefix(String url, final T target) {
         url = url.toLowerCase();
         if (prefixes.containsKey(url)) {
-            throw new SystemImplementationException("Duplicate prefix url registered:" + url+" between "+target+" and "+exact.get(url));
+            throw new SystemImplementationException("Duplicate prefix url registered:" + url + " between " + target + " and " + exact.get(url));
         }
         prefixes.put(url, target);
     }
@@ -290,14 +304,15 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * @return Page handler
      */
     @Nullable
-    protected T lookupPage(HttpRequest request) {
+    protected T lookupPage(final HttpRequest request) {
         if (DEBUG_MAPPING) {
             System.out.println("REQUEST URI:" + request.getRequestLine().getUri());
         }
         final String line = request.getRequestLine().getUri().toLowerCase();
         return lookupPageFromUri(line);
     }
-    protected T lookupPageFromUri(String line) {
+
+    protected T lookupPageFromUri(final String line) {
         if (exact.containsKey(line)) {
             if (DEBUG_MAPPING) {
                 System.out.println("Exact match " + exact.get(line).getClass().getCanonicalName());
@@ -353,7 +368,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * @return An implementation for an authentication page
      */
     protected T authenticationPage() {
-        T page=lookupPageFromUri("/login");
+        final T page = lookupPageFromUri("/login");
         if (page==null) { throw new SystemImplementationException("There is no page at /login during authentication step"); }
         return page;
     }
@@ -372,7 +387,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      *
      * @param response The HttpResponse object to direct output to
      */
-    protected int processOutput(HttpResponse response, T content) {
+    protected int processOutput(final HttpResponse response, final T content) {
         String stringOutput;
         try {
             stringOutput = Page.page().render();
@@ -381,7 +396,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
             stringOutput = "<p>Exception: " + ue.getLocalizedMessage() + "</p>";
         }
         response.setEntity(new StringEntity(stringOutput, getContentType()));
-        for (Map.Entry<String,String> entry:Page.page().getHeadersOut().entrySet()) {
+        for (final Map.Entry<String, String> entry : Page.page().getHeadersOut().entrySet()) {
             response.addHeader(entry.getKey(), entry.getValue());
         }
         response.setStatusCode(Page.page().responseCode());

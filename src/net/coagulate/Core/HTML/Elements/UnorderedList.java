@@ -9,7 +9,7 @@ public class UnorderedList extends TagPair {
         return "ul";
     }
 
-    public Container add(String s) {
+    public Container add(final String s) {
         add(new ListItem(s));
         return this;
     }

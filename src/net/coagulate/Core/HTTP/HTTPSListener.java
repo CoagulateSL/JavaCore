@@ -85,7 +85,7 @@ public class HTTPSListener {
 			                                               .setHandlerMapper(mapper);
 			// NOTE HOW THE HANDLERS ARE A SINGLE INSTANCE.
 			// no instance level data storage.  USE HTTPCONTEXT (superceeded by "State")
-			String name = "HTTPS:" + port;
+			final String name = "HTTPS:" + port;
 			//addHandlers(bootstrap);
 			server=bootstrap.create();
 			if (server==null) { throw new SystemInitialisationException("Server bootstrap was null?"); }

@@ -75,14 +75,14 @@ public abstract class ClassTools {
 	@SuppressWarnings("unchecked")
 	public static <T> Set<Class<? extends T>> getSubclasses(final @Nonnull Class<T> superclass) {
 		final Set<Class<? extends T>> classes= new HashSet<>();
-		for (final Class<? extends Object> c: getClassMap()) {
+		for (final Class<? extends Object> c : getClassMap()) {
 			if (!Modifier.isAbstract(c.getModifiers())) {
 				if (superclass.isAssignableFrom(c)) {
 					classes.add((Class<? extends T>) c);
 				}
 			}
 		}
-		for (Class<? extends T> s:classes) {
+		for (final Class<? extends T> s : classes) {
 			//noinspection ResultOfMethodCallIgnored
 			s.getName();
 		}

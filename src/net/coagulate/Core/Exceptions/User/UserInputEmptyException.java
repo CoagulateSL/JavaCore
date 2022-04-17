@@ -16,11 +16,11 @@ public class UserInputEmptyException extends UserInputValidationException {
 		super(reason,cause);
 	}
 
-	public UserInputEmptyException(String message, Throwable exception, boolean suppress) {
-		super(message, exception, suppress);
-	}
+	public UserInputEmptyException(final String message, final Throwable exception, final boolean suppress) {
+        super(message, exception, suppress);
+    }
 
-	public UserInputEmptyException(String reason, boolean suppress) {
-		super(reason, suppress);
-	}
+    public UserInputEmptyException(final String reason, final boolean suppress) {
+        super(reason, suppress);
+    }
 }

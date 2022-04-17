@@ -16,10 +16,11 @@ public class UserInputValidationParseException extends UserInputValidationExcept
 		super(reason,cause);
 	}
 
-    public UserInputValidationParseException(String reason, boolean suppress) {
-        super(reason,suppress);
+    public UserInputValidationParseException(final String reason, final boolean suppress) {
+        super(reason, suppress);
     }
-	public UserInputValidationParseException(String reason, Throwable cause, boolean suppress) {
-		super(reason,cause, suppress);
-	}
+
+    public UserInputValidationParseException(final String reason, final Throwable cause, final boolean suppress) {
+        super(reason, cause, suppress);
+    }
 }

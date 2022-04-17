@@ -3,7 +3,9 @@ package net.coagulate.Core.HTML.Elements;
 import net.coagulate.Core.HTML.TagPair;
 
 public class TableData extends TagPair {
-    public TableData(String data) { add(new PlainText(data)); }
+    public TableData(final String data) {
+        add(new PlainText(data));
+    }
 
     public TableData() {
         super();
@@ -14,7 +16,7 @@ public class TableData extends TagPair {
         return "td";
     }
 
-    public void span(int span) {
-        addAttribute("colspan",span+"");
+    public void span(final int span) {
+        addAttribute("colspan", span + "");
     }
 }

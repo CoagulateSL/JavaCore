@@ -16,7 +16,7 @@ public class UserInputValidationFilterException extends UserInputValidationExcep
 		super(reason,cause);
 	}
 
-    public UserInputValidationFilterException(String reason, boolean suppress) {
-        super(reason,suppress);
+    public UserInputValidationFilterException(final String reason, final boolean suppress) {
+        super(reason, suppress);
     }
 }

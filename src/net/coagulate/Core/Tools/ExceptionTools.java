@@ -57,12 +57,17 @@ public abstract class ExceptionTools {
 	@Nonnull
 	public static String toHTML(@Nonnull final Throwable e) { return dumpException(e); }
 
-    public static String getPertinent(Throwable t) {
-		if (t==null) { return "Null exception"; }
-		StackTraceElement[] frames=t.getStackTrace();
-		if (frames.length==0) { return "[NoStackTrace] - "+t.getLocalizedMessage(); }
-		StackTraceElement frame=frames[0]; boolean islocal=false;
-		for (StackTraceElement stackTraceElement : frames) {
+    public static String getPertinent(final Throwable t) {
+		if (t == null) {
+			return "Null exception";
+		}
+		final StackTraceElement[] frames = t.getStackTrace();
+		if (frames.length == 0) {
+			return "[NoStackTrace] - " + t.getLocalizedMessage();
+		}
+		StackTraceElement frame = frames[0];
+		boolean islocal = false;
+		for (final StackTraceElement stackTraceElement : frames) {
 			if (!islocal) {
 				if (stackTraceElement.getClassName().startsWith("net.coagulate.")) {
 					frame = stackTraceElement;

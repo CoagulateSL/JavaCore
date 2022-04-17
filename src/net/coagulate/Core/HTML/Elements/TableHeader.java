@@ -2,7 +2,9 @@ package net.coagulate.Core.HTML.Elements;
 
 public class TableHeader extends TableData {
 
-    public TableHeader(String name) { super(name); }
+    public TableHeader(final String name) {
+        super(name);
+    }
 
     public TableHeader() {
         super();

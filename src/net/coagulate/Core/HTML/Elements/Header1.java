@@ -10,5 +10,7 @@ public class Header1 extends TagPair {
 
     public Header1() { super(); }
 
-    public Header1(String text) { super(text); }
+    public Header1(final String text) {
+        super(text);
+    }
 }

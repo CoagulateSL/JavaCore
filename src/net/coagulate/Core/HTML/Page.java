@@ -19,9 +19,9 @@ public class Page {
      * @return Thread's page
      */
     public static Page page() {
-        Thread us=Thread.currentThread();
+        final Thread us = Thread.currentThread();
         if (threadmap.containsKey(us)) { return threadmap.get(us); }
-        Page page=new Page();
+        final Page page = new Page();
         threadmap.put(us,page);
         return page;
     }
@@ -30,32 +30,56 @@ public class Page {
     }
     public static void maintenance() {
         try {
-            for (Thread thread:threadmap.keySet()) {
-                if (!thread.isAlive()) { threadmap.remove(thread); }
+            for (final Thread thread : threadmap.keySet()) {
+                if (!thread.isAlive()) {
+                    threadmap.remove(thread);
+                }
             }
-        } catch (ConcurrentModificationException ignored) {}
+        } catch (final ConcurrentModificationException ignored) {
+        }
     }
 
     private Container root=new Container();
 
-    public Page add(Container content) { root.add(content); return this; }
+    public Page add(final Container content) {
+        root.add(content);
+        return this;
+    }
     private PageTemplate template=new MinimalPageTemplate();
-    public Page template(PageTemplate template) { this.template=template; return this; }
+
+    public Page template(final PageTemplate template) {
+        this.template = template;
+        return this;
+    }
 
     private Page unauthenticated() {
-        boolean requiresauthentication = false;
+        final boolean requiresauthentication = false;
         return this; }
     private Map<String,String> parameters=new HashMap<>();
-    private Page load(Map<String,String> parameters) { this.parameters=parameters; return this; }
+
+    private Page load(final Map<String, String> parameters) {
+        this.parameters = parameters;
+        return this;
+    }
+
     public String toString() {
         root.load(parameters);
         return root.toString();
     }
 
     private int responsecode= HttpStatus.SC_OK;
-    public Container root() { return root; }
-    public void responseCode(int responsecode) { this.responsecode=responsecode; }
-    public int responseCode() { return responsecode; }
+
+    public Container root() {
+        return root;
+    }
+
+    public void responseCode(final int responsecode) {
+        this.responsecode = responsecode;
+    }
+
+    public int responseCode() {
+        return responsecode;
+    }
     private final Map<String,String> headersOut=new HashMap<>();
     public void addHeader(@Nonnull final String name, @Nonnull final String value) { headersOut.put(name,value); }
     @Nonnull public Map<String,String> getHeadersOut() { return headersOut; }
@@ -68,6 +92,12 @@ public class Page {
     }
 
     ContentType contentType=null;
-    public ContentType contentType() { return contentType; }
-    public void contentType(@Nonnull ContentType contentType) { this.contentType=contentType; }
+
+    public ContentType contentType() {
+        return contentType;
+    }
+
+    public void contentType(@Nonnull final ContentType contentType) {
+        this.contentType = contentType;
+    }
 }

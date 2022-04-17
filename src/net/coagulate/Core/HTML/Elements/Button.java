@@ -4,7 +4,7 @@ import net.coagulate.Core.HTML.Container;
 import net.coagulate.Core.HTML.TagPair;
 
 public class Button extends TagPair {
-    public Button(Container container) {
+    public Button(final Container container) {
         super(container);
     }
 
@@ -12,9 +12,9 @@ public class Button extends TagPair {
         super();
     }
 
-    public Button(String type) {
+    public Button(final String type) {
         super();
-        replaceAttribute("type",type);
+        replaceAttribute("type", type);
     }
 
     @Override
