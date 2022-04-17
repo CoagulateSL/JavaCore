@@ -16,6 +16,7 @@ public class StackTraceProfiler extends Thread {
 
     @Override
     public void run() {
+        //noinspection InfiniteLoopStatement
         while (true) {
             try {Thread.sleep(1000);profile();} catch (final Exception ignore) {
             }
