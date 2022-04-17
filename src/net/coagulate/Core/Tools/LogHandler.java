@@ -22,7 +22,6 @@ public class LogHandler extends Handler {
 	public static String mailprefix="[UNKNOWN]";
 
 	public LogHandler() {
-		super();
 		setLevel(Level.ALL);
 	}
 

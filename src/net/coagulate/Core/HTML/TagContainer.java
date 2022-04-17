@@ -6,16 +6,13 @@ import net.coagulate.Core.HTML.Elements.PlainText;
 public abstract class TagContainer extends Container {
 
     public TagContainer() {
-        super();
     }
 
     public TagContainer(final String textcontent) {
-        super();
         add(new PlainText(textcontent));
     }
 
     public TagContainer(final Container container) {
-        super();
         add(container);
     }
 

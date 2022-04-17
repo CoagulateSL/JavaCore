@@ -9,7 +9,6 @@ public class Anchor extends TagPair {
     }
 
     public Anchor() {
-        super();
     }
 
     public Anchor(final String href) {

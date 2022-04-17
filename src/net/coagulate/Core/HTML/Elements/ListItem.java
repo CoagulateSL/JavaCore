@@ -9,7 +9,8 @@ public class ListItem extends TagPair {
         super(container);
     }
 
-    public ListItem() { super();  }
+    public ListItem() {
+    }
 
     public ListItem(final String text) {
         super(text);

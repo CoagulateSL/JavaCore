@@ -8,7 +8,7 @@ public class Paragraph extends TagPair {
         super(header1);
     }
 
-    public Paragraph() { super();
+    public Paragraph() {
     }
 
     public Paragraph(final String text) {

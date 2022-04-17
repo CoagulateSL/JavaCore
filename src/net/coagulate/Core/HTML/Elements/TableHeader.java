@@ -7,7 +7,6 @@ public class TableHeader extends TableData {
     }
 
     public TableHeader() {
-        super();
     }
 
     @Override

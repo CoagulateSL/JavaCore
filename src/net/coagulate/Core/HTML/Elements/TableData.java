@@ -8,7 +8,6 @@ public class TableData extends TagPair {
     }
 
     public TableData() {
-        super();
     }
 
     @Override

@@ -9,7 +9,6 @@ public class Input extends TagSingle {
     }
 
     public Input() {
-        super();
     }
 
     public Input(final String type) {

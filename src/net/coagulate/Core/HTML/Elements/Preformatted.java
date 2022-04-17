@@ -8,7 +8,6 @@ public class Preformatted extends TagPair {
     }
 
     public Preformatted() {
-        super();
     }
 
     @Override

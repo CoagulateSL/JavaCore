@@ -9,11 +9,9 @@ public class Button extends TagPair {
     }
 
     public Button() {
-        super();
     }
 
     public Button(final String type) {
-        super();
         replaceAttribute("type", type);
     }
 

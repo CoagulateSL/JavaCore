@@ -19,8 +19,7 @@ public abstract class TableRow extends Table {
 	public TableRow(final int id) { this.id=id; }
 
 	protected TableRow() {
-		super();
-		id=-1;
+        id = -1;
 	}
 
 	// ----- Internal Statics -----

@@ -11,7 +11,6 @@ public abstract class TagPair extends TagContainer {
     }
 
     public TagPair() {
-        super();
     }
 
     public TagPair(final String text) {

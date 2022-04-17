@@ -9,7 +9,6 @@ public class HorizontalRule extends TagSingle {
     }
 
     public HorizontalRule() {
-        super();
     }
 
     public HorizontalRule(final String text) {

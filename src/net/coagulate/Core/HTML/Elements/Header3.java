@@ -8,7 +8,8 @@ public class Header3 extends TagPair {
         return "h3";
     }
 
-    public Header3() { super(); }
+    public Header3() {
+    }
 
     public Header3(final String text) {
         super(text);
