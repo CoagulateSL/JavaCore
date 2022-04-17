@@ -97,7 +97,7 @@ public class LogHandler extends Handler {
 			String system=record.getLoggerName();
 			String classname=record.getSourceClassName();
 			final String method=record.getSourceMethodName();
-			final int thread=record.getThreadID();
+			final long thread=record.getLongThreadID();
 			String message=record.getMessage();
 			final long when=record.getMillis();
 			if (!system.contains(".")) { System.out.println("***** UNDOTTED LOGGER SYSTEM DETECTED: "+system); }
