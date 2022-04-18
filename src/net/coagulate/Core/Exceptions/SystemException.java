@@ -11,13 +11,13 @@ public abstract class SystemException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	private final boolean suppresslogging;
 
-	public SystemException(final String reason) {
+	protected SystemException(final String reason) {
 		super(reason);
 		suppresslogging = false;
 	}
 
-	public SystemException(final String reason,
-						   final Throwable cause) {
+	protected SystemException(final String reason,
+							  final Throwable cause) {
 		super(reason, cause);
 		if (UserException.class.isAssignableFrom(cause.getClass())) {
 			suppresslogging = ((UserException) cause).suppressed();
@@ -30,19 +30,21 @@ public abstract class SystemException extends RuntimeException {
 		}
 	}
 
-	public SystemException(final String reason,
-	                       final boolean suppresslogging) {
+	protected SystemException(final String reason,
+							  final boolean suppresslogging) {
 		super(reason);
-		this.suppresslogging=suppresslogging;
+		this.suppresslogging = suppresslogging;
 	}
 
-	public SystemException(final String reason,
-	                       final Throwable cause,
-	                       final boolean suppresslogging) {
-		super(reason,cause);
-		this.suppresslogging=suppresslogging;
+	protected SystemException(final String reason,
+							  final Throwable cause,
+							  final boolean suppresslogging) {
+		super(reason, cause);
+		this.suppresslogging = suppresslogging;
 	}
 
 	// ---------- INSTANCE ----------
-	public final boolean suppressed() { return suppresslogging; }
+	public final boolean suppressed() {
+		return suppresslogging;
+	}
 }

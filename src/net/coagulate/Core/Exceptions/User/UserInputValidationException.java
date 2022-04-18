@@ -7,22 +7,24 @@ import net.coagulate.Core.Exceptions.UserException;
  */
 
 public abstract class UserInputValidationException extends UserException {
-	private static final long serialVersionUID=1L;
+	private static final long serialVersionUID = 1L;
 
-	public UserInputValidationException(final String reason) {
+	protected UserInputValidationException(final String reason) {
 		super(reason);
 	}
 
-	public UserInputValidationException(final String reason,
-	                                    final Throwable cause) {
-		super(reason,cause);
+	protected UserInputValidationException(final String reason,
+										   final Throwable cause) {
+		super(reason, cause);
 	}
 
-	public UserInputValidationException(final String message,
-	                                    final Throwable exception,
-	                                    final boolean suppress) {super(message,exception,suppress);}
+	protected UserInputValidationException(final String message,
+										   final Throwable exception,
+										   final boolean suppress) {
+		super(message, exception, suppress);
+	}
 
-    public UserInputValidationException(final String reason, final boolean suppress) {
-        super(reason, suppress);
-    }
+	protected UserInputValidationException(final String reason, final boolean suppress) {
+		super(reason, suppress);
+	}
 }

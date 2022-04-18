@@ -61,7 +61,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
         }
     }
 
-    public URLMapper() {
+    protected URLMapper() {
         logger = Logger.getLogger(getClass().getCanonicalName());
     }
 

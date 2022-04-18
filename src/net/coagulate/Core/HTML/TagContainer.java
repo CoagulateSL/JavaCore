@@ -5,14 +5,14 @@ import net.coagulate.Core.HTML.Elements.PlainText;
 
 public abstract class TagContainer extends Container {
 
-    public TagContainer() {
+    protected TagContainer() {
     }
 
-    public TagContainer(final String textcontent) {
+    protected TagContainer(final String textcontent) {
         add(new PlainText(textcontent));
     }
 
-    public TagContainer(final Container container) {
+    protected TagContainer(final Container container) {
         add(container);
     }
 

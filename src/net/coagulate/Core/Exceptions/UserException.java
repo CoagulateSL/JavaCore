@@ -10,14 +10,14 @@ public abstract class UserException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	private final boolean suppresslogging;
 
-	public UserException(final String reason) {
+	protected UserException(final String reason) {
 		super(reason);
 		suppresslogging = false;
 	}
 
-	public UserException(final String reason,
-	                     final Throwable cause) {
-		super(reason,cause);
+	protected UserException(final String reason,
+							final Throwable cause) {
+		super(reason, cause);
 		if (UserException.class.isAssignableFrom(cause.getClass())) {
 			suppresslogging = ((UserException) cause).suppressed();
 		} else {
@@ -29,19 +29,21 @@ public abstract class UserException extends RuntimeException {
 		}
 	}
 
-	public UserException(final String reason,
-	                     final boolean suppresslogging) {
+	protected UserException(final String reason,
+							final boolean suppresslogging) {
 		super(reason);
-		this.suppresslogging=suppresslogging;
+		this.suppresslogging = suppresslogging;
 	}
 
-	public UserException(final String reason,
-	                     final Throwable cause,
-	                     final boolean suppresslogging) {
-		super(reason,cause);
-		this.suppresslogging=suppresslogging;
+	protected UserException(final String reason,
+							final Throwable cause,
+							final boolean suppresslogging) {
+		super(reason, cause);
+		this.suppresslogging = suppresslogging;
 	}
 
 	// ---------- INSTANCE ----------
-	public final boolean suppressed() { return suppresslogging; }
+	public final boolean suppressed() {
+		return suppresslogging;
+	}
 }

@@ -1,7 +1,7 @@
 package net.coagulate.Core.HTML;
 
 public abstract class TagPair extends TagContainer {
-    public TagPair(final Container container) {
+    protected TagPair(final Container container) {
         super(container);
     }
 
@@ -10,10 +10,10 @@ public abstract class TagPair extends TagContainer {
         return true;
     }
 
-    public TagPair() {
+    protected TagPair() {
     }
 
-    public TagPair(final String text) {
+    protected TagPair(final String text) {
         super(text);
     }
 }
