@@ -180,14 +180,14 @@ public abstract class ClassTools {
 	                                 @Nonnull final Set<Class<? extends Object>> classes) {
 		if (DEBUG) { System.out.println("Class consider "+fullname); }
 		fullname=fullname.replaceAll("\\.class$","");
-		StringBuilder relativename= new StringBuilder();
+		final StringBuilder relativename= new StringBuilder();
 		for (final String element: fullname.split(Pattern.quote("\\"))) {
 			if (relativename.length() > 0) {
 				relativename.append(".");
 			}
 			relativename.append(element);
 		}
-		StringBuilder classname= new StringBuilder();
+		final StringBuilder classname= new StringBuilder();
 		for (final String element: relativename.toString().split(Pattern.quote("/"))) {
 			if (classname.length() > 0) {
 				classname.append(".");
