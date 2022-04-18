@@ -27,7 +27,7 @@ import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
 /** Guides a URL through the process of handling the request.
- *
+ * <p>
  * The lifecycle for a request is roughly as follows
  * (URLDistributor assigns URL to a URLMapper, which is a subclass of us, and we perform):
  * handle() calls _handle() which calls (+ denotes abstract method)
