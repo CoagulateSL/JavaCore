@@ -180,29 +180,29 @@ public abstract class ClassTools {
 	                                 @Nonnull final Set<Class<? extends Object>> classes) {
 		if (DEBUG) { System.out.println("Class consider "+fullname); }
 		fullname=fullname.replaceAll("\\.class$","");
-		String relativename="";
+		StringBuilder relativename= new StringBuilder();
 		for (final String element: fullname.split(Pattern.quote("\\"))) {
-			if (!relativename.isEmpty()) {
-				relativename += ".";
+			if (relativename.length() > 0) {
+				relativename.append(".");
 			}
-			relativename+=element;
+			relativename.append(element);
 		}
-		String classname="";
-		for (final String element: relativename.split(Pattern.quote("/"))) {
-			if (!classname.isEmpty()) {
-				classname += ".";
+		StringBuilder classname= new StringBuilder();
+		for (final String element: relativename.toString().split(Pattern.quote("/"))) {
+			if (classname.length() > 0) {
+				classname.append(".");
 			}
-			classname+=element;
+			classname.append(element);
 		}
 		totalclasses++;
-		if (!classname.startsWith("net.coagulate.")) {
+		if (!classname.toString().startsWith("net.coagulate.")) {
 			if (DEBUG) { System.out.println("Drop "+classname+" due to prefix failure"); }
 			return;
 		}
 		// examine named class and instantiate if appropriate.
 		try {
 			//System.out.println(classname);
-			final Class<? extends Object> c=Class.forName(classname);
+			final Class<? extends Object> c=Class.forName(classname.toString());
 			classes.add(c);
 			if (DEBUG) { System.out.println("ADDED "+classname); }
 		}
