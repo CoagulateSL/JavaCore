@@ -106,7 +106,7 @@ public class LogHandler extends Handler {
 			}
 			system=system.replaceFirst("net\\.coagulate\\.","");
 			while (classname.contains(".")) {
-				classname=classname.substring(classname.indexOf(".")+1);
+				classname=classname.substring(classname.indexOf('.')+1);
 			}
 			if (parameters!=null && parameters.length>0) {
 				for (int i=0;i<parameters.length;i++) {
