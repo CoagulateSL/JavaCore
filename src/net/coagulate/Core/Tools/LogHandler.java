@@ -118,7 +118,7 @@ public class LogHandler extends Handler {
 					//}
 				}
 			}
-			System.out.println(formatLevel(level)+"#"+postpad(thread+"",4)+" "+system+" - "+message+" (@"+classname+"."+method+")");
+			System.out.println(formatLevel(level) + "#" + postpad(String.valueOf(thread), 4) + " " + system + " - " + message + " (@" + classname + "." + method + ")");
 
 			if ((level==null || level.intValue()> FINE.intValue()) && record.getThrown()!=null) {
 				final Throwable thrown=record.getThrown();

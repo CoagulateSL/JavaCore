@@ -16,6 +16,6 @@ public class TableData extends TagPair {
     }
 
     public void span(final int span) {
-        addAttribute("colspan", span + "");
+        addAttribute("colspan", String.valueOf(span));
     }
 }

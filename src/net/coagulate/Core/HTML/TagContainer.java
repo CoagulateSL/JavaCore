@@ -48,7 +48,7 @@ public abstract class TagContainer extends Container {
     }
 
     public TagContainer size(final int size) {
-        replaceAttribute("size", size + "");
+        replaceAttribute("size", String.valueOf(size));
         return this;
     }
 

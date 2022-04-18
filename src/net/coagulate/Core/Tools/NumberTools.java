@@ -17,7 +17,7 @@ public class NumberTools {
 		if (debug) { System.out.println("whole:"+whole); }
 		final int decimal=Math.round((number-((float) whole))*((float) (Math.pow(10,dp))));
 		if (debug) { System.out.println("dec:"+decimal); }
-		final StringBuilder decimalstring=new StringBuilder(decimal+"");
+		final StringBuilder decimalstring = new StringBuilder(String.valueOf(decimal));
 		if (debug) { System.out.println("decimalstring:"+decimalstring); }
 		while (decimalstring.length()<dp) { decimalstring.append("0"); }
 		if (debug) { System.out.println("decimalstring:"+decimalstring); }
