@@ -19,7 +19,7 @@ public abstract class Crypto {
 			return DatatypeConverter.printHexBinary(md.digest(string.getBytes(StandardCharsets.UTF_8)));
 		}
 		catch (@Nonnull final NoSuchAlgorithmException e) {
-			throw new AssertionError("No SHA-1 algorithm??");
+			throw new AssertionError("No SHA-1 algorithm??", e);
 		}
 	}
 
@@ -30,7 +30,7 @@ public abstract class Crypto {
 			return DatatypeConverter.printHexBinary(md.digest(string.getBytes(StandardCharsets.UTF_8)));
 		}
 		catch (@Nonnull final NoSuchAlgorithmException e) {
-			throw new AssertionError("No SHA-256 algorithm??");
+			throw new AssertionError("No SHA-256 algorithm??", e);
 		}
 	}
 }
