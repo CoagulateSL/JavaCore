@@ -2,11 +2,14 @@ package net.coagulate.Core.Exceptions.User;
 
 import net.coagulate.Core.Exceptions.UserException;
 
+import java.io.Serial;
+
 /**
  * User input fails to validate.  subclass me :)
  */
 
 public abstract class UserInputValidationException extends UserException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     protected UserInputValidationException(final String message) {

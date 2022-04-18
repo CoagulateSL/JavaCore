@@ -2,11 +2,14 @@ package net.coagulate.Core.Exceptions.User;
 
 import net.coagulate.Core.Exceptions.UserException;
 
+import java.io.Serial;
+
 /**
  * Tell the user a remote system failed
  */
 
 public class UserRemoteFailureException extends UserException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public UserRemoteFailureException(final String message) {

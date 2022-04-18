@@ -1,5 +1,7 @@
 package net.coagulate.Core.Exceptions;
 
+import java.io.Serial;
+
 /**
  * Checked exception indicating an error with a users request.
  * These should be intercepted by the interface and shown appropriately.
@@ -7,7 +9,8 @@ package net.coagulate.Core.Exceptions;
  * @author Iain Price
  */
 public abstract class UserException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+	@Serial
+    private static final long serialVersionUID = 1L;
 	private final boolean suppresslogging;
 
 	protected UserException(final String message) {

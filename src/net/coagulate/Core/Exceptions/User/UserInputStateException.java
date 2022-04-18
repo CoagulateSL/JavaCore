@@ -1,10 +1,13 @@
 package net.coagulate.Core.Exceptions.User;
 
+import java.io.Serial;
+
 /**
  * User input makes no sense given the current state
  */
 
 public class UserInputStateException extends UserInputValidationException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public UserInputStateException(final String message) {

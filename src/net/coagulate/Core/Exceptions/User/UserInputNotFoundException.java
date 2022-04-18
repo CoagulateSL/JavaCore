@@ -1,10 +1,13 @@
 package net.coagulate.Core.Exceptions.User;
 
+import java.io.Serial;
+
 /**
  * User supplied no data when they should have
  */
 
 public class UserInputNotFoundException extends UserInputValidationException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public UserInputNotFoundException(final String reason, final Throwable cause, final boolean suppresslogging) {

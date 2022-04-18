@@ -1,10 +1,13 @@
 package net.coagulate.Core.Exceptions.User;
 
+import java.io.Serial;
+
 /**
  * User input doesn't parse correctly
  */
 
 public class UserInputValidationParseException extends UserInputValidationException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public UserInputValidationParseException(final String message) {

@@ -2,6 +2,8 @@ package net.coagulate.Core.Database;
 
 import net.coagulate.Core.Exceptions.SystemException;
 
+import java.io.Serial;
+
 /**
  * Represents errors with the GPHUD.getDB().
  * We've made this 'runtime' as theoretically /any/ sql statement can fail, so this can be thrown unchecked.
@@ -14,6 +16,7 @@ import net.coagulate.Core.Exceptions.SystemException;
  * @author Iain Price <gphud@predestined.net>
  */
 public class DBException extends SystemException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public DBException(final String message) {

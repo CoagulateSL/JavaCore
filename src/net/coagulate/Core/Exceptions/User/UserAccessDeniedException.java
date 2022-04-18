@@ -1,10 +1,13 @@
 package net.coagulate.Core.Exceptions.User;
 
+import java.io.Serial;
+
 /**
  * User not allowed to access this
  */
 
 public class UserAccessDeniedException extends UserInputValidationException {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public UserAccessDeniedException(final String message) {

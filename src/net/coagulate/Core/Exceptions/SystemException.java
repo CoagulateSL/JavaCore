@@ -1,5 +1,7 @@
 package net.coagulate.Core.Exceptions;
 
+import java.io.Serial;
+
 /**
  * Internal errors in the code.
  * Unchecked, usually thrown to the top and logged.
@@ -8,7 +10,8 @@ package net.coagulate.Core.Exceptions;
  * @author Iain Price
  */
 public abstract class SystemException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+	@Serial
+    private static final long serialVersionUID = 1L;
 	private final boolean suppresslogging;
 
 	protected SystemException(final String message) {
