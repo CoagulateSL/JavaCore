@@ -9,7 +9,6 @@ import java.io.Serial;
  */
 public class NoDataException extends DBException {
     @Serial
-    @Serial
     private static final long serialVersionUID = 1L;
 
     public NoDataException(final String message) {

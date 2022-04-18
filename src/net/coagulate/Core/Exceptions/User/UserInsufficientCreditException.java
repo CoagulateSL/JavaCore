@@ -10,7 +10,6 @@ import java.io.Serial;
 
 public class UserInsufficientCreditException extends UserException {
     @Serial
-    @Serial
     private static final long serialVersionUID = 1L;
 
     public UserInsufficientCreditException(final String message) {

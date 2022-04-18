@@ -10,7 +10,6 @@ import java.io.Serial;
 
 public class SystemConsistencyException extends SystemException {
     @Serial
-    @Serial
     private static final long serialVersionUID = 1L;
 
     public SystemConsistencyException(final String message) {
