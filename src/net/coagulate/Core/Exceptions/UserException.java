@@ -8,18 +8,24 @@ package net.coagulate.Core.Exceptions;
  */
 public abstract class UserException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
-	private boolean suppresslogging;
+	private final boolean suppresslogging;
 
-	public UserException(final String reason) { super(reason); }
+	public UserException(final String reason) {
+		super(reason);
+		suppresslogging = false;
+	}
 
 	public UserException(final String reason,
 	                     final Throwable cause) {
 		super(reason,cause);
 		if (UserException.class.isAssignableFrom(cause.getClass())) {
-			suppresslogging=((UserException)cause).suppressed();
-		}
-		if (SystemException.class.isAssignableFrom(cause.getClass())) {
-			suppresslogging=((SystemException)cause).suppressed();
+			suppresslogging = ((UserException) cause).suppressed();
+		} else {
+			if (SystemException.class.isAssignableFrom(cause.getClass())) {
+				suppresslogging = ((SystemException) cause).suppressed();
+			} else {
+				suppresslogging = false;
+			}
 		}
 	}
 
