@@ -50,11 +50,11 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
     public static final boolean LOGREQUESTS = false;
 
     @Override
-    public final void handle(final HttpRequest request, final HttpResponse response, final HttpContext context) {
+    public final void handle(final HttpRequest httpRequest, final HttpResponse httpResponse, final HttpContext httpContext) {
         // a "generally extendable" pipeline for handling a HTTP Request
         // wrapped in a exception handler.  don't leak exceptions! bad subclasses!
         try {
-            _handle(request, context, response);
+            _handle(httpRequest, httpContext, httpResponse);
         } catch (final Throwable e) {
             logger.log(SEVERE, "Exception escaped page handler", e);
             throw new SystemImplementationException("Exception escaped page handlers", e);
@@ -136,9 +136,9 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 
     protected abstract void renderUnhandledError(HttpRequest request, HttpContext context, HttpResponse response, Throwable t);
 
-    protected abstract void renderSystemError(HttpRequest request, HttpContext context, HttpResponse response, SystemException ite);
+    protected abstract void renderSystemError(HttpRequest request, HttpContext context, HttpResponse response, SystemException systemException);
 
-    protected abstract void renderUserError(HttpRequest request, HttpContext context, HttpResponse response, UserException ite);
+    protected abstract void renderUserError(HttpRequest request, HttpContext context, HttpResponse response, UserException userException);
 
     protected void earlyInitialiseState(final HttpRequest request, final HttpContext context) {
         Page.cleanup();
@@ -311,12 +311,12 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
         return lookupPageFromUri(line);
     }
 
-    protected T lookupPageFromUri(final String line) {
-        if (exact.containsKey(line)) {
+    protected T lookupPageFromUri(final String uri) {
+        if (exact.containsKey(uri)) {
             if (DEBUG_MAPPING) {
-                System.out.println("Exact match " + exact.get(line).getClass().getCanonicalName());
+                System.out.println("Exact match " + exact.get(uri).getClass().getCanonicalName());
             }
-            return exact.get(line);
+            return exact.get(uri);
         } else {
             if (DEBUG_MAPPING) {
                 System.out.println("Exact match against " + exact.size() + " elements returned nothing");
@@ -331,16 +331,16 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
         int matchedPrefixLength=-1;
         T matchedHandler = null;
         for (final String prefix : prefixes.keySet()) {
-            if (line.startsWith(prefix)) {
+            if (uri.startsWith(prefix)) {
                 if (prefix.length() > matchedPrefixLength) {
                     matchedPrefix = prefix;
                     matchedHandler = prefixes.get(prefix);
-                    matchedPrefixLength=prefix.length();
+                    matchedPrefixLength = prefix.length();
                 }
             }
         }
         if (DEBUG_MAPPING) {
-            System.out.println("Matched prefix "+matchedPrefix+" for url "+line);
+            System.out.println("Matched prefix " + matchedPrefix + " for url " + uri);
             if (matchedHandler == null) {
                 System.out.println("Prefix match returned null match, this is now a 404");
             } else {
@@ -348,7 +348,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
             }
         }
         if (matchedHandler == null) {
-            logger.log(Level.FINE, "Requested URI '{0}' was not mapped to a page - returning 404.", line);
+            logger.log(Level.FINE, "Requested URI '{0}' was not mapped to a page - returning 404.", uri);
             return null;
         }
         return matchedHandler;

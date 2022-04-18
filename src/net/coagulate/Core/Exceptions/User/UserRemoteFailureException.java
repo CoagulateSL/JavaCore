@@ -7,18 +7,18 @@ import net.coagulate.Core.Exceptions.UserException;
  */
 
 public class UserRemoteFailureException extends UserException {
-	private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
-	public UserRemoteFailureException(final String reason) {
-		super(reason);
-	}
+    public UserRemoteFailureException(final String message) {
+        super(message);
+    }
 
-	public UserRemoteFailureException(final String reason,
-	                                  final Throwable cause) {
-		super(reason,cause);
-	}
+    public UserRemoteFailureException(final String message,
+                                      final Throwable cause) {
+        super(message, cause);
+    }
 
-	public UserRemoteFailureException(final String reason, final boolean suppresslogging) {
+    public UserRemoteFailureException(final String reason, final boolean suppresslogging) {
         super(reason, suppresslogging);
     }
 

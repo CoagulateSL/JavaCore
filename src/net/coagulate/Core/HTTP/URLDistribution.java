@@ -36,8 +36,8 @@ public final class URLDistribution implements HttpRequestHandlerMapper {
     }
 
     @Override
-    public HttpRequestHandler lookup(final HttpRequest request) {
-        final String url = request.getRequestLine().getUri().toLowerCase();
+    public HttpRequestHandler lookup(final HttpRequest httpRequest) {
+        final String url = httpRequest.getRequestLine().getUri().toLowerCase();
         if (DEBUG_LOOKUP) {
             logger().fine("HTTP Distribution Lookup for " + url);
         }

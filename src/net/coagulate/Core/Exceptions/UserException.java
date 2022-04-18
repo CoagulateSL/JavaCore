@@ -10,14 +10,14 @@ public abstract class UserException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	private final boolean suppresslogging;
 
-	protected UserException(final String reason) {
-		super(reason);
+	protected UserException(final String message) {
+		super(message);
 		suppresslogging = false;
 	}
 
-	protected UserException(final String reason,
+	protected UserException(final String message,
 							final Throwable cause) {
-		super(reason, cause);
+		super(message, cause);
 		if (UserException.class.isAssignableFrom(cause.getClass())) {
 			suppresslogging = ((UserException) cause).suppressed();
 		} else {

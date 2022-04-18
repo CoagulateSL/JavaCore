@@ -33,7 +33,7 @@ public class Table extends TagPair {
     }
 
     @Override
-    public Container add(final String content) {
+    public Container add(final String text) {
         throw new SystemImplementationException("You can not add content directly to a table object (you need a row)");
     }
 }

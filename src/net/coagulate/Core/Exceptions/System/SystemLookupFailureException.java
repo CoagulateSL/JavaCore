@@ -7,13 +7,13 @@ import net.coagulate.Core.Exceptions.SystemException;
  */
 
 public class SystemLookupFailureException extends SystemException {
-	private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
-	public SystemLookupFailureException(final String reason) {
-		super(reason);
-	}
+    public SystemLookupFailureException(final String message) {
+        super(message);
+    }
 
-	public SystemLookupFailureException(final String reason, final boolean suppresslogging) {
+    public SystemLookupFailureException(final String reason, final boolean suppresslogging) {
         super(reason, suppresslogging);
     }
 
@@ -21,8 +21,8 @@ public class SystemLookupFailureException extends SystemException {
         super(reason, cause, suppresslogging);
     }
 
-	public SystemLookupFailureException(final String reason,
-										final Throwable cause) {
-		super(reason,cause);
-	}
+    public SystemLookupFailureException(final String message,
+                                        final Throwable cause) {
+        super(message, cause);
+    }
 }

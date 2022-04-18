@@ -7,14 +7,14 @@ import net.coagulate.Core.Exceptions.UserException;
  */
 
 public class UserExecutionException extends UserException {
-	private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
-	public UserExecutionException(final String reason) {
-		super(reason);
-	}
+    public UserExecutionException(final String message) {
+        super(message);
+    }
 
-	public UserExecutionException(final String reason,
-	                              final Throwable cause) {
-		super(reason,cause);
-	}
+    public UserExecutionException(final String message,
+                                  final Throwable cause) {
+        super(message, cause);
+    }
 }

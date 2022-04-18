@@ -4,15 +4,15 @@ import net.coagulate.Core.HTML.Container;
 import net.coagulate.Core.HTML.TagPair;
 
 public class Paragraph extends TagPair {
-    public Paragraph(final Container header1) {
-        super(header1);
+    public Paragraph(final Container container) {
+        super(container);
     }
 
     public Paragraph() {
     }
 
-    public Paragraph(final String text) {
-        super(text);
+    public Paragraph(final String textcontent) {
+        super(textcontent);
     }
 
     @Override

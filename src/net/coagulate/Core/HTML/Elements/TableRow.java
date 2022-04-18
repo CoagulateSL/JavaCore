@@ -46,8 +46,8 @@ public class TableRow extends TagPair {
     }
 
     @Override
-    public Container add(final String content) {
-        data(content);
+    public Container add(final String text) {
+        data(text);
         return this;
     }
 

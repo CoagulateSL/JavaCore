@@ -7,14 +7,14 @@ import net.coagulate.Core.Exceptions.SystemException;
  */
 
 public class SystemExecutionException extends SystemException {
-	private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
-	public SystemExecutionException(final String reason) {
-		super(reason);
-	}
+    public SystemExecutionException(final String message) {
+        super(message);
+    }
 
-	public SystemExecutionException(final String reason,
-	                                final Throwable cause) {
-		super(reason,cause);
-	}
+    public SystemExecutionException(final String message,
+                                    final Throwable cause) {
+        super(message, cause);
+    }
 }

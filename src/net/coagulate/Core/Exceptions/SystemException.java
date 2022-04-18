@@ -11,14 +11,14 @@ public abstract class SystemException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	private final boolean suppresslogging;
 
-	protected SystemException(final String reason) {
-		super(reason);
+	protected SystemException(final String message) {
+		super(message);
 		suppresslogging = false;
 	}
 
-	protected SystemException(final String reason,
+	protected SystemException(final String message,
 							  final Throwable cause) {
-		super(reason, cause);
+		super(message, cause);
 		if (UserException.class.isAssignableFrom(cause.getClass())) {
 			suppresslogging = ((UserException) cause).suppressed();
 		} else {

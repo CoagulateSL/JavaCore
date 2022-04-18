@@ -11,7 +11,7 @@ public class Header3 extends TagPair {
     public Header3() {
     }
 
-    public Header3(final String text) {
-        super(text);
+    public Header3(final String textcontent) {
+        super(textcontent);
     }
 }

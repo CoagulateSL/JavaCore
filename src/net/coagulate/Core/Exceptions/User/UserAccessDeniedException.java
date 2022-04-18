@@ -5,22 +5,22 @@ package net.coagulate.Core.Exceptions.User;
  */
 
 public class UserAccessDeniedException extends UserInputValidationException {
-	private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
-	public UserAccessDeniedException(final String reason) {
-		super(reason);
-	}
-
-	public UserAccessDeniedException(final String message, final Throwable exception, final boolean suppress) {
-        super(message, exception, suppress);
+    public UserAccessDeniedException(final String message) {
+        super(message);
     }
 
-    public UserAccessDeniedException(final String reason, final boolean suppress) {
-        super(reason, suppress);
+    public UserAccessDeniedException(final String reason, final Throwable cause, final boolean suppresslogging) {
+        super(reason, cause, suppresslogging);
     }
 
-	public UserAccessDeniedException(final String reason,
-									 final Throwable cause) {
-		super(reason,cause);
-	}
+    public UserAccessDeniedException(final String reason, final boolean suppresslogging) {
+        super(reason, suppresslogging);
+    }
+
+    public UserAccessDeniedException(final String message,
+                                     final Throwable cause) {
+        super(message, cause);
+    }
 }

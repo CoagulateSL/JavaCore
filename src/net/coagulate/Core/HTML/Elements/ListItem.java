@@ -12,8 +12,8 @@ public class ListItem extends TagPair {
     public ListItem() {
     }
 
-    public ListItem(final String text) {
-        super(text);
+    public ListItem(final String textcontent) {
+        super(textcontent);
     }
 
     @Override

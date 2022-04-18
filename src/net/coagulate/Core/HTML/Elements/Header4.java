@@ -11,7 +11,7 @@ public class Header4 extends TagPair {
     public Header4() {
     }
 
-    public Header4(final String text) {
-        super(text);
+    public Header4(final String textcontent) {
+        super(textcontent);
     }
 }

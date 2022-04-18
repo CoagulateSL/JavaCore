@@ -13,7 +13,7 @@ public abstract class TagPair extends TagContainer {
     protected TagPair() {
     }
 
-    protected TagPair(final String text) {
-        super(text);
+    protected TagPair(final String textcontent) {
+        super(textcontent);
     }
 }

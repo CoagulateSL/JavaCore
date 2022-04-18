@@ -165,9 +165,9 @@ public abstract class Passwords {
 		}
 
 		public InvalidHashException(final String message,
-		                            final Throwable source) {
-			super(message,source);
-		}
+                                    final Throwable cause) {
+            super(message, cause);
+        }
 	}
 
 	@SuppressWarnings("serial")
@@ -176,10 +176,10 @@ public abstract class Passwords {
 			super(message);
 		}
 
-		public CannotPerformOperationException(final String message,
-		                                       final Throwable source) {
-			super(message,source);
-		}
+        public CannotPerformOperationException(final String message,
+                                               final Throwable cause) {
+            super(message, cause);
+        }
 	}
 
 }

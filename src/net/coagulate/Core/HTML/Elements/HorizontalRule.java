@@ -11,8 +11,8 @@ public class HorizontalRule extends TagSingle {
     public HorizontalRule() {
     }
 
-    public HorizontalRule(final String text) {
-        super(text);
+    public HorizontalRule(final String textcontent) {
+        super(textcontent);
     }
 
     @Override

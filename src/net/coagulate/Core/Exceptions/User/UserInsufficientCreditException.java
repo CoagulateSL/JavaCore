@@ -7,14 +7,14 @@ import net.coagulate.Core.Exceptions.UserException;
  */
 
 public class UserInsufficientCreditException extends UserException {
-	private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
-	public UserInsufficientCreditException(final String reason) {
-		super(reason);
-	}
+    public UserInsufficientCreditException(final String message) {
+        super(message);
+    }
 
-	public UserInsufficientCreditException(final String reason,
-	                                       final Throwable cause) {
-		super(reason,cause);
-	}
+    public UserInsufficientCreditException(final String message,
+                                           final Throwable cause) {
+        super(message, cause);
+    }
 }
