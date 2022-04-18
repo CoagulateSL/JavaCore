@@ -549,27 +549,28 @@ public abstract class DBConnection {
 				boolean parsed=false;
 				if (p instanceof Integer) {
 					{
-						ps.setInt(i,(Integer) p);
-						parsed=true;
+						ps.setInt(i, (Integer) p);
+						parsed = true;
 					}
 				}
 				if (p instanceof byte[]) {
-					ps.setBytes(i,(byte[]) p);
-					parsed=true;
+					ps.setBytes(i, (byte[]) p);
+					parsed = true;
 				}
-				if (p instanceof Byte[]) {
-					final Byte[] in=(Byte[]) p;
-					final byte[] out=new byte[in.length];
-					for (int byteLoop=0;byteLoop<in.length;byteLoop++) { out[byteLoop]=in[byteLoop]; }
-					ps.setBytes(i,out);
-					parsed=true;
+				if (p instanceof final Byte[] in) {
+					final byte[] out = new byte[in.length];
+					for (int byteLoop = 0; byteLoop < in.length; byteLoop++) {
+						out[byteLoop] = in[byteLoop];
+					}
+					ps.setBytes(i, out);
+					parsed = true;
 				}
 				if (p instanceof String) {
-					ps.setString(i,(String) p);
-					parsed=true;
+					ps.setString(i, (String) p);
+					parsed = true;
 				}
 				if (p instanceof NullInteger) {
-					ps.setNull(i,Types.INTEGER);
+					ps.setNull(i, Types.INTEGER);
 					parsed=true;
 				}
 				if (p instanceof Float) {

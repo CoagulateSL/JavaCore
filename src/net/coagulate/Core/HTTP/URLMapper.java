@@ -200,8 +200,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
      * @param parameters The parameter map to update
      */
     protected int processPostData(final HttpRequest request, final Map<String, String> parameters) {
-        if (request instanceof HttpEntityEnclosingRequest) {
-            final HttpEntityEnclosingRequest r = (HttpEntityEnclosingRequest) request;
+        if (request instanceof final HttpEntityEnclosingRequest r) {
             final int inputSize = (int) r.getEntity().getContentLength();
             processPostEntity(r.getEntity(), parameters);
             return inputSize;
