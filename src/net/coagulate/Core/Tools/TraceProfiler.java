@@ -34,9 +34,9 @@ public class TraceProfiler {
         final Set<Integer> counts = new TreeSet<>(Comparator.reverseOrder());
         counts.addAll(profile.values());
         for (final Integer value : counts) {
-            for (final String trace : profile.keySet()) {
-                if (profile.get(trace).equals(value)) {
-                    report.append("<tr><td>").append(value).append("</td><td><pre>").append(trace).append("</pre></td></tr>");
+            for (final Map.Entry<String, Integer> entry : profile.entrySet()) {
+                if (entry.getValue().equals(value)) {
+                    report.append("<tr><td>").append(value).append("</td><td><pre>").append(entry.getKey()).append("</pre></td></tr>");
                 }
             }
         }
