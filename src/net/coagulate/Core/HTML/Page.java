@@ -53,7 +53,7 @@ public class Page {
     }
 
     private Page unauthenticated() {
-        final boolean requiresauthentication = false;
+        final boolean requiresAuth = false;
         return this; }
     private Map<String,String> parameters=new HashMap<>();
 
