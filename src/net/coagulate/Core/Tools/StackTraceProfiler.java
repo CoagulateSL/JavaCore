@@ -18,7 +18,8 @@ public class StackTraceProfiler extends Thread {
     public void run() {
         //noinspection InfiniteLoopStatement
         while (true) {
-            try {Thread.sleep(1000);profile();} catch (final Exception ignore) {
+            try {//noinspection BusyWait
+                Thread.sleep(1000);profile();} catch (final Exception ignore) {
             }
         }
     }
