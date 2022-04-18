@@ -77,7 +77,7 @@ public abstract class DBConnection {
 			final Integer c=entry.getValue();
 			final Long runFor=runtime.get(statement);
 			if (c==null || runFor==null || c==0) {
-				per.put(statement,0d); // explicitly a double.  even though it can be inferred, and is.  "wah wah this is an int not a double"...  it's both! :P
+				per.put(statement, 0.0d); // explicitly a double.  even though it can be inferred, and is.  "wah wah this is an int not a double"...  it's both! :P
 			}
 			else {
 				per.put(statement,((double) runFor)/((double) c)); /// :P

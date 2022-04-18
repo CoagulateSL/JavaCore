@@ -15,7 +15,7 @@ public class NumberTools {
 		if (debug) { System.out.println("SRC "+number+" for dp "+dp+" = "+Math.pow(10,dp)); }
 		final int whole=(int) Math.round(Math.floor(number));
 		if (debug) { System.out.println("whole:"+whole); }
-		final int decimal=Math.round((number-((float) whole))*((float) (Math.pow(10,dp))));
+		final int decimal=Math.round((number- whole)*((float) (Math.pow(10,dp))));
 		if (debug) { System.out.println("dec:"+decimal); }
 		final StringBuilder decimalstring = new StringBuilder(String.valueOf(decimal));
 		if (debug) { System.out.println("decimalstring:"+decimalstring); }
