@@ -182,12 +182,16 @@ public abstract class ClassTools {
 		fullname=fullname.replaceAll("\\.class$","");
 		String relativename="";
 		for (final String element: fullname.split(Pattern.quote("\\"))) {
-			if (!"".equals(relativename)) { relativename+="."; }
+			if (!relativename.isEmpty()) {
+				relativename += ".";
+			}
 			relativename+=element;
 		}
 		String classname="";
 		for (final String element: relativename.split(Pattern.quote("/"))) {
-			if (!"".equals(classname)) { classname+="."; }
+			if (!classname.isEmpty()) {
+				classname += ".";
+			}
 			classname+=element;
 		}
 		totalclasses++;
