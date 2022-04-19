@@ -1,26 +1,29 @@
 package net.coagulate.Core.Exceptions.User;
 
+import java.io.Serial;
+
 /**
  * User input is too short
  */
 
 public class UserInputInvalidChoiceException extends UserInputValidationException {
-	private static final long serialVersionUID=1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-	public UserInputInvalidChoiceException(final String reason) {
-		super(reason);
-	}
+    public UserInputInvalidChoiceException(final String message) {
+        super(message);
+    }
 
-	public UserInputInvalidChoiceException(final String reason,
-	                                       final Throwable cause) {
-		super(reason,cause);
-	}
+    public UserInputInvalidChoiceException(final String message,
+                                           final Throwable cause) {
+        super(message, cause);
+    }
 
-	public UserInputInvalidChoiceException(String message, Throwable exception, boolean suppress) {
-		super(message, exception, suppress);
-	}
+    public UserInputInvalidChoiceException(final String reason, final Throwable cause, final boolean suppresslogging) {
+        super(reason, cause, suppresslogging);
+    }
 
-	public UserInputInvalidChoiceException(String reason, boolean suppress) {
-		super(reason, suppress);
-	}
+    public UserInputInvalidChoiceException(final String reason, final boolean suppresslogging) {
+        super(reason, suppresslogging);
+    }
 }

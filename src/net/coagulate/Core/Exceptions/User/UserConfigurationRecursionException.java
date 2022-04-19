@@ -1,11 +1,17 @@
 package net.coagulate.Core.Exceptions.User;
 
+import java.io.Serial;
+
 public class UserConfigurationRecursionException extends UserConfigurationException {
-    public UserConfigurationRecursionException(String reason) {
-        super(reason);
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    public UserConfigurationRecursionException(final String message) {
+        super(message);
     }
 
-    public UserConfigurationRecursionException(String reason, Throwable cause) {
-        super(reason, cause);
+    public UserConfigurationRecursionException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 }

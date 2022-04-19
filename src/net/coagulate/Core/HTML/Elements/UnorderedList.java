@@ -9,8 +9,8 @@ public class UnorderedList extends TagPair {
         return "ul";
     }
 
-    public Container add(String s) {
-        add(new ListItem(s));
+    public Container add(final String text) {
+        add(new ListItem(text));
         return this;
     }
 }

@@ -16,11 +16,12 @@ public abstract class TableRow extends Table {
 	protected static final Map<String,Map<Integer,TableRow>> factory=new TreeMap<>();
 	final int id;
 
-	public TableRow(final int id) { this.id=id; }
+	protected TableRow(final int id) {
+		this.id = id;
+	}
 
 	protected TableRow() {
-		super();
-		id=-1;
+        id = -1;
 	}
 
 	// ----- Internal Statics -----

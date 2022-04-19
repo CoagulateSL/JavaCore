@@ -48,7 +48,7 @@ public class HTTPListener {
 			                                               .setHandlerMapper(mapper);
 			// NOTE HOW THE HANDLERS ARE A SINGLE INSTANCE.
 			// no instance level data storage.  USE HTTPCONTEXT (superceeded by "State")
-			String name = "HTTP:" + port;
+			final String name = "HTTP:" + port;
 			//addHandlers(bootstrap);
 			server=bootstrap.create();
 			if (server==null) { throw new SystemInitialisationException("Server bootstrap is null?"); }

@@ -7,9 +7,16 @@ import java.util.Map;
 public class Raw extends Container {
 
     @Override
-    public void load(Map<String, String> parameters) {}
+    public void load(final Map<String, String> parameters) {
+    }
 
     private final String text;
-    public Raw(String text) { this.text=text; }
-    public String toString() { return text; }
+
+    public Raw(final String text) {
+        this.text = text;
+    }
+
+    public String toString() {
+        return text;
+    }
 }

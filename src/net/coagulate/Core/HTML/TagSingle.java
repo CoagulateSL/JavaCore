@@ -1,13 +1,14 @@
 package net.coagulate.Core.HTML;
 
 public abstract class TagSingle extends TagContainer {
-    public TagSingle() { super(); }
+    protected TagSingle() {
+    }
 
-    public TagSingle(String textcontent) {
+    protected TagSingle(final String textcontent) {
         super(textcontent);
     }
 
-    public TagSingle(Container container) {
+    protected TagSingle(final Container container) {
         super(container);
     }
 

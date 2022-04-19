@@ -10,7 +10,8 @@ import java.util.Date;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static java.util.logging.Level.*;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 
 /**
  * @author Iain Price
@@ -34,7 +35,10 @@ public abstract class DBConnection {
 
 	private static final String PACKAGE_PREFIX ="net.coagulate.Core.Database";
 	private final Set<String> permittedCallers =new HashSet<>();
-	public void permit(String prefix) { permittedCallers.add(prefix); }
+
+	public void permit(final String prefix) {
+		permittedCallers.add(prefix);
+	}
 
 	protected DBConnection(final String sourceName) {
 		this.sourceName = sourceName;
@@ -73,7 +77,7 @@ public abstract class DBConnection {
 			final Integer c=entry.getValue();
 			final Long runFor=runtime.get(statement);
 			if (c==null || runFor==null || c==0) {
-				per.put(statement,0d); // explicitly a double.  even though it can be inferred, and is.  "wah wah this is an int not a double"...  it's both! :P
+				per.put(statement, 0.0d); // explicitly a double.  even though it can be inferred, and is.  "wah wah this is an int not a double"...  it's both! :P
 			}
 			else {
 				per.put(statement,((double) runFor)/((double) c)); /// :P
@@ -285,12 +289,14 @@ public abstract class DBConnection {
 	// check the caller's path is in the permitted list, if such a thing is set up
 	private void permitCheck() {
 		if (permittedCallers.isEmpty()) { return; } // fast path
-		StackTraceElement[] caller = Thread.currentThread().getStackTrace();
+		final StackTraceElement[] caller = Thread.currentThread().getStackTrace();
 		for (int i=0;i<caller.length-1;i++) {
-			String className=caller[i].getClassName();
+			final String className = caller[i].getClassName();
 			if (!(className.startsWith(PACKAGE_PREFIX) || className.startsWith("java.lang"))) {
-				for (String permitted: permittedCallers) {
-					if (className.startsWith(permitted)) { return; }
+				for (final String permitted : permittedCallers) {
+					if (className.startsWith(permitted)) {
+						return;
+					}
 				}
 				// uh oh
 				//System.err.println("DB TRACING FAILURE");
@@ -543,27 +549,28 @@ public abstract class DBConnection {
 				boolean parsed=false;
 				if (p instanceof Integer) {
 					{
-						ps.setInt(i,(Integer) p);
-						parsed=true;
+						ps.setInt(i, (Integer) p);
+						parsed = true;
 					}
 				}
 				if (p instanceof byte[]) {
-					ps.setBytes(i,(byte[]) p);
-					parsed=true;
+					ps.setBytes(i, (byte[]) p);
+					parsed = true;
 				}
-				if (p instanceof Byte[]) {
-					final Byte[] in=(Byte[]) p;
-					final byte[] out=new byte[in.length];
-					for (int byteLoop=0;byteLoop<in.length;byteLoop++) { out[byteLoop]=in[byteLoop]; }
-					ps.setBytes(i,out);
-					parsed=true;
+				if (p instanceof final Byte[] in) {
+					final byte[] out = new byte[in.length];
+					for (int byteLoop = 0; byteLoop < in.length; byteLoop++) {
+						out[byteLoop] = in[byteLoop];
+					}
+					ps.setBytes(i, out);
+					parsed = true;
 				}
 				if (p instanceof String) {
-					ps.setString(i,(String) p);
-					parsed=true;
+					ps.setString(i, (String) p);
+					parsed = true;
 				}
 				if (p instanceof NullInteger) {
-					ps.setNull(i,Types.INTEGER);
+					ps.setNull(i, Types.INTEGER);
 					parsed=true;
 				}
 				if (p instanceof Float) {

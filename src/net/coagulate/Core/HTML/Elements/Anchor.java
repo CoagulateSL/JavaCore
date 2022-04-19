@@ -4,22 +4,26 @@ import net.coagulate.Core.HTML.Container;
 import net.coagulate.Core.HTML.TagPair;
 
 public class Anchor extends TagPair {
-    public Anchor(Container container) {
+    public Anchor(final Container container) {
         super(container);
     }
 
     public Anchor() {
-        super();
     }
 
-    public Anchor(String href) {
+    public Anchor(final String href) {
         href(href);
     }
-    public Anchor(String href,String content) {
+
+    public Anchor(final String href, final String content) {
         href(href);
         add(content);
     }
-    public Anchor href(String url) { replaceAttribute("href",url); return this; }
+
+    public Anchor href(final String url) {
+        replaceAttribute("href", url);
+        return this;
+    }
 
     @Override
     public String tag() {

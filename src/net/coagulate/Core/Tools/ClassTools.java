@@ -73,16 +73,16 @@ public abstract class ClassTools {
 
 	@Nonnull
 	@SuppressWarnings("unchecked")
-	public static <T> Set<Class<? extends T>> getSubclasses(final @Nonnull Class<T> superclass) {
-		final Set<Class<? extends T>> classes= new HashSet<>();
-		for (final Class<? extends Object> c: getClassMap()) {
+	public static <T> Set<Class<? extends T>> getSubclasses(@Nonnull final Class<T> superclass) {
+		final Set<Class<? extends T>> classes = new HashSet<>();
+		for (final Class<? extends Object> c : getClassMap()) {
 			if (!Modifier.isAbstract(c.getModifiers())) {
 				if (superclass.isAssignableFrom(c)) {
 					classes.add((Class<? extends T>) c);
 				}
 			}
 		}
-		for (Class<? extends T> s:classes) {
+		for (final Class<? extends T> s : classes) {
 			//noinspection ResultOfMethodCallIgnored
 			s.getName();
 		}
@@ -180,25 +180,29 @@ public abstract class ClassTools {
 	                                 @Nonnull final Set<Class<? extends Object>> classes) {
 		if (DEBUG) { System.out.println("Class consider "+fullname); }
 		fullname=fullname.replaceAll("\\.class$","");
-		String relativename="";
+		final StringBuilder relativename= new StringBuilder();
 		for (final String element: fullname.split(Pattern.quote("\\"))) {
-			if (!"".equals(relativename)) { relativename+="."; }
-			relativename+=element;
+			if (!relativename.isEmpty()) {
+				relativename.append(".");
+			}
+			relativename.append(element);
 		}
-		String classname="";
-		for (final String element: relativename.split(Pattern.quote("/"))) {
-			if (!"".equals(classname)) { classname+="."; }
-			classname+=element;
+		final StringBuilder classname= new StringBuilder();
+		for (final String element: relativename.toString().split(Pattern.quote("/"))) {
+			if (!classname.isEmpty()) {
+				classname.append(".");
+			}
+			classname.append(element);
 		}
 		totalclasses++;
-		if (!classname.startsWith("net.coagulate.")) {
+		if (!classname.toString().startsWith("net.coagulate.")) {
 			if (DEBUG) { System.out.println("Drop "+classname+" due to prefix failure"); }
 			return;
 		}
 		// examine named class and instantiate if appropriate.
 		try {
 			//System.out.println(classname);
-			final Class<? extends Object> c=Class.forName(classname);
+			final Class<? extends Object> c=Class.forName(classname.toString());
 			classes.add(c);
 			if (DEBUG) { System.out.println("ADDED "+classname); }
 		}

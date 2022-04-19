@@ -4,16 +4,15 @@ import net.coagulate.Core.HTML.Container;
 import net.coagulate.Core.HTML.TagSingle;
 
 public class HorizontalRule extends TagSingle {
-    public HorizontalRule(Container container) {
+    public HorizontalRule(final Container container) {
         super(container);
     }
 
     public HorizontalRule() {
-        super();
     }
 
-    public HorizontalRule(String text) {
-        super(text);
+    public HorizontalRule(final String textcontent) {
+        super(textcontent);
     }
 
     @Override

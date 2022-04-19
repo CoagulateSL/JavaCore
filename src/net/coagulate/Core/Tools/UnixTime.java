@@ -244,7 +244,7 @@ public abstract class UnixTime {
 	@Nonnull
 	private static String fromUnixTime(final int date,
 	                                   @Nonnull final DateFormat df) {
-		return df.format(new Date(((long) (date))*((long) 1000)));
+		return df.format(new Date((date) *(1000L)));
 	}
 
 }

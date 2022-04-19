@@ -22,14 +22,13 @@ public class LogHandler extends Handler {
 	public static String mailprefix="[UNKNOWN]";
 
 	public LogHandler() {
-		super();
-		setLevel(Level.ALL);
+		setLevel(ALL);
 	}
 
 	// ---------- STATICS ----------
 	public static void initialise() {
 		LogManager.getLogManager().reset();
-		Logger.getLogger("").setLevel(Level.ALL);
+		Logger.getLogger("").setLevel(ALL);
 		Logger.getLogger("").addHandler(new LogHandler());
 	}
 
@@ -37,7 +36,7 @@ public class LogHandler extends Handler {
 
 	@Nonnull
 	public static String getSignature(final Throwable t) {
-		StackTraceElement[] stacktrace = t.getStackTrace();
+		final StackTraceElement[] stacktrace = t.getStackTrace();
 		if (stacktrace.length==0) { return "NO-STACK-TRACE??"; }
 		try {
 			final StackTraceElement ste=stacktrace[0];
@@ -107,7 +106,7 @@ public class LogHandler extends Handler {
 			}
 			system=system.replaceFirst("net\\.coagulate\\.","");
 			while (classname.contains(".")) {
-				classname=classname.substring(classname.indexOf(".")+1);
+				classname=classname.substring(classname.indexOf('.')+1);
 			}
 			if (parameters!=null && parameters.length>0) {
 				for (int i=0;i<parameters.length;i++) {
@@ -119,7 +118,7 @@ public class LogHandler extends Handler {
 					//}
 				}
 			}
-			System.out.println(formatLevel(level)+"#"+postpad(thread+"",4)+" "+system+" - "+message+" (@"+classname+"."+method+")");
+			System.out.println(formatLevel(level) + "#" + postpad(String.valueOf(thread), 4) + " " + system + " - " + message + " (@" + classname + "." + method + ")");
 
 			if ((level==null || level.intValue()> FINE.intValue()) && record.getThrown()!=null) {
 				final Throwable thrown=record.getThrown();
@@ -189,25 +188,25 @@ public class LogHandler extends Handler {
 
 	@Nonnull
 	private String formatLevel(final Level level) {
-		if (level==Level.CONFIG) {
+		if (level == CONFIG) {
 			return "conf";
 		}
-		if (level== FINE) {
+		if (level == FINE) {
 			return "D   ";
 		}
 		if (level== FINER) {
 			return "d   ";
 		}
-		if (level== FINEST) {
+		if (level == FINEST) {
 			return "_ ";
 		}
-		if (level==Level.INFO) {
+		if (level == INFO) {
 			return "Info";
 		}
-		if (level==Level.SEVERE) {
+		if (level == SEVERE) {
 			return "XXXX";
 		}
-		if (level==Level.WARNING) {
+		if (level == WARNING) {
 			return "WARN";
 		}
 		return "????";

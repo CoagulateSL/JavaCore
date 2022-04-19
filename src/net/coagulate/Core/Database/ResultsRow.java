@@ -175,7 +175,7 @@ public class ResultsRow {
 	@Nullable
 	public Boolean getBoolNullable(@Nonnull final String column) {
 		if (getStringNullable(column)==null) { return null; }
-		return getString(column).equals("1");
+		return "1".equals(getString(column));
 	}
 
 	/**
@@ -188,7 +188,7 @@ public class ResultsRow {
 	@Nullable
 	public Boolean getBoolNullable() {
 		if (getStringNullable()==null) { return null; }
-		return getStringNullable().equals("1");
+		return "1".equals(getStringNullable());
 	}
 
 	/**

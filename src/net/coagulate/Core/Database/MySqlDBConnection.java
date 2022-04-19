@@ -12,7 +12,7 @@ public class MySqlDBConnection extends DBConnection {
 
     private final BasicDataSource dataSource=new BasicDataSource();
 
-    public MySqlDBConnection(String sourceName, String jdbc) {
+    public MySqlDBConnection(final String sourceName, final String jdbc) {
         super(sourceName);
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl(jdbc);
@@ -23,8 +23,8 @@ public class MySqlDBConnection extends DBConnection {
     public void shutdown() {
         try {
             dataSource.close();
-        } catch (SQLException e) {
-            logger.log(Level.WARNING,"Failed to close datasource "+getName(),e);
+        } catch (final SQLException e) {
+            logger.log(Level.WARNING, "Failed to close datasource " + getName(), e);
         }
     }
 
@@ -33,8 +33,8 @@ public class MySqlDBConnection extends DBConnection {
     public Connection getConnection() {
         try {
             return dataSource.getConnection();
-        } catch (SQLException e) {
-            throw new SystemInitialisationException("Unable to get database pooled connection",e);
+        } catch (final SQLException e) {
+            throw new SystemInitialisationException("Unable to get database pooled connection", e);
         }
     }
 }

@@ -5,14 +5,15 @@ import net.coagulate.Core.HTML.TagPair;
 
 public class ListItem extends TagPair {
 
-    public ListItem(Container container) {
+    public ListItem(final Container container) {
         super(container);
     }
 
-    public ListItem() { super();  }
+    public ListItem() {
+    }
 
-    public ListItem(String text) {
-        super(text);
+    public ListItem(final String textcontent) {
+        super(textcontent);
     }
 
     @Override
