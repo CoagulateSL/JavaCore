@@ -3,6 +3,8 @@ package net.coagulate.Core.HTML;
 import net.coagulate.Core.Exceptions.System.SystemImplementationException;
 import net.coagulate.Core.HTML.Elements.PlainText;
 
+import javax.annotation.Nonnull;
+
 public abstract class TagContainer extends Container {
 
     protected TagContainer() {
@@ -23,9 +25,9 @@ public abstract class TagContainer extends Container {
     public abstract String tag();
     public abstract boolean container();
     @Override
-    public String toString() {
-        if (container()) { return openTag()+super.toString()+closeTag(); }
-        return openTag();
+    public void toString(@Nonnull final StringBuilder sb) {
+        sb.append(openTag());
+        if (container()) { super.toString(sb); sb.append(closeTag()); }
     }
     private String openTag() {
         final StringBuilder tag = new StringBuilder("<");
