@@ -18,12 +18,16 @@ public class Container {
     }
 
     @Override
-    public String toString() {
-        final StringBuilder result = new StringBuilder();
+    public final String toString() {
+        final StringBuilder sb=new StringBuilder();
+        toString(sb);
+        return sb.toString();
+    }
+    
+    protected void toString(@Nonnull final StringBuilder result) {
         for (final Container content : contents()) {
             result.append(content.toString());
         }
-        return result.toString();
     }
 
     public void load(final Map<String, String> parameters) {

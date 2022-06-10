@@ -2,6 +2,7 @@ package net.coagulate.Core.HTML.Elements;
 
 import net.coagulate.Core.HTML.Container;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 @Deprecated
 public class Raw extends Container {
@@ -16,7 +17,7 @@ public class Raw extends Container {
         this.text = text;
     }
 
-    public String toString() {
-        return text;
+    public void toString(@Nonnull final StringBuilder sb) {
+        sb.append(text);
     }
 }
