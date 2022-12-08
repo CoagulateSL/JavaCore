@@ -4,6 +4,7 @@ import net.coagulate.Core.Exceptions.System.SystemImplementationException;
 import net.coagulate.Core.Exceptions.SystemException;
 import net.coagulate.Core.Exceptions.UserException;
 import net.coagulate.Core.HTML.Page;
+import net.coagulate.SL.Config;
 import org.apache.http.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
@@ -47,8 +48,8 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
     private static final boolean DEBUG_PARAMS = false;
     private final Logger logger;
     private static final boolean DEBUG_MAPPING = false;
-    public static final boolean LOGREQUESTS = false;
-
+    public static final boolean LOGREQUESTS =Config.logRequests();
+    
     @Override
     public final void handle(final HttpRequest httpRequest, final HttpResponse httpResponse, final HttpContext httpContext) {
         // a "generally extendable" pipeline for handling a HTTP Request
