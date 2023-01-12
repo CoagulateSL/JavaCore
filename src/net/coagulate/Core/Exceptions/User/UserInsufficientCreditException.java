@@ -9,15 +9,13 @@ import java.io.Serial;
  */
 
 public class UserInsufficientCreditException extends UserException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    public UserInsufficientCreditException(final String message) {
-        super(message);
-    }
-
-    public UserInsufficientCreditException(final String message,
-                                           final Throwable cause) {
-        super(message, cause);
-    }
+	@Serial private static final long serialVersionUID=1L;
+	
+	public UserInsufficientCreditException(final String message) {
+		super(message);
+	}
+	
+	public UserInsufficientCreditException(final String message,final Throwable cause) {
+		super(message,cause);
+	}
 }

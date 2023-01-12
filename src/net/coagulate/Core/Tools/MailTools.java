@@ -16,17 +16,12 @@ import java.util.Properties;
  * @author Iain Price
  */
 public abstract class MailTools {
-	@Nullable
-	public static String defaultserver;
-	@Nullable
-	public static String defaultfromname;
-	@Nullable
-	public static String defaultfromaddress;
-	@Nullable
-	public static String defaulttoname;
-	@Nullable
-	public static String defaulttoaddress;
-
+	@Nullable public static String defaultserver;
+	@Nullable public static String defaultfromname;
+	@Nullable public static String defaultfromaddress;
+	@Nullable public static String defaulttoname;
+	@Nullable public static String defaulttoaddress;
+	
 	// ---------- STATICS ----------
 	public static void mail(final String server,
 	                        final String fromname,
@@ -47,7 +42,7 @@ public abstract class MailTools {
 		msg.setContent(body,"text/html");
 		Transport.send(msg);
 	}
-
+	
 	public static void mail(final String fromname,
 	                        final String fromaddress,
 	                        final String toname,
@@ -59,35 +54,21 @@ public abstract class MailTools {
 		}
 		mail(defaultserver,fromname,fromaddress,toname,toaddress,subject,body);
 	}
-
-	public static void mail(final String toname,
-	                        final String toaddress,
-	                        final String subject,
-	                        final String body) throws MessagingException {
-		if (defaultfromname==null || defaultfromaddress==null) {
-			throw new SystemInitialisationException("Mail called without default from address configured");
-		}
-		mail(defaultfromname,defaultfromaddress,toname,toaddress,subject,body);
-	}
-
-	public static void mail(final String subject,
-	                        final String body) throws MessagingException {
-		if (defaulttoname==null || defaulttoaddress==null) {
-			throw new SystemInitialisationException("Mail called without default to address configured");
-		}
-		mail(defaulttoname,defaulttoaddress,subject,body);
-	}
-
-	public static void logTrace(final String subject,
-	                            final String intro) {
+	
+	public static void logTrace(final String subject,final String intro) {
 		final StringBuilder body=new StringBuilder(intro+"\n<br>\n");
 		for (final StackTraceElement ele: Thread.currentThread().getStackTrace()) {
-			body.append("Caller: ").append(ele.getClassName()).append("/").append(ele.getMethodName()).append(":").append(ele.getLineNumber()).append("\n<br>\n");
+			body.append("Caller: ")
+			    .append(ele.getClassName())
+			    .append("/")
+			    .append(ele.getMethodName())
+			    .append(":")
+			    .append(ele.getLineNumber())
+			    .append("\n<br>\n");
 		}
 		try {
 			MailTools.mail("Trace: "+subject,body.toString());
-		}
-		catch (@Nonnull final MessagingException ee) {
+		} catch (@Nonnull final MessagingException ee) {
 			System.err.println("Failed to mail trace:");
 			System.err.println("Subject was: "+subject);
 			System.out.println("Intro was:"+intro);
@@ -95,5 +76,22 @@ public abstract class MailTools {
 			ee.printStackTrace();
 		}
 	}
-
+	
+	public static void mail(final String subject,final String body) throws MessagingException {
+		if (defaulttoname==null||defaulttoaddress==null) {
+			throw new SystemInitialisationException("Mail called without default to address configured");
+		}
+		mail(defaulttoname,defaulttoaddress,subject,body);
+	}
+	
+	public static void mail(final String toname,
+	                        final String toaddress,
+	                        final String subject,
+	                        final String body) throws MessagingException {
+		if (defaultfromname==null||defaultfromaddress==null) {
+			throw new SystemInitialisationException("Mail called without default from address configured");
+		}
+		mail(defaultfromname,defaultfromaddress,toname,toaddress,subject,body);
+	}
+	
 }

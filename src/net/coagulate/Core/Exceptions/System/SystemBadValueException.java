@@ -9,15 +9,13 @@ import java.io.Serial;
  */
 
 public class SystemBadValueException extends SystemException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    public SystemBadValueException(final String message) {
-        super(message);
-    }
-
-    public SystemBadValueException(final String message,
-                                   final Throwable cause) {
-        super(message, cause);
-    }
+	@Serial private static final long serialVersionUID=1L;
+	
+	public SystemBadValueException(final String message) {
+		super(message);
+	}
+	
+	public SystemBadValueException(final String message,final Throwable cause) {
+		super(message,cause);
+	}
 }

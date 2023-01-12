@@ -7,15 +7,13 @@ import java.io.Serial;
  */
 
 public class UserInputTooLongException extends UserInputValidationException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    public UserInputTooLongException(final String message) {
-        super(message);
-    }
-
-    public UserInputTooLongException(final String message,
-                                     final Throwable cause) {
-        super(message, cause);
-    }
+	@Serial private static final long serialVersionUID=1L;
+	
+	public UserInputTooLongException(final String message) {
+		super(message);
+	}
+	
+	public UserInputTooLongException(final String message,final Throwable cause) {
+		super(message,cause);
+	}
 }

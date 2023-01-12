@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 public abstract class DumpableState {
-
+	
 	// ---------- INSTANCE ----------
 	@Nonnull
 	public String toHTML() {
@@ -24,11 +24,9 @@ public abstract class DumpableState {
 				f.setAccessible(true);
 				final Object content=f.get(this);
 				ret.append(toHTML(content));
-			}
-			catch (@Nonnull final IllegalArgumentException ex) {
+			} catch (@Nonnull final IllegalArgumentException ex) {
 				ret.append("IllegalArgument");
-			}
-			catch (@Nonnull final IllegalAccessException ex) {
+			} catch (@Nonnull final IllegalAccessException ex) {
 				ret.append("IllegalAccess");
 			}
 			ret.append("</td></tr>");
@@ -37,28 +35,34 @@ public abstract class DumpableState {
 		ret.append(dumpAdditionalStateToHtml());
 		return ret.toString();
 	}
-
+	
 	// ----- Internal Instance -----
 	@Nonnull
 	protected abstract String dumpAdditionalStateToHtml();
-
+	
 	@Nonnull
 	private String toHTML(@Nullable final Object o) {
-		if (o==null) { return "</td><td valign=top><i>NULL</i>"; }
+		if (o==null) {
+			return "</td><td valign=top><i>NULL</i>";
+		}
 		final StringBuilder ret=new StringBuilder(o.getClass().getSimpleName()+"</td><td valign=top>");
 		boolean handled=false;
 		if (o instanceof Header[]) {
 			ret.append("<table>");
 			handled=true;
-			for (final Header h: ((Header[]) o)) {
-				ret.append("<tr><td valign=top>").append(h.getName()).append("</td><td valign=top>").append(h.getValue()).append("</td></tr>");
+			for (final Header h: ((Header[])o)) {
+				ret.append("<tr><td valign=top>")
+				   .append(h.getName())
+				   .append("</td><td valign=top>")
+				   .append(h.getValue())
+				   .append("</td></tr>");
 			}
 			ret.append("</table>");
 		}
 		if (BasicHttpRequest.class.isAssignableFrom(o.getClass())) {
 			handled=true;
 			ret.append("<table border=1>");
-			final BasicHttpRequest req=(BasicHttpRequest) o;
+			final BasicHttpRequest req=(BasicHttpRequest)o;
 			ret.append("<tr><td valign=top colspan=4>").append(req.getRequestLine()).append("</td></td>");
 			for (final Header header: req.getAllHeaders()) {
 				ret.append("<tr><td valign=top>").append(toHTML(header.getName())).append("</td>");
@@ -69,7 +73,7 @@ public abstract class DumpableState {
 		if (JSONObject.class.isAssignableFrom(o.getClass())) {
 			handled=true;
 			ret.append("<table border=1>");
-			final JSONObject json=(JSONObject) o;
+			final JSONObject json=(JSONObject)o;
 			final Map<String,Object> map=json.toMap();
 			for (final Map.Entry<String,Object> entry: map.entrySet()) {
 				ret.append("<tr><td valign=top>").append(toHTML(entry.getKey())).append("</td>");
@@ -80,16 +84,18 @@ public abstract class DumpableState {
 		if (Map.class.isAssignableFrom(o.getClass())) {
 			handled=true;
 			ret.append("<table border=1>");
-			@SuppressWarnings("unchecked") final Map<Object,Object> map=(Map<Object,Object>) o;
+			@SuppressWarnings("unchecked") final Map<Object,Object> map=(Map<Object,Object>)o;
 			for (final Map.Entry<Object,Object> entry: map.entrySet()) {
 				ret.append("<tr><td valign=top>").append(toHTML(entry.getKey())).append("</td>");
 				ret.append("<td valign=top>").append(toHTML(entry.getValue())).append("</td></tr>");
 			}
 			ret.append("</table>");
 		}
-		if (!handled) { ret.append(o); }
+		if (!handled) {
+			ret.append(o);
+		}
 		return ret.toString();
 	}
-
+	
 }
 

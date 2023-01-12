@@ -7,25 +7,21 @@ import java.io.Serial;
  */
 
 public class UserInputStateException extends UserInputValidationException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    public UserInputStateException(final String message) {
-        super(message);
-    }
-
-    public UserInputStateException(final String message,
-                                   final Throwable cause) {
-        super(message, cause);
-    }
-
-    public UserInputStateException(final String reason, final boolean suppresslogging) {
-        super(reason, suppresslogging);
-    }
-
-    public UserInputStateException(final String reason,
-                                   final Throwable cause,
-                                   final boolean suppresslogging) {
-        super(reason, cause, suppresslogging);
-    }
+	@Serial private static final long serialVersionUID=1L;
+	
+	public UserInputStateException(final String message) {
+		super(message);
+	}
+	
+	public UserInputStateException(final String message,final Throwable cause) {
+		super(message,cause);
+	}
+	
+	public UserInputStateException(final String reason,final boolean suppresslogging) {
+		super(reason,suppresslogging);
+	}
+	
+	public UserInputStateException(final String reason,final Throwable cause,final boolean suppresslogging) {
+		super(reason,cause,suppresslogging);
+	}
 }

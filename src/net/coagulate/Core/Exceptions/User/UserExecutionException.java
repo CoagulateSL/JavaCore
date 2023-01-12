@@ -9,15 +9,13 @@ import java.io.Serial;
  */
 
 public class UserExecutionException extends UserException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    public UserExecutionException(final String message) {
-        super(message);
-    }
-
-    public UserExecutionException(final String message,
-                                  final Throwable cause) {
-        super(message, cause);
-    }
+	@Serial private static final long serialVersionUID=1L;
+	
+	public UserExecutionException(final String message) {
+		super(message);
+	}
+	
+	public UserExecutionException(final String message,final Throwable cause) {
+		super(message,cause);
+	}
 }

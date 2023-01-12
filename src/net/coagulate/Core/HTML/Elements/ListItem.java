@@ -4,20 +4,20 @@ import net.coagulate.Core.HTML.Container;
 import net.coagulate.Core.HTML.TagPair;
 
 public class ListItem extends TagPair {
-
-    public ListItem(final Container container) {
-        super(container);
-    }
-
-    public ListItem() {
-    }
-
-    public ListItem(final String textcontent) {
-        super(textcontent);
-    }
-
-    @Override
-    public String tag() {
-        return "li";
-    }
+	
+	public ListItem(final Container container) {
+		super(container);
+	}
+	
+	public ListItem() {
+	}
+	
+	public ListItem(final String textcontent) {
+		super(textcontent);
+	}
+	
+	@Override
+	public String tag() {
+		return "li";
+	}
 }

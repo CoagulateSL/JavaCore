@@ -22,14 +22,14 @@ import java.util.logging.Logger;
  * @author Iain Price <gphud@predestined.net>
  */
 public abstract class DB {
-	static final long SLOWQUERYTHRESHOLD_QUERY=100;
-	static final long SLOWQUERYTHRESHOLD_UPDATE=250;
-	static final boolean sqldebug_queries=false;
-	static final boolean sqldebug_commands=false;
-
-
+	static final long    SLOWQUERYTHRESHOLD_QUERY =100;
+	static final long    SLOWQUERYTHRESHOLD_UPDATE=250;
+	static final boolean sqldebug_queries         =false;
+	static final boolean sqldebug_commands        =false;
+	
+	
 	private static final Map<String,DBConnection> datasources=new HashMap<>();
-
+	
 	// ---------- STATICS ----------
 	@Nonnull
 	public static DBConnection get(@Nonnull final String datasourcename) {
@@ -38,12 +38,12 @@ public abstract class DB {
 		}
 		return datasources.get(datasourcename);
 	}
-
+	
 	@Nonnull
 	public static Set<DBConnection> get() {
 		return new HashSet<>(datasources.values());
 	}
-
+	
 	public static void shutdown() {
 		final Set<String> names=new HashSet<>(datasources.keySet());
 		for (final String source: names) {
@@ -52,17 +52,18 @@ public abstract class DB {
 			datasources.remove(source);
 		}
 	}
-
+	
 	public static boolean test() {
 		for (final DBConnection connection: datasources.values()) {
-			if (!connection.test()) { return false; }
+			if (!connection.test()) {
+				return false;
+			}
 		}
 		return true;
 	}
-
+	
 	// ----- Internal Statics -----
-	static void register(@Nonnull final String sourcename,
-	                     @Nonnull final DBConnection connection) {
+	static void register(@Nonnull final String sourcename,@Nonnull final DBConnection connection) {
 		if (datasources.containsKey(sourcename)) {
 			Logger.getLogger(DB.class.getName()).warning("Re-registering DB connection "+sourcename);
 			final DBConnection outgoing=datasources.get(sourcename);
