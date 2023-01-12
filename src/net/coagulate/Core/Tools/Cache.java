@@ -9,7 +9,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 public class Cache <U,T> {
 
-    private static final Map<String, Cache<?, ?>> caches = new ConcurrentHashMap<>();
+    /**
+     * If set to true forces all cache elements to refresh every couple of seconds, regardless of their preference.
+     * For use during node transitions.
+     */
+    public static  boolean                eagerCacheFlush=false;
+    private static Map<String,Cache<?,?>> caches         =new ConcurrentHashMap<>();
     private final int expiration;
 
     private Cache(final int expiration) {
@@ -108,12 +113,30 @@ public class Cache <U,T> {
             cache.remove(row);
         }
     }
-
+    
+    public static String cacheStatus() {
+        return eagerCacheFlush?"Caching is eagerly refreshed":"Normal caching operations";
+    }
+    
     private final Map<U, CacheElement<T>> cache = new ConcurrentHashMap<>();
 
     private long cacheHit;
     private long cacheMiss;
-
+    /**
+     * The name is a lie, this will force the cache to expire things quickly, but not terminate the cache.
+     */
+    public static void disableCache() {
+        eagerCacheFlush=true;
+    }
+    
+    /**
+     * Restores standard caching operations and purges all the caches in the process...
+     */
+    public static void enableCache() {
+        eagerCacheFlush=false;
+        caches=new ConcurrentHashMap<>(); // merry garbage collection day?
+    }
+    
     /**
      * Get an object from the cache
      *
@@ -125,7 +148,7 @@ public class Cache <U,T> {
         final int now = UnixTime.getUnixTime();
         CacheElement<T> cached = cache.getOrDefault(key, null);
         if (cached != null) {
-            if (cached.expires < now) {
+            if (cached.expires<now||(eagerCacheFlush&&(UnixTime.getUnixTime()-cached.cachedAt)>5)) {
                 cache.remove(key);
                 cached = null;
             }
@@ -154,9 +177,11 @@ public class Cache <U,T> {
         @Nullable
         public final T element;
         public final int expires;
+        public final           int cachedAt;
 
         public CacheElement(@Nullable final T element,
                             final int expires) {
+            this.cachedAt=UnixTime.getUnixTime();
             this.element=element;
             this.expires=expires;
         }
