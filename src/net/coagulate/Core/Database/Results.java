@@ -14,9 +14,9 @@ import java.util.List;
  * Implements iterable, thus can be .iterator()ed or foreached (for (Row row:results) { code; } )
  */
 public class Results implements Iterable<ResultsRow> {
-	private final List<ResultsRow> data=new ArrayList<>();
-	private String statement="";
-
+	private final List<ResultsRow> data     =new ArrayList<>();
+	private       String           statement="";
+	
 	/**
 	 * Unpack a resultset into our data structure.
 	 * After this, the resultset / connection can be released (which is done in Database class)
@@ -30,14 +30,13 @@ public class Results implements Iterable<ResultsRow> {
 				final ResultsRow r=new ResultsRow(rs);
 				data.add(r);
 			}
-		}
-		catch (@Nonnull final SQLException ex) {
+		} catch (@Nonnull final SQLException ex) {
 			throw new DBException("SQLException reading a resultset from SQL:'"+statement+"'",ex);
 		}
 	}
-
+	
 	// ---------- INSTANCE ----------
-
+	
 	/**
 	 * Iterator interface
 	 *
@@ -45,8 +44,10 @@ public class Results implements Iterable<ResultsRow> {
 	 */
 	@Override
 	@Nonnull
-	public Iterator<ResultsRow> iterator() { return data.iterator(); }
-
+	public Iterator<ResultsRow> iterator() {
+		return data.iterator();
+	}
+	
 	/**
 	 * Gets the first row of the results set.
 	 *
@@ -54,44 +55,56 @@ public class Results implements Iterable<ResultsRow> {
 	 */
 	@Nonnull
 	public ResultsRow first() {
-		if (size()<1) { throw new NoDataException("There are no rows"); }
+		if (size()<1) {
+			throw new NoDataException("There are no rows");
+		}
 		return data.get(0);
 	}
-
+	
 	/**
 	 * Size of results
 	 *
 	 * @return ResultsRow count
 	 */
-	public int size() { return data.size(); }
-
-	/**
-	 * Convenience method
-	 *
-	 * @return True if zero elements
-	 */
-	public boolean empty() { return size()==0; }
-
+	public int size() {
+		return data.size();
+	}
+	
 	/**
 	 * Convenience method.
 	 * Returns the literal opposite of empty()
 	 *
 	 * @return true if the results are not empty()
 	 */
-	public boolean notEmpty() { return (!(empty())); }
-
+	public boolean notEmpty() {
+		return (!(empty()));
+	}
+	
+	/**
+	 * Convenience method
+	 *
+	 * @return True if zero elements
+	 */
+	public boolean empty() {
+		return size()==0;
+	}
+	
 	/**
 	 * Get the set statement associated with this result set.
 	 *
 	 * @return The statement set earlier by setStatement() or the blank string.
 	 */
 	@Nonnull
-	public String getStatement() { return statement; }
-
+	public String getStatement() {
+		return statement;
+	}
+	
 	/**
 	 * Set the statement associated with this result set.
 	 *
 	 * @param stmt SQL Statement
 	 */
-	public void setStatement(@Nonnull final String stmt) { statement=stmt; }
+	public void setStatement(@Nonnull final String stmt) {
+		statement=stmt;
+	}
 }

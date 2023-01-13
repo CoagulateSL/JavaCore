@@ -14,11 +14,11 @@ public abstract class UnixTime {
 	
 	public static final int SECOND=1;
 	public static final int MINUTE=60*SECOND;
-	public static final int HOUR=60*MINUTE;
-	public static final int DAY=24*HOUR;
-	public static final int WEEK=7*DAY;
-	public static final int MONTH=4*WEEK;
-	public static final int YEAR=365*DAY;
+	public static final int HOUR  =60*MINUTE;
+	public static final int DAY   =24*HOUR;
+	public static final int WEEK  =7*DAY;
+	public static final int MONTH =4*WEEK;
+	public static final int YEAR  =365*DAY;
 	
 	// ---------- STATICS ----------
 	
@@ -33,12 +33,7 @@ public abstract class UnixTime {
 	 * @param minute   Minute
 	 * @return Representative unixtime
 	 */
-	public static int create(final String timezone,
-							 final int day,
-							 int month,
-							 int year,
-							 final int hour,
-							 final int minute) {
+	public static int create(final String timezone,final int day,int month,int year,final int hour,final int minute) {
 		final DateFormat dfslt=DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
 		dfslt.setTimeZone(TimeZone.getTimeZone(timezone));
 		if (year<100) {
@@ -69,18 +64,18 @@ public abstract class UnixTime {
 	}
 	
 	@Nonnull
-	public static String fromUnixTime(@Nullable final Integer date,
-									  @Nonnull final String timezone) {
-		if (date==null) {return "-";}
-		final DateFormat df=DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
-		df.setTimeZone(TimeZone.getTimeZone(timezone));
-		return fromUnixTime(date,df);
+	public static String fromUnixTime(@Nonnull final String date,final String timezone) {
+		return fromUnixTime(Integer.parseInt(date),timezone);
 	}
 	
 	@Nonnull
-	public static String fromUnixTime(@Nonnull final String date,
-									  final String timezone) {
-		return fromUnixTime(Integer.parseInt(date),timezone);
+	public static String fromUnixTime(@Nullable final Integer date,@Nonnull final String timezone) {
+		if (date==null) {
+			return "-";
+		}
+		final DateFormat df=DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
+		df.setTimeZone(TimeZone.getTimeZone(timezone));
+		return fromUnixTime(date,df);
 	}
 	
 	/**
@@ -104,6 +99,35 @@ public abstract class UnixTime {
 		return duration(seconds,false);
 	}
 	
+	// ----- Internal Statics -----
+	@Nonnull
+	private static String fromUnixTime(final int date,@Nonnull final DateFormat df) {
+		return df.format(new Date((date)*(1000L)));
+	}
+	
+	/**
+	 * Express the difference between timestamps as a string
+	 *
+	 * @param unixtime Time to compare the difference with
+	 * @return Time between now and then expressed as a duration, with seconds
+	 */
+	@Nonnull
+	public static String durationRelativeToNow(final int unixtime) {
+		return durationRelativeToNow(unixtime,true);
+	}
+	
+	/**
+	 * Express the difference between timestamps as a string
+	 *
+	 * @param unixtime    Time to compare the difference with
+	 * @param withseconds Include the seconds in the duration string
+	 * @return Time between now and then expressed as a duration, with optional seconds
+	 */
+	@Nonnull
+	public static String durationRelativeToNow(final int unixtime,final boolean withseconds) {
+		return duration(relativeToNow(unixtime),withseconds);
+	}
+	
 	/**
 	 * Convert a duration (scalar time units) to a string
 	 *
@@ -112,8 +136,7 @@ public abstract class UnixTime {
 	 * @return Duration as a string (e.g. 3h 2m 1s)
 	 */
 	@Nonnull
-	public static String duration(int t,
-								  final boolean precise) {
+	public static String duration(int t,final boolean precise) {
 		String prefix="";
 		if (t<0) {
 			prefix="T-";
@@ -208,37 +231,6 @@ public abstract class UnixTime {
 			//steps++;
 		}
 		return r;
-	}
-	
-	/**
-	 * Express the difference between timestamps as a string
-	 *
-	 * @param unixtime Time to compare the difference with
-	 * @return Time between now and then expressed as a duration, with seconds
-	 */
-	@Nonnull
-	public static String durationRelativeToNow(final int unixtime) {
-		return durationRelativeToNow(unixtime,true);
-	}
-	
-	/**
-	 * Express the difference between timestamps as a string
-	 *
-	 * @param unixtime    Time to compare the difference with
-	 * @param withseconds Include the seconds in the duration string
-	 * @return Time between now and then expressed as a duration, with optional seconds
-	 */
-	@Nonnull
-	public static String durationRelativeToNow(final int unixtime,
-											   final boolean withseconds) {
-		return duration(relativeToNow(unixtime),withseconds);
-	}
-	
-	// ----- Internal Statics -----
-	@Nonnull
-	private static String fromUnixTime(final int date,
-									   @Nonnull final DateFormat df) {
-		return df.format(new Date((date)*(1000L)));
 	}
 	
 }

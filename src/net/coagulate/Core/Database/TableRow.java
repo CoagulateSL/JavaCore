@@ -14,18 +14,18 @@ import java.util.function.Function;
 public abstract class TableRow extends Table {
 	// use of the factory is of course optional :)
 	protected static final Map<String,Map<Integer,TableRow>> factory=new TreeMap<>();
-	final int id;
-
+	final                  int                               id;
+	
 	protected TableRow(final int id) {
-		this.id = id;
+		this.id=id;
 	}
-
+	
 	protected TableRow() {
-        id = -1;
+		id=-1;
 	}
-
+	
 	// ----- Internal Statics -----
-
+	
 	/**
 	 * Thread safe putter into the factory.  Also the getter.
 	 * NOTE - this method returns an object.  this may not be the same as the object you are putting, if someone beat you to it.
@@ -33,18 +33,18 @@ public abstract class TableRow extends Table {
 	 * one gets there first will be stored, and the 2nd caller will simply get the first "put"s object back, which it should
 	 * use in preference to its own created one.
 	 *
-	 * @param type  Class name for object type
-	 * @param id    ID number
+	 * @param type     Class name for object type
+	 * @param id       ID number
 	 * @param supplier Function that will generate the object if necessary
-	 *
 	 * @return DBObject that should be used, not necessarily the one that was stored
 	 */
 	@Nonnull
 	protected static synchronized TableRow factoryPut(@Nonnull final String type,
-													  final int id,
-													  @Nonnull final Function<Integer,TableRow> supplier) {
+	                                                  final int id,
+	                                                  @Nonnull final Function<Integer,TableRow> supplier) {
 		if (id==0) {
-			throw new SystemBadValueException("ID zero is expressly prohibited, does not exist, and suggests a programming bug.");
+			throw new SystemBadValueException(
+					"ID zero is expressly prohibited, does not exist, and suggests a programming bug.");
 		}
 		if (!factory.containsKey(type)) {
 			// we need this to avoid null pointer below
@@ -59,9 +59,9 @@ public abstract class TableRow extends Table {
 		// return, either the previous value, or the one we just put there
 		return factory.get(type).get(id);
 	}
-
+	
 	// ---------- INSTANCE ----------
-
+	
 	/**
 	 * Defines the name of the ID (primary key) column for this table.
 	 *
@@ -69,14 +69,31 @@ public abstract class TableRow extends Table {
 	 */
 	@Nonnull
 	public abstract String getIdColumn();
-
-	public int getId() { return id; }
-
+	
+	/**
+	 * Convenience method for getting a boolean.
+	 *
+	 * @param column Name of the column to read
+	 * @return The boolean form of the column.  0/null maps to false and 1 maps to true.
+	 *
+	 * @throws NoDataException      if there are no results
+	 * @throws TooMuchDataException if there are multiple results
+	 */
+	public boolean getBool(@Nonnull final String column) {
+		final Integer val=getIntNullable(column);
+		if (val==null||val==0) {
+			return false;
+		}
+		if (val==1) {
+			return true;
+		}
+		throw new DBException("Unexpected value "+val+" parsing DB boolean field selfmodify on attribute "+this);
+	}
+	
 	/**
 	 * Convenience method for getting a string.
 	 *
 	 * @param column Name of the column to read
-	 *
 	 * @return The string form of the column.  Can be null only if the cell's contents are null.
 	 *
 	 * @throws NoDataException      if there are no results
@@ -86,12 +103,11 @@ public abstract class TableRow extends Table {
 	public String getStringNullable(@Nonnull final String column) {
 		return dqs("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
-
+	
 	/**
 	 * Convenience method for getting a string.
 	 *
 	 * @param column Name of the column to read
-	 *
 	 * @return The string form of the column.
 	 *
 	 * @throws NoDataException      if there are no results or the contents of the cell is null
@@ -101,12 +117,11 @@ public abstract class TableRow extends Table {
 	public String getString(@Nonnull final String column) {
 		return dqsnn("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
-
+	
 	/**
 	 * Convenience method for getting an integer.
 	 *
 	 * @param column Name of the column to read
-	 *
 	 * @return The integer form of the column.  Can be null only if the cell's contents are null.
 	 *
 	 * @throws NoDataException      if there are no results
@@ -116,12 +131,11 @@ public abstract class TableRow extends Table {
 	public Integer getIntNullable(@Nonnull final String column) {
 		return dqi("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
-
+	
 	/**
 	 * Convenience method for getting a string.
 	 *
 	 * @param column Name of the column to read
-	 *
 	 * @return The string form of the column.
 	 *
 	 * @throws NoDataException      if there are no results or the contents of the cell is null
@@ -130,12 +144,11 @@ public abstract class TableRow extends Table {
 	public int getInt(@Nonnull final String column) {
 		return dqinn("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
-
+	
 	/**
 	 * Convenience method for getting a float.
 	 *
 	 * @param column Name of the column to read
-	 *
 	 * @return The float form of the column.  Can be null only if the cell's contents are null.
 	 *
 	 * @throws NoDataException      if there are no results
@@ -145,12 +158,11 @@ public abstract class TableRow extends Table {
 	public Float getFloatNullable(@Nonnull final String column) {
 		return dqf("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
-
+	
 	/**
 	 * Convenience method for getting a float.
 	 *
 	 * @param column Name of the column to read
-	 *
 	 * @return The float form of the column.
 	 *
 	 * @throws NoDataException      if there are no results or the contents of the cell is null
@@ -159,12 +171,11 @@ public abstract class TableRow extends Table {
 	public float getFloat(@Nonnull final String column) {
 		return dqfnn("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
-
+	
 	/**
 	 * Convenience method for getting a long.
 	 *
 	 * @param column Name of the column to read
-	 *
 	 * @return The long form of the column.  Can be null only if the cell's contents are null.
 	 *
 	 * @throws NoDataException      if there are no results
@@ -174,12 +185,11 @@ public abstract class TableRow extends Table {
 	public Long getLongNullable(@Nonnull final String column) {
 		return dql("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
-
+	
 	/**
 	 * Convenience method for getting a long.
 	 *
 	 * @param column Name of the column to read
-	 *
 	 * @return The long form of the column.
 	 *
 	 * @throws NoDataException      if there are no results or the contents of the cell is null
@@ -188,30 +198,21 @@ public abstract class TableRow extends Table {
 	public long getLong(@Nonnull final String column) {
 		return dqlnn("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
-
-
+	
 	/**
-	 * Convenience method for getting a boolean.
+	 * Set a column with a boolean value.
 	 *
-	 * @param column Name of the column to read
-	 *
-	 * @return The boolean form of the column.  0/null maps to false and 1 maps to true.
-	 *
-	 * @throws NoDataException      if there are no results
-	 * @throws TooMuchDataException if there are multiple results
+	 * @param columnname Name of the column to set
+	 * @param value      The boolean value to set
 	 */
-	public boolean getBool(@Nonnull final String column) {
-		final Integer val=getIntNullable(column);
-		if (val==null || val==0) { return false; }
-		if (val==1) { return true; }
-		throw new DBException("Unexpected value "+val+" parsing DB boolean field selfmodify on attribute "+this);
+	public void set(@Nonnull final String columnname,@Nullable final Boolean value) {
+		set(columnname,(value!=null&&value?1:0));
 	}
-
+	
 	/**
 	 * Convenience method for getting a byte array.
 	 *
 	 * @param column Name of the column to read
-	 *
 	 * @return The byte array form of the column.
 	 *
 	 * @throws NoDataException      if there are no results
@@ -221,36 +222,29 @@ public abstract class TableRow extends Table {
 	public byte[] getBytes(@Nonnull final String column) {
 		return dqbytenn("select "+column+" from "+getTableName()+" where "+getIdColumn()+"=?",getId());
 	}
-
-	/**
-	 * Set a column with a boolean value.
-	 *
-	 * @param columnname Name of the column to set
-	 * @param value      The boolean value to set
-	 */
-	public void set(@Nonnull final String columnname,
-	                @Nullable final Boolean value) { set(columnname,(value!=null && value?1:0)); }
-
-	/**
-	 * Set a column with a string value.
-	 *
-	 * @param columnname The name of the column to set
-	 * @param value      The string value to store
-	 */
-	public void set(@Nonnull final String columnname,
-	                @Nullable final String value) {
-		d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId());
-	}
-
+	
 	/**
 	 * Set a column with an integer value.
 	 *
 	 * @param columnname The name of the column to set
 	 * @param value      The integer value to store
 	 */
-	public void set(@Nonnull final String columnname,
-	                @Nullable final Integer value) {
+	public void set(@Nonnull final String columnname,@Nullable final Integer value) {
 		d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId());
 	}
-
+	
+	public int getId() {
+		return id;
+	}
+	
+	/**
+	 * Set a column with a string value.
+	 *
+	 * @param columnname The name of the column to set
+	 * @param value      The string value to store
+	 */
+	public void set(@Nonnull final String columnname,@Nullable final String value) {
+		d("update "+getTableName()+" set "+columnname+"=? where "+getIdColumn()+"=?",value,getId());
+	}
+	
 }

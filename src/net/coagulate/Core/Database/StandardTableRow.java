@@ -6,14 +6,16 @@ import javax.annotation.Nonnull;
  * @author Iain Price
  */
 public abstract class StandardTableRow extends TableRow {
-
+	
 	protected StandardTableRow(final int id) {
 		super(id);
 	}
-
+	
 	// ---------- INSTANCE ----------
 	@Nonnull
 	@Override
-	public String getIdColumn() { return "id"; }
-
+	public String getIdColumn() {
+		return "id";
+	}
+	
 }

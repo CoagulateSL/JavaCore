@@ -9,15 +9,13 @@ import java.io.Serial;
  */
 
 public class SystemImplementationException extends SystemException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    public SystemImplementationException(final String message) {
-        super(message);
-    }
-
-    public SystemImplementationException(final String message,
-                                         final Throwable cause) {
-        super(message, cause);
-    }
+	@Serial private static final long serialVersionUID=1L;
+	
+	public SystemImplementationException(final String message) {
+		super(message);
+	}
+	
+	public SystemImplementationException(final String message,final Throwable cause) {
+		super(message,cause);
+	}
 }

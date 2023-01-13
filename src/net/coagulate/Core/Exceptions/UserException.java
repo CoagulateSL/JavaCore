@@ -9,42 +9,37 @@ import java.io.Serial;
  * @author Iain Price
  */
 public abstract class UserException extends RuntimeException {
-	@Serial
-    private static final long serialVersionUID = 1L;
-	private final boolean suppresslogging;
-
+	@Serial private static final long    serialVersionUID=1L;
+	private final                boolean suppresslogging;
+	
 	protected UserException(final String message) {
 		super(message);
-		suppresslogging = false;
+		suppresslogging=false;
 	}
-
-	protected UserException(final String message,
-							final Throwable cause) {
-		super(message, cause);
+	
+	protected UserException(final String message,final Throwable cause) {
+		super(message,cause);
 		if (UserException.class.isAssignableFrom(cause.getClass())) {
-			suppresslogging = ((UserException) cause).suppressed();
+			suppresslogging=((UserException)cause).suppressed();
 		} else {
 			if (SystemException.class.isAssignableFrom(cause.getClass())) {
-				suppresslogging = ((SystemException) cause).suppressed();
+				suppresslogging=((SystemException)cause).suppressed();
 			} else {
-				suppresslogging = false;
+				suppresslogging=false;
 			}
 		}
 	}
-
-	protected UserException(final String reason,
-							final boolean suppresslogging) {
+	
+	protected UserException(final String reason,final boolean suppresslogging) {
 		super(reason);
-		this.suppresslogging = suppresslogging;
+		this.suppresslogging=suppresslogging;
 	}
-
-	protected UserException(final String reason,
-							final Throwable cause,
-							final boolean suppresslogging) {
-		super(reason, cause);
-		this.suppresslogging = suppresslogging;
+	
+	protected UserException(final String reason,final Throwable cause,final boolean suppresslogging) {
+		super(reason,cause);
+		this.suppresslogging=suppresslogging;
 	}
-
+	
 	// ---------- INSTANCE ----------
 	public final boolean suppressed() {
 		return suppresslogging;

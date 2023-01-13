@@ -8,15 +8,13 @@ import java.io.Serial;
  * @author Iain Price <gphud@predestined.net>
  */
 public class NoDataException extends DBException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    public NoDataException(final String message) {
-        super(message);
-    }
-
-    public NoDataException(final String message,
-                           final Throwable cause) {
-        super(message, cause);
-    }
+	@Serial private static final long serialVersionUID=1L;
+	
+	public NoDataException(final String message) {
+		super(message);
+	}
+	
+	public NoDataException(final String message,final Throwable cause) {
+		super(message,cause);
+	}
 }

@@ -9,23 +9,21 @@ import java.io.Serial;
  */
 
 public class UserRemoteFailureException extends UserException {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    public UserRemoteFailureException(final String message) {
-        super(message);
-    }
-
-    public UserRemoteFailureException(final String message,
-                                      final Throwable cause) {
-        super(message, cause);
-    }
-
-    public UserRemoteFailureException(final String reason, final boolean suppresslogging) {
-        super(reason, suppresslogging);
-    }
-
-    public UserRemoteFailureException(final String reason, final Throwable cause, final boolean suppresslogging) {
-        super(reason, cause, suppresslogging);
-    }
+	@Serial private static final long serialVersionUID=1L;
+	
+	public UserRemoteFailureException(final String message) {
+		super(message);
+	}
+	
+	public UserRemoteFailureException(final String message,final Throwable cause) {
+		super(message,cause);
+	}
+	
+	public UserRemoteFailureException(final String reason,final boolean suppresslogging) {
+		super(reason,suppresslogging);
+	}
+	
+	public UserRemoteFailureException(final String reason,final Throwable cause,final boolean suppresslogging) {
+		super(reason,cause,suppresslogging);
+	}
 }
