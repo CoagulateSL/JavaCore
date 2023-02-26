@@ -4,7 +4,6 @@ import net.coagulate.Core.Exceptions.System.SystemImplementationException;
 import net.coagulate.Core.Exceptions.SystemException;
 import net.coagulate.Core.Exceptions.UserException;
 import net.coagulate.Core.HTML.Page;
-import net.coagulate.SL.Config;
 import org.apache.http.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
@@ -46,8 +45,8 @@ import static java.util.logging.Level.WARNING;
  * @param <T> Type of handler (e.g. Method is a common choice)
  */
 public abstract class URLMapper<T> implements HttpRequestHandler {
-	public static final  boolean LOGREQUESTS  =Config.logRequests();
-	private static final boolean DEBUG_PARAMS =false;
+	private static final boolean DEBUG_PARAMS=false;
+	public static        boolean LOGREQUESTS =false;
 	private static final boolean DEBUG_MAPPING=false;
 	final Map<String,T> prefixes=new HashMap<>();
 	final Map<String,T> exact   =new HashMap<>();
