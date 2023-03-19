@@ -14,9 +14,9 @@ public class Cache<U,T> {
 	 * If set to true forces all cache elements to refresh every couple of seconds, regardless of their preference.
 	 * For use during node transitions.
 	 */
-	public static  boolean                eagerCacheFlush=false;
-	private static Map<String,Cache<?,?>> caches         =new ConcurrentHashMap<>();
-	private final  int                    expiration;
+	public static        boolean                eagerCacheFlush=false;
+	private static final Map<String,Cache<?,?>> caches         =new ConcurrentHashMap<>();
+	private final        int                    expiration;
 	private final Map<U,CacheElement<T>> cache=new ConcurrentHashMap<>();
 	private long cacheHit;
 	private long cacheMiss;
@@ -120,9 +120,15 @@ public class Cache<U,T> {
 	/**
 	 * Restores standard caching operations and purges all the caches in the process...
 	 */
-	public static void enableCache() {
+	public static synchronized void enableCache() {
 		eagerCacheFlush=false;
-		caches=new ConcurrentHashMap<>(); // merry garbage collection day?
+		// oh god why, dont do this
+		// caches=new ConcurrentHashMap<>(); // merry garbage collection day?
+		// the using classes have a static reference, you MUST purge all the content instead
+		for (final Cache cache:
+		     caches.values()) {
+			cache.purgeAll();
+		}
 	}
 	
 	/**
