@@ -58,11 +58,10 @@ public class StackTraceProfiler extends Thread {
 	
 	public static void profile() {
 		for (final StackTraceElement[] stackTrace: Thread.getAllStackTraces().values()) {
-			for (final StackTraceElement stackTraceElement: stackTrace) {
-				record(stackTraceElement.getClassName(),
-				       stackTraceElement.getMethodName(),
-				       stackTraceElement.getLineNumber());
-			}
+			final StackTraceElement stackTraceElement=stackTrace[0];
+			record(stackTraceElement.getClassName(),
+			       stackTraceElement.getMethodName(),
+			       stackTraceElement.getLineNumber());
 		}
 	}
 	
