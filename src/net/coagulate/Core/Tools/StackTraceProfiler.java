@@ -51,17 +51,19 @@ public class StackTraceProfiler extends Thread {
 			try {//noinspection BusyWait
 				Thread.sleep(1000);
 				profile();
-			} catch (final Exception ignore) {
+			} catch (final Exception pain) {
+				System.err.print("Exception in stack trace profiler.  Stop this from happening.");
+				pain.printStackTrace();
 			}
 		}
 	}
 	
 	public static void profile() {
 		for (final StackTraceElement[] stackTrace: Thread.getAllStackTraces().values()) {
-			final StackTraceElement stackTraceElement=stackTrace[0];
-			record(stackTraceElement.getClassName(),
-			       stackTraceElement.getMethodName(),
-			       stackTraceElement.getLineNumber());
+			if (stackTrace.length>0) {
+				final StackTraceElement stackTraceElement=stackTrace[0];
+				record(stackTraceElement.getClassName(),stackTraceElement.getMethodName(),stackTraceElement.getLineNumber());
+			}
 		}
 	}
 	
