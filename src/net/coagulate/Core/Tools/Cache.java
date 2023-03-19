@@ -120,16 +120,14 @@ public class Cache<U,T> {
 	/**
 	 * Restores standard caching operations and purges all the caches in the process...
 	 */
-	public static void enableCache() {
+	public static synchronized void enableCache() {
 		eagerCacheFlush=false;
 		// oh god why, dont do this
 		// caches=new ConcurrentHashMap<>(); // merry garbage collection day?
 		// the using classes have a static reference, you MUST purge all the content instead
-		synchronized(caches) {
-			for (final Cache cache:
-			     caches.values()) {
-				cache.purgeAll();
-			}
+		for (final Cache cache:
+		     caches.values()) {
+			cache.purgeAll();
 		}
 	}
 	
