@@ -61,8 +61,13 @@ public class StackTraceProfiler extends Thread {
 	public static void profile() {
 		for (final StackTraceElement[] stackTrace: Thread.getAllStackTraces().values()) {
 			if (stackTrace.length>0) {
-				final StackTraceElement stackTraceElement=stackTrace[0];
-				record(stackTraceElement.getClassName(),stackTraceElement.getMethodName(),stackTraceElement.getLineNumber());
+				for (int i=0;i<stackTrace.length;i++) {
+					final StackTraceElement stackTraceElement=stackTrace[i];
+					if (stackTraceElement.getClassName().startsWith("net.coagulate.")) {
+						record(stackTraceElement.getClassName(),stackTraceElement.getMethodName(),stackTraceElement.getLineNumber());
+						return;
+					}
+				}
 			}
 		}
 	}
