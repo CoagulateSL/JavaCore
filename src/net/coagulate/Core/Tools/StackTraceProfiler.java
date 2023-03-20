@@ -11,7 +11,7 @@ public class StackTraceProfiler extends Thread {
 	private static final List<String> ignoreprefix=new ArrayList<>();
 	
 	public static void ignore(final String classname) { ignore.add(classname); }
-	public static void ignorePrefix(final String classname) { ignore.add(classname); }
+	public static void ignorePrefix(final String classname) { ignoreprefix.add(classname); }
 	public static String htmlDump() {
 		final StringBuilder ret=new StringBuilder();
 		ret.append("<table><tr><th>Class</th><th>Method</th><th>Line Number</th><th>Count</th></tr>");
