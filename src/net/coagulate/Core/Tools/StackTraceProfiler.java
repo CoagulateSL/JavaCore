@@ -1,11 +1,17 @@
 package net.coagulate.Core.Tools;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StackTraceProfiler extends Thread {
 	private static final Map<String,Map<String,Map<Integer,Integer>>> profiled=new HashMap<>();
+	private static final List<String> ignore=new ArrayList<>();
+	private static final List<String> ignoreprefix=new ArrayList<>();
 	
+	public static void ignore(final String classname) { ignore.add(classname); }
+	public static void ignorePrefix(final String classname) { ignore.add(classname); }
 	public static String htmlDump() {
 		final StringBuilder ret=new StringBuilder();
 		ret.append("<table><tr><th>Class</th><th>Method</th><th>Line Number</th><th>Count</th></tr>");
@@ -63,9 +69,24 @@ public class StackTraceProfiler extends Thread {
 			if (stackTrace.length>0) {
 				for (int i=0;i<stackTrace.length;i++) {
 					final StackTraceElement stackTraceElement=stackTrace[i];
-					if (stackTraceElement.getClassName().startsWith("net.coagulate.")) {
-						record(stackTraceElement.getClassName(),stackTraceElement.getMethodName(),stackTraceElement.getLineNumber());
-						return;
+					final String classname=stackTraceElement.getClassName();
+					if (classname.startsWith("net.coagulate.")) {
+						if (!ignore.contains(classname)) {
+							// prefix check
+							boolean record=true;
+							for (final String prefix:ignoreprefix) {
+								if (classname.startsWith(prefix)) {
+									record=false;
+									break;
+								}
+							}
+							if (record) {
+								record(stackTraceElement.getClassName(),
+								       stackTraceElement.getMethodName(),
+								       stackTraceElement.getLineNumber());
+								return;
+							}
+						}
 					}
 				}
 			}
