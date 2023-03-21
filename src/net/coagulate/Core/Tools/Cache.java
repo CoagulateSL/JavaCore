@@ -3,7 +3,7 @@ package net.coagulate.Core.Tools;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,9 +15,9 @@ public class Cache<U,T> {
 	 * For use during node transitions.
 	 */
 	public static        boolean                eagerCacheFlush=false;
-	private static final Map<String,Cache<?,?>> caches         =new ConcurrentHashMap<>();
+	private static final Map<String,Cache<?,?>> caches         =new ConcurrentSkipListMap<>();
 	private final        int                    expiration;
-	private final Map<U,CacheElement<T>> cache=new ConcurrentHashMap<>();
+	private final Map<U,CacheElement<T>> cache=new ConcurrentSkipListMap<>();
 	private long cacheHit;
 	private long cacheMiss;
 	
