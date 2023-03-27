@@ -347,6 +347,10 @@ public abstract class DBConnection {
 	 * @param params               SQL arguments.
 	 */
 	public void d(@Nonnull final String parameterisedCommand,final Object... params) {
+		_d(false,parameterisedCommand,params);
+	}
+
+	private void _d(final boolean slowQuery,@Nonnull final String parameterisedCommand,final Object... params) {
 		// permitted?
 		permitCheck();
 		if (logSql) {
@@ -362,17 +366,17 @@ public abstract class DBConnection {
 			stm.execute();
 			final long end=new Date().getTime();
 			final long diff=end-start;
-			if (DB.sqldebug_commands||(diff)>=DB.SLOWQUERYTHRESHOLD_UPDATE) {
+			if (!slowQuery && (DB.sqldebug_commands||(diff)>=DB.SLOWQUERYTHRESHOLD_UPDATE)) {
 				logger.finer("SQL "+(diff)+"ms ["+formatCaller()+"]:"+stm);
 			}
-			if (logSql) {
+			if (!slowQuery && logSql) {
 				if (sqlLogSum.containsKey(parameterisedCommand)) {
 					sqlLogSum.put(parameterisedCommand,sqlLogSum.get(parameterisedCommand)+(diff));
 				} else {
 					sqlLogSum.put(parameterisedCommand,diff);
 				}
 			}
-			if (accumulateStats) {
+			if (!slowQuery && accumulateStats) {
 				synchronized(updateLock) {
 					updates++;
 					updateTime+=(diff);
@@ -385,6 +389,10 @@ public abstract class DBConnection {
 			throw new DBException("SQL error during command "+parameterisedCommand,e);
 		}
 		
+	}
+
+	public void dSlow(@Nonnull final String parameterisedCommand,final Object... params) {
+		_d(true,parameterisedCommand,params);
 	}
 	
 	/**
