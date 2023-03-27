@@ -16,6 +16,8 @@ public class MySqlDBConnection extends DBConnection {
 		super(sourceName);
 		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 		dataSource.setUrl(jdbc);
+		dataSource.setDefaultAutoCommit(true);
+		dataSource.setAutoCommitOnReturn(true);
 		register();
 	}
 	
