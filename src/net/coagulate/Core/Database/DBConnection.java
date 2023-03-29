@@ -6,6 +6,7 @@ import net.coagulate.Core.Exceptions.User.UserConfigurationException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.*;
+import java.time.Instant;
 import java.util.Date;
 import java.util.*;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ public abstract class DBConnection {
 	static final         boolean             logSql         =true;
 	private static final boolean             accumulateStats=true;
 	private static final String      PACKAGE_PREFIX  ="net.coagulate.Core.Database";
+	private final Instant sqlLogSince=Instant.now();
 	final                Map<String,Integer> sqlLog         =new HashMap<>();
 	final                Map<String,Long>    sqlLogSum      =new HashMap<>();
 	final                Logger              logger;
@@ -69,7 +71,7 @@ public abstract class DBConnection {
 		}
 	}
 	
-	public void getSqlLogs(@Nonnull final Map<String,Integer> count,
+	public Instant getSqlLogs(@Nonnull final Map<String,Integer> count,
 	                       @Nonnull final Map<String,Long> runtime,
 	                       @Nonnull final Map<String,Double> per) {
 		if (!logSql) {
@@ -88,6 +90,7 @@ public abstract class DBConnection {
 				per.put(statement,((double)runFor)/((double)c)); /// :P
 			}
 		}
+		return sqlLogSince;
 	}
 	
 	public abstract void shutdown();
