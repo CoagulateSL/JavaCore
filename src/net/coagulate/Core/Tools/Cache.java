@@ -129,6 +129,7 @@ public class Cache<U,T> {
 		     caches.values()) {
 			cache.purgeAll();
 		}
+		Logger.getLogger("net.coagulate.Core.Tools.Cache").log(Level.INFO,"Internal cache structures have been cleaned");
 	}
 	
 	/**
