@@ -21,9 +21,9 @@ public abstract class DBConnection {
 	
 	static final         boolean             logSql         =true;
 	private static final boolean             accumulateStats=true;
-	private static final String      PACKAGE_PREFIX  ="net.coagulate.Core.Database";
-	private final Instant sqlLogSince=Instant.now();
-	final                Map<String,Integer> sqlLog         =new HashMap<>();
+	private static final String              PACKAGE_PREFIX="net.coagulate.Core.Database";
+	final                Map<String,Integer> sqlLog        =new HashMap<>();
+	private              Instant             sqlLogSince   =Instant.now();
 	final                Map<String,Long>    sqlLogSum      =new HashMap<>();
 	final                Logger              logger;
 	private final        Object              queryLock      =new Object();
@@ -37,6 +37,12 @@ public abstract class DBConnection {
 	private              long                updateTime;
 	private              long                updateMax;
 	
+	public void resetSQLLogs() {
+		sqlLog.clear();
+		sqlLogSum.clear();
+		sqlLogSince=Instant.now();
+		Logger.getLogger("net.coagulate.Core.Database.DBConnection."+getName()).info("Reset SQL statistics on "+getName());
+	}
 	public void permit(final String prefix) {
 		permittedCallers.add(prefix);
 	}
