@@ -167,7 +167,7 @@ public class Cache<U,T> {
 	}
 	
 	public void set(final U key,final T value) {
-		cache.put(key,new CacheElement<>(value,expiration));
+		cache.put(key,new CacheElement<>(value,UnixTime.getUnixTime()+expiration));
 	}
 	
 	public static class CacheStats {
