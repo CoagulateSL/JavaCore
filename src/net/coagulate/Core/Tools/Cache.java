@@ -25,13 +25,21 @@ public class Cache<U,T> {
 		this.expiration=expiration;
 	}
 	
+	private boolean caseInsensitive=false;
+
+	public static <R,S> Cache<R,S> getCache(@Nonnull final String name,final int expiration) {
+		return getCache(name,expiration,false);
+	}
+
 	@SuppressWarnings("unchecked")
-	public static <R,S> Cache<R,S> getCache(@Nonnull String name,final int expiration) {
+	public static <R,S> Cache<R,S> getCache(@Nonnull String name,final int expiration,final boolean caseinsensitive) {
 		name=name.toLowerCase();
 		if (caches.containsKey(name)) {
 			return (Cache<R,S>)caches.get(name);
 		}
-		return makeCache(name,expiration);
+		final Cache<R,S> localcache=makeCache(name,expiration);
+		localcache.caseInsensitive=caseinsensitive;
+		return localcache;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -139,7 +147,10 @@ public class Cache<U,T> {
 	 * @param supplier Functional Supplier for the value, if not cached
 	 * @return T from the cache
 	 */
-	public T get(@Nonnull final U key,final Supplier<T> supplier) {
+	public T get(@Nonnull U key,final Supplier<T> supplier) {
+		if (caseInsensitive && key instanceof String) {
+			key=((U)((String)key).toLowerCase());
+		}
 		final int now=UnixTime.getUnixTime();
 		CacheElement<T> cached=cache.getOrDefault(key,null);
 		if (cached!=null) {
@@ -158,7 +169,10 @@ public class Cache<U,T> {
 		return cached.element;
 	}
 	
-	public void purge(final U name) {
+	public void purge(U name) {
+		if (caseInsensitive && name instanceof String) {
+			name=(U)((String)name).toLowerCase();
+		}
 		cache.remove(name);
 	}
 	
@@ -166,7 +180,10 @@ public class Cache<U,T> {
 		cache.clear();
 	}
 	
-	public void set(final U key,final T value) {
+	public void set(U key,final T value) {
+		if (caseInsensitive && key instanceof String) {
+			key=(U)((String)key).toLowerCase();
+		}
 		cache.put(key,new CacheElement<>(value,UnixTime.getUnixTime()+expiration));
 	}
 	
