@@ -64,6 +64,10 @@ public class Cache<U,T> {
 		}
 	}
 	
+	public static boolean isRestricted() {
+		return eagerCacheFlush;
+	}
+	
 	private void maintenanceThis() {
 		final int now=UnixTime.getUnixTime();
 		final Set<U> deleteSet=new HashSet<>();
