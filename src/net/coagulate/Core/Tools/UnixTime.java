@@ -128,7 +128,7 @@ public abstract class UnixTime {
 		return duration(relativeToNow(unixtime),withseconds);
 	}
 	
-	public static String duration(int t,final boolean precise) { return duration(t,precise,false); }
+	public static String duration(final int t,final boolean precise) { return duration(t,precise,false); }
 	/**
 	 * Convert a duration (scalar time units) to a string
 	 *
@@ -137,7 +137,7 @@ public abstract class UnixTime {
 	 * @return Duration as a string (e.g. 3h 2m 1s)
 	 */
 	@Nonnull
-	public static String duration(int t,final boolean precise,boolean noSeconds) {
+	public static String duration(int t,final boolean precise,final boolean noSeconds) {
 		String prefix="";
 		if (t<0) {
 			prefix="T-";
