@@ -4,8 +4,10 @@ import net.coagulate.Core.Exceptions.System.SystemImplementationException;
 import net.coagulate.Core.Exceptions.SystemException;
 import net.coagulate.Core.Exceptions.UserException;
 import net.coagulate.Core.HTML.Page;
+import org.apache.commons.fileupload.MultipartStream;
 import org.apache.http.*;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
@@ -13,6 +15,7 @@ import org.apache.http.protocol.HttpRequestHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,6 +25,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -45,12 +50,12 @@ import static java.util.logging.Level.WARNING;
  * @param <T> Type of handler (e.g. Method is a common choice)
  */
 public abstract class URLMapper<T> implements HttpRequestHandler {
-	private static final boolean DEBUG_PARAMS=false;
-	public static        boolean LOGREQUESTS =false;
-	private static final boolean DEBUG_MAPPING=false;
-	final Map<String,T> prefixes=new HashMap<>();
-	final Map<String,T> exact   =new HashMap<>();
-	private final        Logger  logger;
+	private static final boolean       DEBUG_PARAMS =false;
+	private static final boolean       DEBUG_MAPPING=false;
+	public static        boolean       LOGREQUESTS  =false;
+	final                Map<String,T> prefixes     =new HashMap<>();
+	final                Map<String,T> exact        =new HashMap<>();
+	private final        Logger        logger;
 	
 	protected URLMapper() {
 		logger=Logger.getLogger(getClass().getCanonicalName());
@@ -255,7 +260,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 	                                          HttpContext context,
 	                                          HttpResponse response,
 	                                          SystemException systemException);
-
+	
 	protected abstract void renderUnhandledError(HttpRequest request,
 	                                             HttpContext context,
 	                                             HttpResponse response,
@@ -394,15 +399,58 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 	 */
 	protected void processPostEntity(final HttpEntity entity,final Map<String,String> parameters) {
 		try {
-			final List<NameValuePair> map=URLEncodedUtils.parse(entity);
-			for (final NameValuePair kv: map) {
-				parameters.put(kv.getName(),kv.getValue());
-				if (DEBUG_PARAMS) {
-					System.out.println("Imported POST parameter '"+kv.getName()+"'='"+kv.getValue()+"'");
-				}
+			if (DEBUG_PARAMS) {
+				System.out.println("Post entity is "+entity.getClass());
 			}
+			final BasicHttpEntity e=(BasicHttpEntity)entity;
+			if (DEBUG_PARAMS) {
+				System.out.println("Post entity content type is "+e.getContentType().getValue());
+			}
+			if ("application/x-www-form-urlencoded".equalsIgnoreCase(e.getContentType().getValue())) {
+				final List<NameValuePair> map=URLEncodedUtils.parse(entity);
+				for (final NameValuePair kv: map) {
+					parameters.put(kv.getName(),kv.getValue());
+					if (DEBUG_PARAMS) {
+						System.out.println("Imported URIEncoded parameter '"+kv.getName()+"'='"+kv.getValue()+"'");
+					}
+				}
+				return;
+			}
+			if (e.getContentType().getValue().startsWith("multipart/form-data; boundary=")) {
+				// this is bad and prone to failure from any number of valid formatting variations:)
+				final String boundary=e.getContentType().getValue().replaceAll("multipart/form-data; boundary=","");
+				final MultipartStream stream=
+						new MultipartStream(entity.getContent(),boundary.getBytes(StandardCharsets.UTF_8));
+				boolean moreParts=stream.skipPreamble();
+				while (moreParts) {
+					final String header=stream.readHeaders();
+					final Pattern regexp=Pattern.compile(".*; ?name=\"([^\"]+)\".*",Pattern.MULTILINE|Pattern.DOTALL);
+					final Matcher matcher=regexp.matcher(header);
+					String name=null;
+					if (matcher.matches()) {
+						name=matcher.group(1);
+					}
+					final ByteArrayOutputStream baos=new ByteArrayOutputStream();
+					stream.readBodyData(baos);
+					if (name!=null) {
+						parameters.put(name,baos.toString());
+						if (DEBUG_PARAMS) {
+							System.out.println("Imported multipart data '"+name+"'='"+baos+"'");
+						}
+					} else {
+						logger.warning(
+								"Failed to consume multipart/form-data section with header "+header+" and body "+baos);
+					}
+					moreParts=stream.readBoundary();
+				}
+				return;
+			}
+			System.out.println(new String(entity.getContent().readAllBytes()));
+			logger.log(SEVERE,"Do not know how to decode "+e.getContentType().getValue());
+			throw new SystemImplementationException(
+					"There is no HTTP POST handler for content type "+e.getContentType().getValue());
 		} catch (final IOException e) {
-			logger.log(WARNING,"Failed to URLDecode posted entity",e);
+			logger.log(WARNING,"Failed to Decode posted entity",e);
 		}
 	}
 	
