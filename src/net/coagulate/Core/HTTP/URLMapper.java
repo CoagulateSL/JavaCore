@@ -406,7 +406,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 			if (DEBUG_PARAMS) {
 				System.out.println("Post entity content type is "+e.getContentType().getValue());
 			}
-			if ("application/x-www-form-urlencoded".equalsIgnoreCase(e.getContentType().getValue())) {
+			if (e.getContentType().getValue().toLowerCase().contains("application/x-www-form-urlencoded")) {
 				final List<NameValuePair> map=URLEncodedUtils.parse(entity);
 				for (final NameValuePair kv: map) {
 					parameters.put(kv.getName(),kv.getValue());
@@ -416,7 +416,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 				}
 				return;
 			}
-			if (e.getContentType().getValue().startsWith("multipart/form-data; boundary=")) {
+			if (e.getContentType().getValue().toLowerCase().startsWith("multipart/form-data; boundary=")) {
 				// this is bad and prone to failure from any number of valid formatting variations:)
 				final String boundary=e.getContentType().getValue().replaceAll("multipart/form-data; boundary=","");
 				final MultipartStream stream=
