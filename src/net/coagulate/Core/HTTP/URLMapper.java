@@ -2,6 +2,7 @@ package net.coagulate.Core.HTTP;
 
 import net.coagulate.Core.Exceptions.System.SystemImplementationException;
 import net.coagulate.Core.Exceptions.SystemException;
+import net.coagulate.Core.Exceptions.User.UserInputValidationFilterException;
 import net.coagulate.Core.Exceptions.UserException;
 import net.coagulate.Core.HTML.Page;
 import org.apache.commons.fileupload.MultipartStream;
@@ -399,14 +400,24 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 	 */
 	protected void processPostEntity(final HttpEntity entity,final Map<String,String> parameters) {
 		try {
+			if (entity==null) {
+				return;
+			}
 			if (DEBUG_PARAMS) {
 				System.out.println("Post entity is "+entity.getClass());
 			}
 			final BasicHttpEntity e=(BasicHttpEntity)entity;
-			if (DEBUG_PARAMS) {
-				System.out.println("Post entity content type is "+e.getContentType().getValue());
+			if (e.getContentType()==null) {
+				return;
 			}
-			if (e.getContentType().getValue().toLowerCase().contains("application/x-www-form-urlencoded")) {
+			final String contentType=e.getContentType().getValue().toLowerCase();
+			if (contentType==null) {
+				return;
+			}
+			if (DEBUG_PARAMS) {
+				System.out.println("Post entity content type is "+contentType);
+			}
+			if (contentType.contains("application/x-www-form-urlencoded")) {
 				final List<NameValuePair> map=URLEncodedUtils.parse(entity);
 				for (final NameValuePair kv: map) {
 					parameters.put(kv.getName(),kv.getValue());
@@ -416,9 +427,9 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 				}
 				return;
 			}
-			if (e.getContentType().getValue().toLowerCase().startsWith("multipart/form-data; boundary=")) {
+			if (contentType.startsWith("multipart/form-data; boundary=")) {
 				// this is bad and prone to failure from any number of valid formatting variations:)
-				final String boundary=e.getContentType().getValue().replaceAll("multipart/form-data; boundary=","");
+				final String boundary=contentType.replaceAll("multipart/form-data; boundary=","");
 				final MultipartStream stream=
 						new MultipartStream(entity.getContent(),boundary.getBytes(StandardCharsets.UTF_8));
 				boolean moreParts=stream.skipPreamble();
@@ -445,10 +456,12 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 				}
 				return;
 			}
+			if ("application/xml".equals(contentType)) {
+				throw new UserInputValidationFilterException("Content type not supported or expected",true);
+			}
 			System.out.println(new String(entity.getContent().readAllBytes()));
-			logger.log(SEVERE,"Do not know how to decode "+e.getContentType().getValue());
-			throw new SystemImplementationException(
-					"There is no HTTP POST handler for content type "+e.getContentType().getValue());
+			logger.log(SEVERE,"Do not know how to decode "+contentType);
+			throw new SystemImplementationException("There is no HTTP POST handler for content type "+contentType);
 		} catch (final IOException e) {
 			logger.log(WARNING,"Failed to Decode posted entity",e);
 		}
