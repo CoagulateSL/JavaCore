@@ -121,7 +121,10 @@ public class Cache<U,T> {
 	public static String cacheStatus() {
 		return eagerCacheFlush?"Caching is eagerly refreshed":"Normal caching operations";
 	}
-
+	
+	public static boolean cacheEnabled() {
+		return !eagerCacheFlush;
+	}
 	/**
 	 * The name is a lie, this will force the cache to expire things quickly, but not terminate the cache.
 	 */
