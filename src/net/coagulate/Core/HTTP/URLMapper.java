@@ -459,6 +459,9 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 			if ("application/xml".equals(contentType)) {
 				throw new UserInputValidationFilterException("Content type not supported or expected",true);
 			}
+			if ("application/dns-message".equals(contentType)) {
+				throw new UserInputValidationFilterException("Dubious user",true);
+			}
 			System.out.println(new String(entity.getContent().readAllBytes()));
 			logger.log(SEVERE,"Do not know how to decode "+contentType);
 			throw new SystemImplementationException("There is no HTTP POST handler for content type "+contentType);
