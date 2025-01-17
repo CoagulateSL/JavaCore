@@ -456,7 +456,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 				}
 				return;
 			}
-			if ("application/xml".equals(contentType)) {
+			if ("text/xml".equals(contentType)||"application/xml".equals(contentType)) {
 				throw new UserInputValidationFilterException("Content type not supported or expected",true);
 			}
 			if ("application/dns-message".equals(contentType)) {
