@@ -427,7 +427,7 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 				}
 				return;
 			}
-			if ("text/plain".equals(contentType)) {
+			if (contentType.startsWith("text/plain")) {
 				final String[] elements=new String(entity.getContent().readAllBytes()).split("[\n\r]+");
 				for (int i=0;i<elements.length;i++) {
 					parameters.put(String.valueOf(i),elements[i]);
