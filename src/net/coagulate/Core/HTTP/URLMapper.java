@@ -427,6 +427,16 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 				}
 				return;
 			}
+			if ("text/plain".equals(contentType)) {
+				final String[] elements=new String(entity.getContent().readAllBytes()).split("[\n\r]+");
+				for (int i=0;i<elements.length;i++) {
+					parameters.put(String.valueOf(i),elements[i]);
+					if (DEBUG_PARAMS) {
+						System.out.println("Imported text/plain line "+i+" = "+elements[i]);
+					}
+				}
+				return;
+			}
 			if (contentType.startsWith("multipart/form-data; boundary=")) {
 				// this is bad and prone to failure from any number of valid formatting variations:)
 				final String boundary=contentType.replaceAll("multipart/form-data; boundary=","");
@@ -456,11 +466,13 @@ public abstract class URLMapper<T> implements HttpRequestHandler {
 				}
 				return;
 			}
+			
 			if ("text/xml".equals(contentType)||"application/xml".equals(contentType)) {
 				throw new UserInputValidationFilterException("Content type not supported or expected",true);
 			}
 			if ("application/dns-message".equals(contentType)) {
 				throw new UserInputValidationFilterException("Dubious user",true);
+				
 			}
 			System.out.println(new String(entity.getContent().readAllBytes()));
 			logger.log(SEVERE,"Do not know how to decode "+contentType);
