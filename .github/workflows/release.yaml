@@ -21,8 +21,8 @@ jobs:
           token: ${{ secrets.PACKAGE_READ }}
           submodules: true
       - name: Git Submodule Update
+        working-directory: SLCore
         run: |
-          cd SLCore
           git pull --recurse-submodules
           git submodule update --remote --recursive
       - name: Commit update
