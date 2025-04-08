@@ -28,25 +28,4 @@ jobs:
           PACKAGE_READ: ${{ secrets.PACKAGE_READ }}
         working-directory: JavaCore
         run: mvn --batch-mode clean compile
-      - name: Checkout depender SLCore
-        uses: actions/checkout@v2
-        with:
-          repository: 'CoagulateSL/SLCore'        
-          path: SLCore
-          token: ${{ secrets.PACKAGE_READ }}
-          submodules: true
-      - name: Git Submodule Update
-        run: |
-          cd SLCore
-          git pull --recurse-submodules
-          git submodule update --remote --recursive
-      - name: Commit update
-        working-directory: SLCore
-        run: |
-          git config --global user.name 'Git bot'
-          git config --global user.email 'bot@noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/CoagulateSL/SLCore
-          git commit -am "Auto updated submodule references" && git push || echo "No changes to commit"
-        
-        
         
