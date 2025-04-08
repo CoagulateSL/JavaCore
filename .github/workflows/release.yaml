@@ -1,7 +1,7 @@
-name: Compile Test
+name: Release
 
-on: 
-  pull_request:
+on:
+  push:
     branches:
       - master
     
