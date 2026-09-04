@@ -6,5 +6,8 @@ public class InputText extends Input {
 		super("text");
 		replaceAttribute("name",name);
 	}
-	
+	public InputText(final String name,final String value) {
+		this(name);
+		replaceAttribute("value",value);
+	}
 }

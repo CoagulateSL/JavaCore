@@ -19,7 +19,14 @@ public class TableRow extends TagPair {
 		contents().add(new TableData().add(content));
 		return this;
 	}
-	
+	public TableRow dataR(final Container content) {
+		contents().add(new TableData().align("right").add(content));
+		return this;
+	}
+	public TableRow dataR(final String content) {
+		contents().add(new TableData().align("right").add(content));
+		return this;
+	}
 	public TableRow header(final String name) {
 		contents().add(new TableHeader(name));
 		return this;
@@ -45,10 +52,32 @@ public class TableRow extends TagPair {
 		data(text);
 		return this;
 	}
-	
+	@Override
+	public Container add(final int text) {
+		data(text);
+		return this;
+	}
+	@Override
+	public Container add(final float text) {
+		data(text);
+		return this;
+	}
+	@Override
+	public Container add(final double text) {
+		data(text);
+		return this;
+	}
+
 	public TableRow data(final String name) {
 		contents().add(new TableData(name));
 		return this;
 	}
-	
+	public TableRow data(final int name) {
+		contents().add(new TableData(Integer.toString(name)));
+		return this;
+	}
+	public TableRow data(final double name) {
+		contents().add(new TableData(Double.toString(name)));
+		return this;
+	}
 }

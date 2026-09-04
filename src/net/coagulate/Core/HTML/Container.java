@@ -38,7 +38,22 @@ public class Container {
 		contents.add(new PlainText(text));
 		return this;
 	}
-	
+
+	public Container add(final int number) {
+		contents.add(new PlainText(Integer.toString(number)));
+		return this;
+	}
+
+	public Container add(final float number) {
+		contents.add(new PlainText(Float.toString(number)));
+		return this;
+	}
+
+	public Container add(final double number) {
+		contents.add(new PlainText(Double.toString(number)));
+		return this;
+	}
+
 	public String tagAttributes() {
 		final StringBuilder attributelist=new StringBuilder();
 		boolean addedanything=false;

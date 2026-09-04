@@ -12,6 +12,7 @@ public class Table extends TagPair {
 	
 	@Override
 	public Container add(final Container content) {
+		if (content instanceof TableRow) { contents().add(content); return content; }
 		throw new SystemImplementationException("You can not add content directly to a table object (you need a row)");
 	}
 	

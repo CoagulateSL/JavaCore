@@ -18,4 +18,9 @@ public class TableData extends TagPair {
 	public void span(final int span) {
 		addAttribute("colspan",String.valueOf(span));
 	}
+
+	public TableData align(String alignment) {
+		addAttribute("align",alignment);
+		return this;
+	}
 }
