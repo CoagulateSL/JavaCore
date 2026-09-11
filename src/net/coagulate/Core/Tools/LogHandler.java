@@ -93,7 +93,7 @@ public class LogHandler extends Handler {
 						alreadymailed.remove(thrown);
 					} else {
 						if (suppress(thrown)) {
-							System.out.println("Exception Log Suppressed "+getCount(thrown)+"x"+getSignature(thrown));
+							System.out.println("Exception Log Suppressed "+getCount(thrown)+"x"+getSignature(thrown)+" - "+thrown);
 						} else {
 							System.out.println(ExceptionTools.toString(thrown));
 							MailTools.mail(mailprefix+" {NoLog} "+thrown.getClass().getSimpleName()+" - "+message+" - "+
