@@ -80,4 +80,8 @@ public class TableRow extends TagPair {
 		contents().add(new TableData(Double.toString(name)));
 		return this;
 	}
+	public TableRow data(final long name) {
+		contents().add(new TableData(Long.toString(name)));
+		return this;
+	}
 }
