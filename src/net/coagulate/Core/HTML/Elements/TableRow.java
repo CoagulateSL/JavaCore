@@ -8,7 +8,15 @@ public class TableRow extends TagPair {
 	public String tag() {
 		return "tr";
 	}
-	
+
+	public TableRow color(String color) {
+		if (contents().size()==0) {
+			addAttribute("bgcolor", color);
+		} else {
+			contents().get(contents().size()-1).replaceAttribute("bgcolor",color);
+		}
+		return this;
+	}
 	@Override
 	public TableRow add(final Container content) {
 		data(content);
