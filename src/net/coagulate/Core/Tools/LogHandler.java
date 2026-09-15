@@ -5,6 +5,8 @@ import net.coagulate.Core.Exceptions.UserException;
 
 import javax.annotation.Nonnull;
 import javax.mail.MessagingException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.*;
 
@@ -20,7 +22,8 @@ public class LogHandler extends Handler {
 	private static final   Map<String,Integer> suppressioncount=new HashMap<>();
 	private static final   Map<String,Date>    suppressionclear=new HashMap<>();
 	@Nonnull public static String              mailprefix      ="[UNKNOWN]";
-	
+	private static boolean showDateTime=false;
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	public LogHandler() {
 		setLevel(ALL);
 	}
@@ -30,6 +33,10 @@ public class LogHandler extends Handler {
 		LogManager.getLogManager().reset();
 		Logger.getLogger("").setLevel(ALL);
 		Logger.getLogger("").addHandler(new LogHandler());
+	}
+	public static void initialise(boolean showDateTime) {
+		LogHandler.showDateTime=showDateTime;
+		initialise();
 	}
 	
 	public static void alreadyMailed(final Throwable t) {
@@ -70,6 +77,7 @@ public class LogHandler extends Handler {
 				}
 			}
 			System.out.println(
+					(showDateTime? formatter.format(LocalDateTime.now())+" : ":"")+
 					formatLevel(level)+"#"+postpad(String.valueOf(thread),4)+" "+system+" - "+message+" (@"+classname+
 					"."+method+")");
 			
