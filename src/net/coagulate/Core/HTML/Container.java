@@ -16,7 +16,7 @@ public class Container {
 	private final Map<String,String> attributes=new HashMap<>();
 	
 	@Override
-	public final String toString() {
+	public String toString() {
 		final StringBuilder sb=new StringBuilder();
 		toString(sb);
 		return sb.toString();
@@ -105,7 +105,7 @@ public class Container {
 		return this;
 	}
 	
-	protected final List<Container> contents() {
+	public final List<Container> contents() {
 		return contents;
 	}
 	
