@@ -17,12 +17,18 @@ public class TableRow extends TagPair {
 		}
 		return this;
 	}
+	public TableRow rowColor(String color) {
+		addAttribute("bgcolor", color);
+		return this;
+	}
 	@Override
 	public TableRow add(final Container content) {
 		data(content);
 		return this;
 	}
-	
+	public Container get(int i) {
+		return contents().get(i);
+	}
 	public TableRow data(final Container content) {
 		contents().add(new TableData().add(content));
 		return this;
