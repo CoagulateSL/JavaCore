@@ -37,6 +37,10 @@ public class TableRow extends TagPair {
 		contents().add(new TableData().align("right").add(content));
 		return this;
 	}
+	public TableRow dataR(final Integer content) {
+		contents().add(new TableData().align("right").add(content));
+		return this;
+	}
 	public TableRow dataR(final String content) {
 		contents().add(new TableData().align("right").add(content));
 		return this;
