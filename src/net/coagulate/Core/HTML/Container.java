@@ -49,6 +49,11 @@ public class Container {
 		return this;
 	}
 
+	public Container add(final long number) {
+		contents.add(new PlainText(Long.toString(number)));
+		return this;
+	}
+
 	public Container add(final double number) {
 		contents.add(new PlainText(Double.toString(number)));
 		return this;
