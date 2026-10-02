@@ -42,20 +42,13 @@ public class Table extends TagPair {
 		if (!doneHide) {
 			if (sortOn > -1) {
 				contents().sort((a, b) -> {
-					if (a instanceof TableRow) {
-						for (Container c : a.contents()) {
-							if (c instanceof TableHeader) {
-								return -1;
-							}
-						}
-					}
-					if (b instanceof TableRow) {
-						for (Container c : b.contents()) {
-							if (c instanceof TableHeader) {
-								return 1;
-							}
-						}
-					}
+					// only a row whose FIRST cell is a <th> is a real header row; data rows may
+					// legitimately contain <th> cells (e.g. ProjectsPage project link), and treating
+					// those as headers makes this comparator inconsistent and the sort meaningless
+					final boolean aHeader = a instanceof TableRow && ((TableRow) a).get(0) instanceof TableHeader;
+					final boolean bHeader = b instanceof TableRow && ((TableRow) b).get(0) instanceof TableHeader;
+					if (aHeader) { return bHeader ? 0 : -1; }
+					if (bHeader) { return 1; }
 					if (a instanceof TableRow && b instanceof TableRow) {
 						if (sortType == SORT_TYPE.DOUBLE) {
 							Double aa = Double.parseDouble(((TableRow) a).get(sortOn).contents().get(0).toString());
