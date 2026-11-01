@@ -90,7 +90,10 @@ public class Container {
 			content.styleCascade(s);
 		}
 	}
-	
+	public Container bgColor(String color) {
+		styleCascade("background-color: "+color+";");
+		return this;
+	}
 	public void alignment(final String alignment) {
 		replaceAttribute("align",alignment);
 	}
@@ -233,4 +236,9 @@ public class Container {
 		add(new Paragraph(content));
 		return this;
 	}
+
+    public Container br() {
+		add(new LineBreak());
+		return this;
+    }
 }

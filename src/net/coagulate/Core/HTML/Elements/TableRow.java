@@ -53,7 +53,13 @@ public class TableRow extends TagPair {
 		contents().add(new TableHeader(name));
 		return this;
 	}
-	
+	public TableRow header(final String... strings) {
+		for (String s:strings) {
+			header(s);
+		}
+		return this;
+	}
+
 	public TableRow header(final Container content) {
 		contents().add(new TableHeader().add(content));
 		return this;
@@ -92,6 +98,10 @@ public class TableRow extends TagPair {
 
 	public TableRow data(final String name) {
 		contents().add(new TableData(name));
+		return this;
+	}
+	public TableRow data(final String... strings) {
+		for (String s:strings) { data(s); }
 		return this;
 	}
 	public TableRow data(final int name) {
